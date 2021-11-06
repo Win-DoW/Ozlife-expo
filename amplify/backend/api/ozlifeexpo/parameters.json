@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "ozlifeexpo",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authozlifeexpo59bb2ebd59bb2ebd",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

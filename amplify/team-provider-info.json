@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ozlifeexpo-dev-171212-authRole",
+      "UnauthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-171212-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-171212-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-ozlifeexpo-dev-171212-deployment",
+      "UnauthRoleName": "amplify-ozlifeexpo-dev-171212-unauthRole",
+      "StackName": "amplify-ozlifeexpo-dev-171212",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:477404879761:stack/amplify-ozlifeexpo-dev-171212/4131c990-3ed9-11ec-a65a-02686cc3d46a",
+      "AmplifyAppId": "d3mkn0tpxxmnd"
+    },
+    "categories": {
+      "auth": {
+        "ozlifeexpo59bb2ebd59bb2ebd": {}
+      }
+    }
+  }
+}

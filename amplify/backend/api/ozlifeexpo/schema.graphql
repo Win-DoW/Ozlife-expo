@@ -1,0 +1,96 @@
+type User @model {
+  id: ID!
+  email: String!
+  nickname: String
+  profile: String
+  interest: String
+  region: String
+  image: String
+  chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type Store @model {
+  id: ID!
+  owner: String!
+  name: String!
+  profile: String
+  images: [String]
+  tel: String
+  address: String
+  license: String
+  url: String
+  longitude: Float
+  latitude: Float
+
+  ozlifes: [Ozlife] @connection(keyName: "byStore", fields: ["id"])
+}
+
+type Ozlife @model @key(name: "byStore", fields: ["storeId"]) {
+  id: ID!
+  owner: String
+  title: String
+  profile: String
+  images: [String]
+  section: String
+  tag: String
+  question: [String!]
+  member: Int
+  visit_date: String
+  name: String
+  original_price: Int
+  discount_price: Int
+  promotion: String
+  address: String
+
+  storeId: ID!
+  store: Store @connection(fields: ["storeId"])
+
+  reviews: [Review] @connection(keyName: "byOzlife", fields: ["id"])
+}
+
+type Review @model @key(name: "byOzlife", fields: ["ozlifeId"]) {
+  id: ID!
+  reviewer: String
+  reviews: [String]
+
+  ozlifeId: ID!
+  ozlife: Ozlife @connection(fields: ["ozlifeId"])
+}
+
+type ChatRoomUser
+  @model
+  @key(name: "byUser", fields: ["userID", "chatRoomID"])
+  @key(name: "byChatRoom", fields: ["chatRoomID", "userID"]) {
+  id: ID!
+  userID: ID!
+  otherUserID: ID!
+  chatRoomID: ID!
+  user: User @connection(fields: ["userID"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+}
+
+type ChatRoom @model {
+  id: ID!
+  chatRoomUsers: [ChatRoomUser]
+    @connection(keyName: "byChatRoom", fields: ["id"])
+  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"])
+  lastMessageID: ID!
+  lastMessage: Message @connection(fields: ["lastMessageID"])
+  messagesCount: Int!
+}
+
+type Message
+  @model
+  @key(
+    name: "byChatRoom"
+    fields: ["chatRoomID", "createdAt"]
+    queryField: "messagesByChatRoom"
+  ) {
+  id: ID!
+  createdAt: String!
+  content: String!
+  userID: ID!
+  chatRoomID: ID!
+  user: User @connection(fields: ["userID"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+}
