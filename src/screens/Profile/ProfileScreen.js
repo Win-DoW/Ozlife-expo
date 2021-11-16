@@ -10,6 +10,10 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const [stores, setStores] = useState([1])
 
+  const goToSetting = () => {
+    navigation.navigate('ProfileSettingScreen');
+  }
+
   const profileMain = () => {
     return (
       <View style={styles.container}>
@@ -18,7 +22,7 @@ const ProfileScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 20, fontWeight: "bold", marginLeft: 20 }}>내 프로필</Text>
           </View>
           <View style={{ flex: 0.5, flexDirection: "row", justifyContent: "flex-end",}}>
-            <Pressable style={{ marginRight: 15 }}>
+            <Pressable style={{ marginRight: 15 }} onPress={goToSetting}>
               <Ionicons name="settings-outline" size={24} color="#777777" />
             </Pressable>
           </View>
