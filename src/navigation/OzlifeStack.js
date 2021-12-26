@@ -3,6 +3,22 @@ import * as React from 'react';
 
 import OzlifeScreen from '../screens/Ozlife/OzlifeScreen';
 
+import OzlifeDetailScreen from '../screens/Ozlife/OzlifeDetailScreen';
+import OzlifeManageScreen from '../screens/Ozlife/OzlifeManageScreen';
+import OzlifeMapScreen from '../screens/Ozlife/OzlifeMapScreen';
+import OzlifeProfileScreen from '../screens/Ozlife/OzlifeProfileScreen';
+import OzlifeTimeScreen from '../screens/Ozlife/OzlifeTimeScreen';
+
+import OzlifeWriteScreen from '../screens/Ozlife/OzlifeWriteScreen';
+import First from '../screens/Ozlife/OzlifeVisit/First';
+import Second from '../screens/Ozlife/OzlifeVisit/Second';
+import Third from '../screens/Ozlife/OzlifeVisit/Third';
+import Fourth from '../screens/Ozlife/OzlifeVisit/Fourth';
+import Fifth from '../screens/Ozlife/OzlifeVisit/Fifth';
+
+import CommentWriteScreen from '../screens/Ozlife/CommentWriteScreen';
+import CommentViewScreen from '../screens/Ozlife/CommentViewScreen';
+
 const Stack = createStackNavigator();
 
 const OzlifeStack = () => {
@@ -12,6 +28,110 @@ const OzlifeStack = () => {
             <Stack.Screen
                 name="OzlifeScreen"
                 component={OzlifeScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeDetailScreen"
+                component={OzlifeDetailScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeManageScreen"
+                component={OzlifeManageScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeMapScreen"
+                component={OzlifeMapScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeProfileScreen"
+                component={OzlifeProfileScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeTimeScreen"
+                component={OzlifeTimeScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeWriteScreen"
+                component={OzlifeWriteScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="First"
+                component={First}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="Second"
+                component={Second}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="Third"
+                component={Third}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="Fourth"
+                component={Fourth}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="Fifth"
+                component={Fifth}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="CommentWriteScreen"
+                component={CommentWriteScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="CommentViewScreen"
+                component={CommentViewScreen}
                 options={{
                     headerShown: false
                 }}

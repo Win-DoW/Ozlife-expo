@@ -6,7 +6,12 @@ type User @model {
   interest: String
   region: String
   image: String
+
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
+
+    
+  ozlifeItem: [OzlifeItem] @connection(keyName: "ozlifeByUser", fields: ["id"])
+  reviewItem: [ReviewItem] @connection(keyName: "reviewByUser", fields: ["id"])
 }
 
 type Store @model {

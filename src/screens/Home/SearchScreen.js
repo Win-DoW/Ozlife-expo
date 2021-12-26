@@ -62,7 +62,7 @@ const SearchScreen = ({ navigation,  route }) => {
         setStoresAll(stores => [...stores, newStore]);
       }))
 
-      await Promise.all(ozlifes.data.listOzlifes.items.map(async (item, idx) => {
+      await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
         const result = await Storage.get(item.images[0]);
         const newOzlife = {...item, images: result};
         setOzlifesAll(ozlifes => [...ozlifes, newOzlife]);
