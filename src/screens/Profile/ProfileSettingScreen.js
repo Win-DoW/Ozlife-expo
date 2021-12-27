@@ -53,6 +53,10 @@ const ProfileSettingScreen = ({ navigation, route }) => {
         navigation.navigate('SettingStoreManageScreen')
     }
 
+    const goToSettingNoti = () => {
+        navigation.navigate('SettingNotiScreen')
+    }
+
     const goToBack = () => {
         navigation.pop();
     }
@@ -82,7 +86,7 @@ const ProfileSettingScreen = ({ navigation, route }) => {
 
                 <ProfileSettingList text={'가게 관리'} press={goToStoreManage} style={{ marginTop: 17 }}/>
 
-                <ProfileSettingList text={'알림'} press={() => console.warn('3')} style={{ marginTop: 17 }}/>
+                <ProfileSettingList text={'알림'} press={goToSettingNoti} style={{ marginTop: 17 }}/>
 
                 <ProfileSettingList text={'게시글 미노출 사용자 관리'} style={{ borderWidth: 0, borderBottomWidth: 1, backgroundColor: '#efefef' }} />
 

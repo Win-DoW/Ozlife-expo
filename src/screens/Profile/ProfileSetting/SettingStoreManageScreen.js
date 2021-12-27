@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import * as ImagePicker from 'expo-image-picker';
 
+import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
+import { createStore } from '../../../graphql/mutations';
+
 const SettingStoreManageScreen = ({ navigation, route }) => {
+
+    const [inputError, setInputError] = useState(false);
+
+    const [userId, setUserId] = useState('');
 
     const [loading, setLoading] = useState(false);
     const [btnState, setBtnState] = useState(false);
@@ -20,9 +27,80 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
 
+    const ref_storeName = useRef();
+    const ref_storeProfile = useRef();
+    const ref_storeTel = useRef();
+    const ref_storeAddress = useRef();
+    const ref_storeLicense = useRef();
+    const ref_storeUrl = useRef();
+
+    useEffect(() => {
+        fetchUserKey();
+    }, [])
+
+    const fetchUserKey = async() => {
+        try {
+            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
+            setUserId(userKey.attributes.sub);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const goToBack = () => {
         navigation.pop()
+    }
+
+    const checkInputData = () => {
+        if (storeInfo.storeName != '' && storeInfo.storeProfile != '' && storeInfo.storeTel != '' && storeInfo.storeAddress != '' && storeInfo.storeLicense != '' && storeInfo.storeUrl != '' && images.length != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const checkAndRegister = async() => {
+        try {
+            if(checkInputData()) {
+                // 입력이 완료되어 가게 등록이 가능한 상태
+                setInputError(false);
+                setLoading(true);
+
+                // 이미지 처리
+                const keys = await Promise.all(images.map(async (image, idx) => {
+                    const photo = await fetch(image.uri)
+                    const photoBlob = await photo.blob();
+
+                    const result = await Storage.put(`${userId}/${storeInfo.storeName}/${idx}.jpg`, photoBlob, {
+                        contentType: 'image/jpeg',
+                    });
+
+                    return result.key;
+                }))
+
+                // 가게 생성
+                await API.graphql(graphqlOperation(createStore, {
+                    input: {
+                        owner: userId,
+                        name: storeInfo.storeName,
+                        profile: storeInfo.storeProfile,
+                        images: keys,
+                        tel: storeInfo.storeTel,
+                        address: storeInfo.storeAddress,
+                        license: storeInfo.storeLicense,
+                        url: storeInfo.storeUrl
+                    }
+                }))
+
+                setLoading(false);
+                navigation.pop();
+
+            } else {
+                setInputError(true);
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     const imagePicker = async () => {
@@ -59,7 +137,7 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
           >
             <Image
               style={{ height: 35, width: 35 }}
-              source={require("../../assets/images/icon-minus.png")}
+              source={require("../../../assets/images/icon-minus.png")}
             />
           </TouchableOpacity>
         </ImageBackground>
@@ -86,8 +164,8 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                         <Ionicons name="chevron-back-outline" size={32} color="#000000" />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>가게 정보</Text>
-                    <TouchableOpacity style={styles.headerCompleteBtn}>
-                        <Text style={styles.headerCompleteText}>완료</Text>
+                    <TouchableOpacity style={styles.headerCompleteBtn} onPress={btnState ? checkAndRegister : null}>
+                        <Text style={[styles.headerCompleteText, {color: btnState ? '#15b6f1' : '#dddddd'}]}>완료</Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView>
@@ -101,25 +179,36 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                                 <Text style={btnState ? styles.storeNoneExistText : styles.storeExistText}>아니오</Text>
                             </TouchableOpacity>
                         </View>
+                        {
+                            inputError ?
+                            <Text style={styles.errorText}>모든 항목을 입력해주세요.</Text>
+                            :
+                            null
+                        }
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 이름</Text>
                         <TextInput
+                            ref={ref_storeName}
                             style={styles.textinput}
                             placeholder="가게 이름을 적어주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeName': value})}
+                            onSubmitEditing={() => ref_storeProfile.current.focus()}
+                            returnKeyType="next"
                         />
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 설명</Text>
                         <TextInput
+                            ref={ref_storeProfile}
                             style={styles.textinput}
                             placeholder="가게 설명을 적어주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeProfile': value})}
+                            onSubmitEditing={() => Keyboard.dismiss()}
                         />
                     </View>
 
@@ -129,7 +218,7 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                             <View style={styles.imageview}>
                                 <Text style={styles.imageAddText}>사진추가</Text>
                                 <TouchableOpacity style={styles.imagePlusBtn} onPress={imagePicker}>
-                                    <Image style={{height: 35, width: 35}} source={require('../../assets/images/icon-plus.png')}/>
+                                    <Image style={{height: 35, width: 35}} source={require('../../../assets/images/icon-plus.png')}/>
                                 </TouchableOpacity>
                             </View>
                             <FlatList
@@ -145,40 +234,53 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>전화번호</Text>
                         <TextInput
+                            ref={ref_storeTel}
                             style={styles.textinput}
                             placeholder="전화번호를 입력해주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeTel': value})}
+                            onSubmitEditing={() => ref_storeAddress.current.focus()}
+                            returnKeyType='next'
+                            keyboardType='number-pad'
                         />
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 위치</Text>
                         <TextInput
+                            ref={ref_storeAddress}
                             style={styles.textinput}
                             placeholder="가게 위치를 입력해주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeAddress': value})}
+                            onSubmitEditing={() => ref_storeLicense.current.focus()}
+                            returnKeyType='next'
                         />
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>사업자등록증</Text>
                         <TextInput
+                            ref={ref_storeLicense}
                             style={styles.textinput}
                             placeholder="사업자등록번호를 입력하세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeLicense': value})}
+                            onSubmitEditing={() => ref_storeUrl.current.focus()}
+                            returnKeyType='next'
                         />
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 URL</Text>
                         <TextInput
+                            ref={ref_storeUrl}
                             style={styles.textinput}
                             placeholder="가게 URL을 입력해주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStoreInfo({...storeInfo, 'storeUrl': value})}
+                            onSubmitEditing={() => Keyboard.dismiss()}
+                            returnKeyType='done'
                         />
                     </View>
                 </ScrollView>
@@ -216,7 +318,6 @@ const styles = StyleSheet.create({
     headerCompleteText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#15b6f1'
     },
     formBox: {
         paddingHorizontal: 24,
@@ -297,6 +398,13 @@ const styles = StyleSheet.create({
     optionText: {
         fontSize: 14,
         color: '#AAAAAA'
+    },
+    errorText: {
+        fontSize: 12,
+        lineHeight: 24,
+        color: '#FF4444',
+        fontWeight: '400',
+        marginTop: 8
     }
 })
 

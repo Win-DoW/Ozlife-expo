@@ -3,8 +3,8 @@ import { View, Text, Pressable, SafeAreaView, StyleSheet, ScrollView, TextInput,
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { getUser } from '../../graphql/queries';
-import { updateUser } from '../../graphql/mutations'
+import { getUser } from '../../../graphql/queries'
+import { updateUser } from '../../../graphql/mutations'
 
 import RNPickerSelect from 'react-native-picker-select';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -152,7 +152,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                         <Text style={styles.formMainText}>프로필 이미지</Text>
                         <ImageBackground style={styles.image} imageStyle={{ borderRadius: 100}} source={{ uri: checkFile() ? file : userData.get_image }}>
                             <Pressable onPress={imagePicker}>
-                                <Image style={{height: 24, width: 24}} source={require('../../assets/images/icon-plus.png')}/>
+                                <Image style={{height: 24, width: 24}} source={require('../../../assets/images/icon-plus.png')}/>
                             </Pressable>
                         </ImageBackground>
                     </View>
