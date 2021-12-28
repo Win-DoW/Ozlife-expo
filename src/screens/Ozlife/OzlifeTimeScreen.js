@@ -2,14 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 
 import { API, graphqlOperation, Auth } from 'aws-amplify';
-
-import { listUsers } from '../../graphql/queries';
 import { createReview } from '../../graphql/mutations';
 
 const OzlifeTimeScreen = ({ navigation, route }) => {
 
-    const [loading, setLoading] = useState(false); 
-    const [user, setUser] = useState({});
     const ozlife = route.params.ozlife;
     const toDay = {
         0 : '월',
@@ -20,62 +16,32 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
         5 : '금',
         6 : '토',
     };
-    const [year, setYear] = useState('');
-    const [month, setMonth] = useState('');
-    const [date, setDate] = useState('');
-    const [day, setDay] = useState('');
-    const [time, setTime] = useState('');
 
-    useEffect(() => {
-        fetchUser();
-        const visit_date = new Date(ozlife.visit_date);
+    const visit_date = new Date(ozlife.visit_date);
 
-        setYear(visit_date.getFullYear());
-        setMonth(visit_date.getMonth()+1);
-        setDate(visit_date.getDate());
-        setDay(toDay[visit_date.getDay()])
+    const year = visit_date.getFullYear();
+    const month = visit_date.getMonth()+1;
+    const date = visit_date.getDate();
+    const day = toDay[visit_date.getDay()];
 
-        const hours = visit_date.getHours();
-        const minutes = visit_date.getMinutes();
-        const time = hours > 12 ? `오후 ${hours-12}:${minutes} ` : `오전 ${hours}:${minutes} `;
-        setTime(time);
-
-        console.log(visit_date);
-    }, []);
-
-    const fetchUser = async () => {
-        try {
-            setLoading(true);
-
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            const user = await API.graphql(graphqlOperation(listUsers, { filter: { id: { eq: userKey.attributes.sub }}}));
-
-            setUser(user.data.listUsers.items[0]);
-            setLoading(false);
-
-        } catch (e) {
-            setLoading(false);
-            console.log(e);
-        }
-    }
+    const hours = visit_date.getHours();
+    const minutes = visit_date.getMinutes();
+    const time = hours > 12 ? `오후 ${hours-12}:${minutes} ` : `오전 ${hours}:${minutes} `;
 
     const next = async () => {
         try {
-            setLoading(true);
+            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
       
             await API.graphql(graphqlOperation(createReview, { input: {
-                reviewer: userId,
-                ozlifeId: ozlife.id
+                userID: userKey.attributes.sub,
+                ozlifeID: ozlife.id
             }}));
-      
-            setLoading(false);
 
-            navigation.navigate("OzlifeProfile", {
-                ozlifeId: ozlife.id
+            navigation.navigate("OzlifeProfileScreen", {
+                ozlife: ozlife
             })
            
           } catch (e) {
-            setLoading(false);
             console.log(e);
         }
     }

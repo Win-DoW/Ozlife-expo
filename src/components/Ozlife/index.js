@@ -12,19 +12,21 @@ const Ozlife = ({ ozlife, userId }) => {
     const currentDate = new Date().toLocaleString('ko-KR');
 
     const goToOzlifeProfile = () => {
-        navigation.navigate("OzlifeProfile", {
-            ozlifeId: ozlife.id
+        navigation.navigate("OzlifeProfileScreen", {
+            ozlife
         })
     }
 
     const goToOzlifeWrite = () => {
-        navigation.navigate("OzlifeWriteComment", {
-            ozlifeId: ozlife.id
+        navigation.navigate("CommentWriteScreen", {
+            ozlife
         })
     }
 
     const goToOzlifeManage = () => {
-        navigation.navigate("OzlifeManage")
+        navigation.navigate("OzlifeManageScreen", {
+            ozlife
+        })
     }
 
     return (

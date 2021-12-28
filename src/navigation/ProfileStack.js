@@ -8,8 +8,6 @@ import ProfileInformationEditScreen from '../screens/Profile/ProfileSetting/Prof
 import SettingStoreManageScreen from '../screens/Profile/ProfileSetting/SettingStoreManageScreen'
 import SettingNotiScreen from '../screens/Profile/ProfileSetting/SettingNotiScreen'
 
-import StoreProfileScreen from '../screens/Profile/StoreProfile/StoreProfileScreen'
-
 const Stack = createStackNavigator();
 
 const ProfileStack = () => {
@@ -51,14 +49,6 @@ const ProfileStack = () => {
             <Stack.Screen
                 name="SettingNotiScreen"
                 component={SettingNotiScreen}
-                options={{
-                    headerShown: false
-                }}
-            />
-
-            <Stack.Screen
-                name="StoreProfileScreen"
-                component={StoreProfileScreen}
                 options={{
                     headerShown: false
                 }}

@@ -1,20 +1,20 @@
 import React from 'react';
 import { Pressable, Text, View, Image, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Store = ({ store }) => {
     
     const navigation = useNavigation();
 
     const goToStoreProfile = () => {
-        navigation.navigate("StoreProfile", {
-            storeId: store.id,
-            ownerId: store.owner
+        navigation.navigate("StoreProfileScreen", {
+            store
         })
     }
 
     return (
-        <Pressable style={styles.container} onPress={goToStoreProfile}>
+        <Pressable style={styles.container} onPress={() => goToStoreProfile()}>
             <Image
                 source={{uri: store.images}}
                 style={styles.image}
@@ -24,10 +24,7 @@ const Store = ({ store }) => {
                 <Text numberOfLines={2} style={{fontSize: 14, marginTop: 2}}>{store.profile}</Text>
             </View>
             <View style={styles.press}>
-                <Image
-                    source={require('../../assets/next.png')}
-                    style={styles.button}
-                />
+                <Ionicons name="chevron-forward-outline" size={24} color="#000000" />
             </View>
         </Pressable>        
     );

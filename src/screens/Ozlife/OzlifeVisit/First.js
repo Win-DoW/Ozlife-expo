@@ -8,6 +8,8 @@ import styles from './styles';
 const First = ({ navigation, route }) => {
 
   const [images, setImages] = useState([]);
+  const [imageIdx, setImageIdx] = useState(0);
+
   const [inputs, setInputs] = useState({
     title: '',
     profile: '',
@@ -26,23 +28,20 @@ const First = ({ navigation, route }) => {
       console.log('error :', error);
     }
   }
-  
-  const imagePicker = () => {
-    ImagePicker.openPicker({
-      multiple: true
-    }).then(images => {
-      const data = images.map((image, idx) => {
-        let imageUri = Platform.OS === 'ios' ? `file:///${image.path}` : image.path;
-        let file = {
-          id: idx,
-          uri: imageUri,
-        }
-        return file;
-      })
-      console.log(data);
-      setImages(data);      
-    });      
-  }
+
+  const imagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImages([...images, {id: imageIdx, uri: result.uri}]);
+      setImageIdx(imageIdx + 1);
+    }
+  };
 
   const onRemove = id => e => {
     setImages(images.filter(image => image.id !== id));

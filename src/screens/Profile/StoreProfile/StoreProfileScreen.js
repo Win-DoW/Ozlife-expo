@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, ScrollView, Pressable } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -46,6 +46,12 @@ const StoreProfileScreen = ({ navigation, route }) => {
             setLoading(false)
             console.log(e)
         }
+    }
+
+    const request = () => {
+        navigation.navigate("OzlifeWriteScreen", {
+            store: storeData
+        })
     }
 
     const goToBack = () => {
@@ -187,6 +193,20 @@ const StoreProfileScreen = ({ navigation, route }) => {
                 //     ListHeaderComponent={FlatListHeader}
                 // />
             }
+
+            {
+            userData.id === storeData.owner ?
+
+            <Pressable style={styles.request} onPress={request}>
+                <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>오지랖 요청하기</Text>
+            </Pressable>
+
+            :
+
+            <Pressable style={styles.request}>
+                <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>채팅하기</Text>
+            </Pressable>
+            }
         </SafeAreaView>
     )
 }
@@ -278,7 +298,14 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: 14,
         fontWeight: '500'
-    }
+    },
+    request: {
+        width: '100%',
+        height: 60,
+        backgroundColor: '#15b6f1',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 })
 
 export default StoreProfileScreen;

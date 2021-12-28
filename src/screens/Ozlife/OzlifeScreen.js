@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
-import { getUser, listOzlives, listReviews } from '../../graphql/queries';
+import { getUser } from '../../graphql/custom';
 
 import Ozlife from '../../components/Ozlife';
 
@@ -13,8 +13,8 @@ const OzlifeScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);  
     const [tabState, setTabState] = useState(0);
     const [user, setUser] = useState({});
-    const [answers, setAnswers] = useState([]);
     const [questions, setQuestions] = useState([]);
+    const [answers, setAnswers] = useState([]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -27,27 +27,30 @@ const OzlifeScreen = ({ navigation, route }) => {
     const fetchData = async () => {
         try {      
             setLoading(true);
-            setQuestions([]);
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
-            const questions = await API.graphql(graphqlOperation(listOzlives, { filter: { owner: { eq: userKey.attributes.sub }}}));
-            const reviews = await API.graphql(graphqlOperation(listReviews, { filter: { reviewer: { eq: userKey.attributes.sub }}}));
 
             setUser(userData.data.getUser);
 
-            await Promise.all(questions.data.listOzlives.items.map(async (item, idx) => {
-                const result = await Storage.get(item.images[0]);
-                const newOzlife = {...item, images: result};
-                setQuestions(ozlifes => [...ozlifes, newOzlife]);
+            let questions = [];
+            await Promise.all(userData.data.getUser.storeItem.items.map(async (item, idx) => {
+                await Promise.all(item.ozlifeItem.items.map(async (item, idx) => {
+                    const result = await Storage.get(item.images[0]);
+                    const newOzlife = {...item, images: result};
+                    questions = [...questions, newOzlife];
+                }))
             }))
 
-            await Promise.all(reviews.data.listReviews.items.map(async (item, idx) => {
-                const ozlife = item.ozlife;
-                const result = await Storage.get(ozlife.images[0]);
-                const newOzlife = {...ozlife, images: result, reviews: item.reviews};
-                setAnswers(ozlifes => [...ozlifes, newOzlife]);
+            let answers = [];
+            await Promise.all(userData.data.getUser.reviewItem.items.map(async (item, idx) => {
+                const result = await Storage.get(item.ozlife.images[0]);
+                const newOzlife = {...item.ozlife, images: result};
+                answers = [...answers, newOzlife];
             }))
+
+            setQuestions(questions);
+            setAnswers(answers);
 
             setLoading(false);
 
@@ -94,24 +97,13 @@ const OzlifeScreen = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            { tabState === 0 &&
             <FlatList
                 ListHeaderComponent={Main}
-                data={answers}
+                data={tabState === 0 ? answers : questions}
                 renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
             />
-            }
-            { tabState === 1 &&
-            <FlatList
-                ListHeaderComponent={Main}
-                data={questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
-                keyExtractor={(item) => item.id}
-                ListEmptyComponent={NoData}
-            />
-            }
         </SafeAreaView>
     )
 };

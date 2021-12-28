@@ -21,7 +21,6 @@ const Fourth = ({ navigation, route }) => {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    currentDate.toLocaleString('ko-KR');
     setDate(currentDate);
 
     console.log(currentDate);

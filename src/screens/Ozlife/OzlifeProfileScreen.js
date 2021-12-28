@@ -1,36 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, FlatList, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
+import { listUsers } from '../../graphql/queries';
 
-import { listUsers, listOzlives } from '../../graphql/queries';
+const OzlifeProfileScreen = ({ route, navigation}) => {
 
-const OzlifeProfileScreen = (props) => {
-
-    const ozlifeId = props.route.params.ozlifeId;
+    const ozlife = route.params.ozlife;
+    const store = ozlife.store;
 
     const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [ozlife, setOzlife] = useState({});
+
     const [ozlifeImages, setOzlifeImages] = useState([]);
-    const [store, setStore] = useState({});
     const [owner, setOwner] = useState({});
     const [ownerImage, setOwnerImage] = useState('');
     const [date, setDate] = useState('');
-
-    const navigation = useNavigation();
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setOzlifeImages([]);
-            fetchData();
-        });
-    
-        return unsubscribe;
-    }, [navigation]);
 
     const goToPhoto1 = () => {
         navigation.navigate("StorePhoto", {
@@ -63,6 +50,14 @@ const OzlifeProfileScreen = (props) => {
             index: 0
         })
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            fetchData();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
     
     const fetchData = async () => {
         try {      
@@ -70,13 +65,8 @@ const OzlifeProfileScreen = (props) => {
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             setUserId(userKey.attributes.sub);
-        
-            const data = await API.graphql(graphqlOperation(listOzlives, { filter: { id: { eq: ozlifeId }}}));
-            const ozlife = data.data.listOzlives.items[0]
 
-            setOzlife(ozlife);
             setDate(ozlife.visit_date.toString().slice(0,10));
-            setStore(ozlife.store);
                       
             await Promise.all(ozlife.images.map(async (item, idx) => {
                 const result = await Storage.get(item);
@@ -97,8 +87,8 @@ const OzlifeProfileScreen = (props) => {
     }
 
     const next = () => {
-        navigation.navigate("OzlifeMap", {
-            ozlife,
+        navigation.navigate("OzlifeMapScreen", {
+            ozlife
         })
     }
 
@@ -242,8 +232,12 @@ const OzlifeProfileScreen = (props) => {
 
             </ScrollView>
 
-            {userId === owner.id ?
-            <Pressable style={styles.button}>
+            {userId === ozlife.owner ?
+            <Pressable style={styles.button} 
+                onPress={() => navigation.navigate("OzlifeManageScreen", {
+                    ozlife
+                })}
+            >
                 <Text style={styles.buttontext}>오지랖 관리하기</Text>
             </Pressable>
             :

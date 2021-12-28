@@ -21,6 +21,8 @@ const Fifth = ({ navigation, route }) => {
     try {
       setLoading(true);
 
+      console.log(ex)
+
       const keys = await Promise.all(ex.images.map(async (image, idx) => {
         const photo = await fetch(image.uri);
         const photoBlob = await photo.blob();
@@ -43,10 +45,15 @@ const Fifth = ({ navigation, route }) => {
       
       setLoading(false);
 
-      navigation.navigate("OzlifeProfile", {
-          ozlifeId: ozlife.data.createOzlife.id
-      });
-     
+      navigation.reset({routes: [
+        {
+          name: 'OzlifeProfileScreen',
+          params: { 
+            ozlife: ozlife.data.createOzlife
+          }
+        },
+      ]});
+
     } catch (e) {
       setLoading(false);
       console.log(e);
