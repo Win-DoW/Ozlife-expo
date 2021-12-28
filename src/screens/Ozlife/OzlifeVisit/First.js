@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, FlatList, Text, Pressable, ScrollView, TextInput, ImageBackground, Image, SafeAreaView, TouchableOpacity } from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
+import * as ImagePicker from 'expo-image-picker';
 import RNPickerSelect from 'react-native-picker-select';
 
 import styles from './styles';

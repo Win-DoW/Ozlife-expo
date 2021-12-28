@@ -198,7 +198,7 @@ const OzlifeProfileScreen = (props) => {
 
                     <View style={styles.line}>
                         <Image
-                            source={require('../../../assets/images/icon-callnum.png')}
+                            source={require('../../assets/images/icon-callnum.png')}
                             style={{width: 16, height: 16, marginHorizontal: 8}}
                         />
                         <Text>{store.tel}</Text>
@@ -206,7 +206,7 @@ const OzlifeProfileScreen = (props) => {
 
                     <View style={styles.line}>
                         <Image
-                            source={require('../../../assets/images/icon-location.png')}
+                            source={require('../../assets/images/icon-location.png')}
                             style={{width: 16, height: 16, marginHorizontal: 8}}
                         />
                         <Text>{store.address}</Text>
@@ -217,19 +217,19 @@ const OzlifeProfileScreen = (props) => {
                         <View style={{flexDirection: 'row', marginBottom: 60}}>
                             <Pressable>
                                 <Image
-                                    source={require('../../../assets/images/kakao-logo.png')}
+                                    source={require('../../assets/images/kakao-logo.png')}
                                     style={{width: 40, height: 40, marginRight: 8}}
                                 />
                             </Pressable>
                             <Pressable>
                                 <Image
-                                    source={require('../../../assets/images/naver-logo.png')}
+                                    source={require('../../assets/images/naver-logo.png')}
                                     style={{width: 40, height: 40, marginRight: 8}}
                                 />
                             </Pressable>
                             <Pressable>
                                 <Image
-                                    source={require('../../../assets/images/bamin-logo.png')}
+                                    source={require('../../assets/images/bamin-logo.png')}
                                     style={{width: 40, height: 40, marginRight: 8}}
                                 />
                             </Pressable>

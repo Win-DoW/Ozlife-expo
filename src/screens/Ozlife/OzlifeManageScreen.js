@@ -49,7 +49,7 @@ const OzlifeManageScreen = () => {
                 </Pressable>
                 <View style={{height: '100%', flex: 1, flexDirection: 'row', paddingLeft: 36}}>
                     <Image
-                        source={require('../../../assets/dog1.jpg')}
+                        source={require('../../assets/dog1.jpg')}
                         style={styles.profileImage}
                     />
                     <View style={styles.profileTextBox}>

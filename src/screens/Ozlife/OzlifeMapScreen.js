@@ -1,78 +1,96 @@
 import React, { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const OzlifeMapScreen = ({ navigation, route }) => {
 
-  const [loading, setLoading] = useState(false);
-  const [distance, setDistance] = useState('');
-
   const ozlife = route.params.ozlife;
   const store = route.params.ozlife.store;
 
+  const [loading, setLoading] = useState(false);
+  const [distance, setDistance] = useState('');
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
   useEffect(() => {
-    setLoading(true);
-    requestLocationPermission();
-    setLoading(false);
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
   }, []);
 
-  function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
-    function deg2rad(deg) { 
-      return deg * (Math.PI/180);
-    }
-
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2-lat1); // deg2rad below 
-    var dLon = deg2rad(lng2-lng1); 
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    var d = R * c; // Distance in km
-
-    if (d < 1) {
-      return Math.round(d * 1000) + 'm';
-    } else {
-      return Math.round(d * 10)/10 + 'km';
-    }
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
   }
 
 
-  const requestLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      getLocation();
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Location Access Required',
-            message: 'This App needs to Access your location',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          getLocation();
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-  };
+  // function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
+  //   function deg2rad(deg) { 
+  //     return deg * (Math.PI/180);
+  //   }
 
-  const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setDistance(getDistanceFromLatLonInKm(position.coords.latitude, position.coords.longitude, store.latitude, store.longitude));
-      },
-      (error) => {
-        console.warn(error);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 30000,
-        maximumAge: 1000
-      },
-    );
-  };
+  //   var R = 6371; // Radius of the earth in km
+  //   var dLat = deg2rad(lat2-lat1); // deg2rad below 
+  //   var dLon = deg2rad(lng2-lng1); 
+  //   var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+  //   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  //   var d = R * c; // Distance in km
+
+  //   if (d < 1) {
+  //     return Math.round(d * 1000) + 'm';
+  //   } else {
+  //     return Math.round(d * 10)/10 + 'km';
+  //   }
+  // }
+
+
+  // const requestLocationPermission = async () => {
+  //   if (Platform.OS === 'ios') {
+  //     getLocation();
+  //   } else {
+  //     try {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //         {
+  //           title: 'Location Access Required',
+  //           message: 'This App needs to Access your location',
+  //         },
+  //       );
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         getLocation();
+  //       }
+  //     } catch (err) {
+  //       console.warn(err);
+  //     }
+  //   }
+  // };
+
+  // const getLocation = () => {
+  //   Geolocation.getCurrentPosition(
+  //     (position) => {
+  //       setDistance(getDistanceFromLatLonInKm(position.coords.latitude, position.coords.longitude, store.latitude, store.longitude));
+  //     },
+  //     (error) => {
+  //       console.warn(error);
+  //     },
+  //     {
+  //       enableHighAccuracy: false,
+  //       timeout: 30000,
+  //       maximumAge: 1000
+  //     },
+  //   );
+  // };
 
   const next = () => {
     navigation.navigate("OzlifeTime", {
