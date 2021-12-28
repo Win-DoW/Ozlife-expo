@@ -1,4 +1,6 @@
-type User @model {
+type User
+  @model
+{
   id: ID!
   email: String!
   nickname: String
@@ -8,14 +10,16 @@ type User @model {
   image: String
 
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
-
-    
-  ozlifeItem: [OzlifeItem] @connection(keyName: "ozlifeByUser", fields: ["id"])
-  reviewItem: [ReviewItem] @connection(keyName: "reviewByUser", fields: ["id"])
+  reviewItem: [Review] @connection(keyName: "reviewByUser", fields: ["id"])
+  storeItem: [Store] @connection(keyName: "storeByUser", fields: ["id"])
 }
 
-type Store @model {
+type Store
+  @model
+  @key(name: "storeByUser", fields: ["userID", "createdAt"])
+{
   id: ID!
+  userID: ID!
   owner: String!
   name: String!
   profile: String
@@ -26,11 +30,15 @@ type Store @model {
   url: String
   longitude: Float
   latitude: Float
+  createdAt: String
 
-  ozlifes: [Ozlife] @connection(keyName: "byStore", fields: ["id"])
+  ozlifeItem: [Ozlife] @connection(keyName: "byStore", fields: ["id"])
 }
 
-type Ozlife @model @key(name: "byStore", fields: ["storeId"]) {
+type Ozlife
+  @model
+  @key(name: "byStore", fields: ["storeID"])
+{
   id: ID!
   owner: String
   title: String
@@ -47,25 +55,31 @@ type Ozlife @model @key(name: "byStore", fields: ["storeId"]) {
   promotion: String
   address: String
 
-  storeId: ID!
-  store: Store @connection(fields: ["storeId"])
+  storeID: ID!
+  store: Store @connection(fields: ["storeID"])
 
-  reviews: [Review] @connection(keyName: "byOzlife", fields: ["id"])
+  reviewItem: [Review] @connection(keyName: "byOzlife", fields: ["id"])
 }
 
-type Review @model @key(name: "byOzlife", fields: ["ozlifeId"]) {
+type Review
+  @model
+  @key(name: "byOzlife", fields: ["ozlifeID"])
+  @key(name: "reviewByUser", fields: ["userID", "createdAt"])
+{
   id: ID!
+  ozlifeID: ID!
+  userID : ID!
   reviewer: String
   reviews: [String]
-
-  ozlifeId: ID!
-  ozlife: Ozlife @connection(fields: ["ozlifeId"])
+  createdAt: String
+  ozlife: Ozlife @connection(fields: ["ozlifeID"])
 }
 
 type ChatRoomUser
   @model
   @key(name: "byUser", fields: ["userID", "chatRoomID"])
-  @key(name: "byChatRoom", fields: ["chatRoomID", "userID"]) {
+  @key(name: "byChatRoom", fields: ["chatRoomID", "userID"])
+{
   id: ID!
   userID: ID!
   otherUserID: ID!
@@ -74,7 +88,9 @@ type ChatRoomUser
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
 }
 
-type ChatRoom @model {
+type ChatRoom
+  @model
+{
   id: ID!
   chatRoomUsers: [ChatRoomUser]
     @connection(keyName: "byChatRoom", fields: ["id"])
@@ -90,7 +106,8 @@ type Message
     name: "byChatRoom"
     fields: ["chatRoomID", "createdAt"]
     queryField: "messagesByChatRoom"
-  ) {
+  )
+{
   id: ID!
   createdAt: String!
   content: String!

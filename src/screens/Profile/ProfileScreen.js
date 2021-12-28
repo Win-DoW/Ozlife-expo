@@ -6,9 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { getUser } from '../../graphql/queries'
 
-import ProfileRegisterStore from '../../components/ProfileRegisterStore';
-
-import StoreInfoData from '../../data/StoreInfoData';
+import ProfileRegisterStore from '../../components/ProfileComponents/ProfileRegisterStore';
 
 const ProfileScreen = ({ navigation, route }) => {
 
@@ -21,7 +19,7 @@ const ProfileScreen = ({ navigation, route }) => {
   }, [navigation])
 
   const [userData, setUserData] = useState({})
-  const [stores, setStores] = useState([1])
+  const [stores, setStores] = useState([])
   const [loading, setLoading] = useState(false);
 
   const fetchUserData = async() => {
@@ -34,6 +32,7 @@ const ProfileScreen = ({ navigation, route }) => {
       const image = await Storage.get(user.data.getUser.image)  
       user.data.getUser.image = image
       setUserData(user.data.getUser)
+      setStores(user.data.getUser.storeItem.items)
       setLoading(false)
     } catch (e) {
       setLoading(false)
@@ -118,8 +117,8 @@ const ProfileScreen = ({ navigation, route }) => {
       </View>
       <FlatList
         ListHeaderComponent={profileMain}
-        data={StoreInfoData}
-        renderItem={({ item }) => <ProfileRegisterStore store={item} />}
+        data={stores}
+        renderItem={({ item }) => <ProfileRegisterStore store={item} navigation={navigation}/>}
         keyExtractor={(item) => item.id}
         style={{ marginBottom: 25 }}
       />
@@ -177,6 +176,9 @@ const styles = StyleSheet.create({
   },
   storeinfo: {
     marginHorizontal: 20
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
 });
 

@@ -22,6 +22,37 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
+      reviewItem {
+        items {
+          id
+          ozlifeID
+          userID
+          reviewer
+          reviews
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      storeItem {
+        items {
+          id
+          userID
+          owner
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -43,6 +74,37 @@ export const onUpdateUser = /* GraphQL */ `
           userID
           otherUserID
           chatRoomID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      reviewItem {
+        items {
+          id
+          ozlifeID
+          userID
+          reviewer
+          reviews
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      storeItem {
+        items {
+          id
+          userID
+          owner
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
           createdAt
           updatedAt
         }
@@ -74,6 +136,37 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      reviewItem {
+        items {
+          id
+          ozlifeID
+          userID
+          reviewer
+          reviews
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      storeItem {
+        items {
+          id
+          userID
+          owner
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -83,6 +176,7 @@ export const onCreateStore = /* GraphQL */ `
   subscription OnCreateStore {
     onCreateStore {
       id
+      userID
       owner
       name
       profile
@@ -93,7 +187,8 @@ export const onCreateStore = /* GraphQL */ `
       url
       longitude
       latitude
-      ozlifes {
+      createdAt
+      ozlifeItem {
         items {
           id
           owner
@@ -110,13 +205,12 @@ export const onCreateStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          storeId
+          storeID
           createdAt
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -125,6 +219,7 @@ export const onUpdateStore = /* GraphQL */ `
   subscription OnUpdateStore {
     onUpdateStore {
       id
+      userID
       owner
       name
       profile
@@ -135,7 +230,8 @@ export const onUpdateStore = /* GraphQL */ `
       url
       longitude
       latitude
-      ozlifes {
+      createdAt
+      ozlifeItem {
         items {
           id
           owner
@@ -152,13 +248,12 @@ export const onUpdateStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          storeId
+          storeID
           createdAt
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -167,6 +262,7 @@ export const onDeleteStore = /* GraphQL */ `
   subscription OnDeleteStore {
     onDeleteStore {
       id
+      userID
       owner
       name
       profile
@@ -177,7 +273,8 @@ export const onDeleteStore = /* GraphQL */ `
       url
       longitude
       latitude
-      ozlifes {
+      createdAt
+      ozlifeItem {
         items {
           id
           owner
@@ -194,13 +291,12 @@ export const onDeleteStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          storeId
+          storeID
           createdAt
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -223,9 +319,10 @@ export const onCreateOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      storeId
+      storeID
       store {
         id
+        userID
         owner
         name
         profile
@@ -236,18 +333,19 @@ export const onCreateOzlife = /* GraphQL */ `
         url
         longitude
         latitude
-        ozlifes {
+        createdAt
+        ozlifeItem {
           nextToken
         }
-        createdAt
         updatedAt
       }
-      reviews {
+      reviewItem {
         items {
           id
+          ozlifeID
+          userID
           reviewer
           reviews
-          ozlifeId
           createdAt
           updatedAt
         }
@@ -276,9 +374,10 @@ export const onUpdateOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      storeId
+      storeID
       store {
         id
+        userID
         owner
         name
         profile
@@ -289,18 +388,19 @@ export const onUpdateOzlife = /* GraphQL */ `
         url
         longitude
         latitude
-        ozlifes {
+        createdAt
+        ozlifeItem {
           nextToken
         }
-        createdAt
         updatedAt
       }
-      reviews {
+      reviewItem {
         items {
           id
+          ozlifeID
+          userID
           reviewer
           reviews
-          ozlifeId
           createdAt
           updatedAt
         }
@@ -329,9 +429,10 @@ export const onDeleteOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      storeId
+      storeID
       store {
         id
+        userID
         owner
         name
         profile
@@ -342,18 +443,19 @@ export const onDeleteOzlife = /* GraphQL */ `
         url
         longitude
         latitude
-        ozlifes {
+        createdAt
+        ozlifeItem {
           nextToken
         }
-        createdAt
         updatedAt
       }
-      reviews {
+      reviewItem {
         items {
           id
+          ozlifeID
+          userID
           reviewer
           reviews
-          ozlifeId
           createdAt
           updatedAt
         }
@@ -368,9 +470,11 @@ export const onCreateReview = /* GraphQL */ `
   subscription OnCreateReview {
     onCreateReview {
       id
+      ozlifeID
+      userID
       reviewer
       reviews
-      ozlifeId
+      createdAt
       ozlife {
         id
         owner
@@ -387,9 +491,10 @@ export const onCreateReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        storeId
+        storeID
         store {
           id
+          userID
           owner
           name
           profile
@@ -403,13 +508,12 @@ export const onCreateReview = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        reviews {
+        reviewItem {
           nextToken
         }
         createdAt
         updatedAt
       }
-      createdAt
       updatedAt
     }
   }
@@ -418,9 +522,11 @@ export const onUpdateReview = /* GraphQL */ `
   subscription OnUpdateReview {
     onUpdateReview {
       id
+      ozlifeID
+      userID
       reviewer
       reviews
-      ozlifeId
+      createdAt
       ozlife {
         id
         owner
@@ -437,9 +543,10 @@ export const onUpdateReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        storeId
+        storeID
         store {
           id
+          userID
           owner
           name
           profile
@@ -453,13 +560,12 @@ export const onUpdateReview = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        reviews {
+        reviewItem {
           nextToken
         }
         createdAt
         updatedAt
       }
-      createdAt
       updatedAt
     }
   }
@@ -468,9 +574,11 @@ export const onDeleteReview = /* GraphQL */ `
   subscription OnDeleteReview {
     onDeleteReview {
       id
+      ozlifeID
+      userID
       reviewer
       reviews
-      ozlifeId
+      createdAt
       ozlife {
         id
         owner
@@ -487,9 +595,10 @@ export const onDeleteReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        storeId
+        storeID
         store {
           id
+          userID
           owner
           name
           profile
@@ -503,13 +612,12 @@ export const onDeleteReview = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        reviews {
+        reviewItem {
           nextToken
         }
         createdAt
         updatedAt
       }
-      createdAt
       updatedAt
     }
   }
@@ -530,6 +638,12 @@ export const onCreateChatRoomUser = /* GraphQL */ `
         region
         image
         chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
           nextToken
         }
         createdAt
@@ -579,6 +693,12 @@ export const onUpdateChatRoomUser = /* GraphQL */ `
         chatRoomUser {
           nextToken
         }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -624,6 +744,12 @@ export const onDeleteChatRoomUser = /* GraphQL */ `
         region
         image
         chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
           nextToken
         }
         createdAt
@@ -851,6 +977,12 @@ export const onCreateMessage = /* GraphQL */ `
         chatRoomUser {
           nextToken
         }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -898,6 +1030,12 @@ export const onUpdateMessage = /* GraphQL */ `
         chatRoomUser {
           nextToken
         }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -943,6 +1081,12 @@ export const onDeleteMessage = /* GraphQL */ `
         region
         image
         chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
           nextToken
         }
         createdAt
