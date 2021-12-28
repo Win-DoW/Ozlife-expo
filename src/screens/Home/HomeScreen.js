@@ -3,21 +3,9 @@ import {Auth} from 'aws-amplify';
 import { PermissionsAndroid, Platform, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, Text, TextInput, SafeAreaView, TouchableOpacity, Image, StyleSheet, Modal, Pressable } from 'react-native';
 
 const HomeScreen = ({ navigation, route }) => {
-  
-  async function signOut() {
-    try {
-      await Auth.signOut();
-      navigation.reset({routes: [{name: 'AuthNavi'}]});
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={signOut} style={{...styles.section, marginTop: 20}}>
-        <Text style={{...styles.midText, color: 'red'}}>로그아웃</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   )
 }
