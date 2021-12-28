@@ -81,6 +81,7 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                 // 가게 생성
                 await API.graphql(graphqlOperation(createStore, {
                     input: {
+                        userID: userId,
                         owner: userId,
                         name: storeInfo.storeName,
                         profile: storeInfo.storeProfile,
@@ -122,8 +123,6 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
     }
 
     const SettingStoreImage = ({ data }) => {
-
-      console.log(data)
 
       return (
         <ImageBackground
