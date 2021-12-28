@@ -18,6 +18,8 @@ const MainNavi = () => {
                 }} 
             />
 
+            
+
         </Stack.Navigator>
     );
 }
