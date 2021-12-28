@@ -195,31 +195,19 @@ const SearchScreen = ({ navigation,  route }) => {
       </View>
 
       <View style={styles.container}>
-        { tabState === 0 &&
         <FlatList
-          data={ozlifes}
-          renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
+          data={ tabState === 0 ? ozlifes : tabState === 1 ? users : stores }
+          renderItem={({item}) => 
+            tabState === 0 ?
+            <Ozlife ozlife={item} userId={user.id} />
+            : tabState === 1 ?
+            <Ozlifer user={item} />
+            :
+            <Store store={item} />
+          }
           keyExtractor={(item) => item.id}
           ListEmptyComponent={nothing}
         />
-        }
-        { tabState === 1 &&
-        <FlatList
-          data={users}
-          renderItem={({item}) => <Ozlifer user={item} />}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={nothing}
-        />
-        }
-        { tabState === 2 &&
-        <FlatList
-          data={stores}
-          renderItem={({item}) => <Store store={item} />}
-          keyExtractor={(item) => item.id}
-          style={{marginBottom: 25}}
-          ListEmptyComponent={nothing}
-        />
-        }
       </View>
       
     </SafeAreaView>
