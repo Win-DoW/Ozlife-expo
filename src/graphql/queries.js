@@ -27,7 +27,6 @@ export const getUser = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -205,7 +204,6 @@ export const getOzlife = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -273,7 +271,6 @@ export const getReview = /* GraphQL */ `
       id
       ozlifeID
       userID
-      reviewer
       reviews
       createdAt
       ozlife {
@@ -330,7 +327,6 @@ export const listReviews = /* GraphQL */ `
         id
         ozlifeID
         userID
-        reviewer
         reviews
         createdAt
         ozlife {

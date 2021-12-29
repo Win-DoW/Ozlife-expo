@@ -27,7 +27,6 @@ export const onCreateUser = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -84,7 +83,6 @@ export const onUpdateUser = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -141,7 +139,6 @@ export const onDeleteUser = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -344,7 +341,6 @@ export const onCreateOzlife = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -399,7 +395,6 @@ export const onUpdateOzlife = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -454,7 +449,6 @@ export const onDeleteOzlife = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt
@@ -472,7 +466,6 @@ export const onCreateReview = /* GraphQL */ `
       id
       ozlifeID
       userID
-      reviewer
       reviews
       createdAt
       ozlife {
@@ -524,7 +517,6 @@ export const onUpdateReview = /* GraphQL */ `
       id
       ozlifeID
       userID
-      reviewer
       reviews
       createdAt
       ozlife {
@@ -576,7 +568,6 @@ export const onDeleteReview = /* GraphQL */ `
       id
       ozlifeID
       userID
-      reviewer
       reviews
       createdAt
       ozlife {

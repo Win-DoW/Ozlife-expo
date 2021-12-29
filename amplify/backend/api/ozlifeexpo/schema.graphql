@@ -67,8 +67,8 @@ type Review
   @key(name: "reviewByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
-  ozlifeID: String
-  userID : String
+  ozlifeID: ID!
+  userID : ID!
   reviews: [String]
   createdAt: String
   ozlife: Ozlife @connection(fields: ["ozlifeID"])
