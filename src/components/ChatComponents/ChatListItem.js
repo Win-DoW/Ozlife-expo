@@ -7,14 +7,12 @@ import {
     Storage
 } from 'aws-amplify';
 
-const ChatListItem = (props) => {
-
-    const { chatRoom, image } = props // 현재 연결되어 있는 채팅방에 대한 정보
+const ChatListItem = ({ chatRoom, image }) => {
 
     const [myId, setMyId] = useState(null) // 상대방과 구분되는 나의 ID를 저장
     const [pressIn, setPressIn] = useState(false);
-    const [profileImage, setProfileImage] = useState(null); // 나와 채팅하고자 하는 상대방 프로필 사진
-    const [otherUser, setOtherUser] = useState(null); // 나와 채팅하고자 하는 다른 상대방에 대한 정보 저장
+    const [profileImage, setProfileImage] = useState(''); // 나와 채팅하고자 하는 상대방 프로필 사진
+    const [otherUser, setOtherUser] = useState(''); // 나와 채팅하고자 하는 다른 상대방에 대한 정보 저장
 
     useEffect(() => {
         const getOtherUser = async () => {
@@ -50,7 +48,7 @@ const ChatListItem = (props) => {
     const navigation = useNavigation();
 
     const goToChatRoom = () => {
-        navigation.navigate("ChatRoom" , {
+        navigation.navigate("ChatRoomScreen" , {
             id: chatRoom.id,
             name: otherUser.nickname,
             image: profileImage,
