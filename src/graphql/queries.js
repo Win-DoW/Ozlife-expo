@@ -25,10 +25,10 @@ export const getUser = /* GraphQL */ `
       reviewItem {
         items {
           id
-          ozlifeID
-          userID
           reviews
           createdAt
+          ozlifeID
+          userID
           updatedAt
         }
         nextToken
@@ -36,8 +36,6 @@ export const getUser = /* GraphQL */ `
       storeItem {
         items {
           id
-          userID
-          owner
           name
           profile
           images
@@ -48,6 +46,30 @@ export const getUser = /* GraphQL */ `
           longitude
           latitude
           createdAt
+          userID
+          updatedAt
+        }
+        nextToken
+      }
+      ozlifeItem {
+        items {
+          id
+          title
+          profile
+          images
+          section
+          tag
+          question
+          member
+          visit_date
+          name
+          original_price
+          discount_price
+          promotion
+          address
+          createdAt
+          storeID
+          userID
           updatedAt
         }
         nextToken
@@ -81,6 +103,9 @@ export const listUsers = /* GraphQL */ `
         storeItem {
           nextToken
         }
+        ozlifeItem {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -92,8 +117,6 @@ export const getStore = /* GraphQL */ `
   query GetStore($id: ID!) {
     getStore(id: $id) {
       id
-      userID
-      owner
       name
       profile
       images
@@ -104,10 +127,33 @@ export const getStore = /* GraphQL */ `
       longitude
       latitude
       createdAt
+      userID
+      user {
+        id
+        email
+        nickname
+        profile
+        interest
+        region
+        image
+        chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
+        ozlifeItem {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       ozlifeItem {
         items {
           id
-          owner
           title
           profile
           images
@@ -121,8 +167,9 @@ export const getStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          storeID
           createdAt
+          storeID
+          userID
           updatedAt
         }
         nextToken
@@ -140,8 +187,6 @@ export const listStores = /* GraphQL */ `
     listStores(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        userID
-        owner
         name
         profile
         images
@@ -152,6 +197,18 @@ export const listStores = /* GraphQL */ `
         longitude
         latitude
         createdAt
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          createdAt
+          updatedAt
+        }
         ozlifeItem {
           nextToken
         }
@@ -165,7 +222,6 @@ export const getOzlife = /* GraphQL */ `
   query GetOzlife($id: ID!) {
     getOzlife(id: $id) {
       id
-      owner
       title
       profile
       images
@@ -179,11 +235,10 @@ export const getOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
+      createdAt
       storeID
       store {
         id
-        userID
-        owner
         name
         profile
         images
@@ -194,23 +249,58 @@ export const getOzlife = /* GraphQL */ `
         longitude
         latitude
         createdAt
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          createdAt
+          updatedAt
+        }
         ozlifeItem {
           nextToken
         }
         updatedAt
       }
+      userID
+      user {
+        id
+        email
+        nickname
+        profile
+        interest
+        region
+        image
+        chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
+        ozlifeItem {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       reviewItem {
         items {
           id
-          ozlifeID
-          userID
           reviews
           createdAt
+          ozlifeID
+          userID
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -224,7 +314,6 @@ export const listOzlives = /* GraphQL */ `
     listOzlives(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        owner
         title
         profile
         images
@@ -238,11 +327,10 @@ export const listOzlives = /* GraphQL */ `
         discount_price
         promotion
         address
+        createdAt
         storeID
         store {
           id
-          userID
-          owner
           name
           profile
           images
@@ -253,12 +341,24 @@ export const listOzlives = /* GraphQL */ `
           longitude
           latitude
           createdAt
+          userID
+          updatedAt
+        }
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          createdAt
           updatedAt
         }
         reviewItem {
           nextToken
         }
-        createdAt
         updatedAt
       }
       nextToken
@@ -269,13 +369,11 @@ export const getReview = /* GraphQL */ `
   query GetReview($id: ID!) {
     getReview(id: $id) {
       id
-      ozlifeID
-      userID
       reviews
       createdAt
+      ozlifeID
       ozlife {
         id
-        owner
         title
         profile
         images
@@ -289,11 +387,10 @@ export const getReview = /* GraphQL */ `
         discount_price
         promotion
         address
+        createdAt
         storeID
         store {
           id
-          userID
-          owner
           name
           profile
           images
@@ -304,9 +401,45 @@ export const getReview = /* GraphQL */ `
           longitude
           latitude
           createdAt
+          userID
+          updatedAt
+        }
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          createdAt
           updatedAt
         }
         reviewItem {
+          nextToken
+        }
+        updatedAt
+      }
+      userID
+      user {
+        id
+        email
+        nickname
+        profile
+        interest
+        region
+        image
+        chatRoomUser {
+          nextToken
+        }
+        reviewItem {
+          nextToken
+        }
+        storeItem {
+          nextToken
+        }
+        ozlifeItem {
           nextToken
         }
         createdAt
@@ -325,13 +458,11 @@ export const listReviews = /* GraphQL */ `
     listReviews(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        ozlifeID
-        userID
         reviews
         createdAt
+        ozlifeID
         ozlife {
           id
-          owner
           title
           profile
           images
@@ -345,7 +476,20 @@ export const listReviews = /* GraphQL */ `
           discount_price
           promotion
           address
+          createdAt
           storeID
+          userID
+          updatedAt
+        }
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
           createdAt
           updatedAt
         }
@@ -377,6 +521,9 @@ export const getChatRoomUser = /* GraphQL */ `
           nextToken
         }
         storeItem {
+          nextToken
+        }
+        ozlifeItem {
           nextToken
         }
         createdAt
@@ -559,6 +706,9 @@ export const getMessage = /* GraphQL */ `
           nextToken
         }
         storeItem {
+          nextToken
+        }
+        ozlifeItem {
           nextToken
         }
         createdAt

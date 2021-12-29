@@ -22,15 +22,13 @@ export const getUser = /* GraphQL */ `
       reviewItem {
         items {
           id
-          ozlifeID
-          userID
-          reviewer
           reviews
           createdAt
+          ozlifeID
+          userID
           updatedAt
           ozlife {
             id
-            owner
             title
             profile
             images
@@ -44,27 +42,9 @@ export const getUser = /* GraphQL */ `
             discount_price
             promotion
             address
-            storeID
-            store {
-              id
-              userID
-              owner
-              name
-              profile
-              images
-              tel
-              address
-              license
-              url
-              longitude
-              latitude
-              createdAt
-              updatedAt
-            }
-            reviewItem {
-              nextToken
-            }
             createdAt
+            storeID
+            userID
             updatedAt
           }
         }
@@ -73,8 +53,6 @@ export const getUser = /* GraphQL */ `
       storeItem {
         items {
           id
-          userID
-          owner
           name
           profile
           images
@@ -85,49 +63,31 @@ export const getUser = /* GraphQL */ `
           longitude
           latitude
           createdAt
+          userID
           updatedAt
-          ozlifeItem {
-            items {
-              id
-              owner
-              title
-              profile
-              images
-              section
-              tag
-              question
-              member
-              visit_date
-              name
-              original_price
-              discount_price
-              promotion
-              address
-              storeID
-              store {
-                id
-                userID
-                owner
-                name
-                profile
-                images
-                tel
-                address
-                license
-                url
-                longitude
-                latitude
-                createdAt
-                ozlifeItem {
-                  nextToken
-                }
-                updatedAt
-              }
-              createdAt
-              updatedAt
-            }
-            nextToken
-          }
+        }
+        nextToken
+      }
+      ozlifeItem {
+        items {
+          id
+          title
+          profile
+          images
+          section
+          tag
+          question
+          member
+          visit_date
+          name
+          original_price
+          discount_price
+          promotion
+          address
+          createdAt
+          storeID
+          userID
+          updatedAt
         }
         nextToken
       }

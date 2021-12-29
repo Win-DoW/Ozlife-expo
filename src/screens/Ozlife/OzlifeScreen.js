@@ -30,27 +30,22 @@ const OzlifeScreen = ({ navigation, route }) => {
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
+            const user = userData.data.getUser;
 
-            setUser(userData.data.getUser);
+            console.log(user)
+            setUser(user);
 
-            let questions = [];
-            await Promise.all(userData.data.getUser.storeItem.items.map(async (item, idx) => {
-                await Promise.all(item.ozlifeItem.items.map(async (item, idx) => {
-                    const result = await Storage.get(item.images[0]);
-                    const newOzlife = {...item, images: result};
-                    questions = [...questions, newOzlife];
-                }))
+            await Promise.all(user.ozlifeItem.items.map(async (item, idx) => {
+                const result = await Storage.get(item.images[0]);
+                const newOzlife = {...item, images: result};
+                setQuestions(ozlifes => [...ozlifes, newOzlife]);
             }))
 
-            let answers = [];
-            await Promise.all(userData.data.getUser.reviewItem.items.map(async (item, idx) => {
+            await Promise.all(user.reviewItem.items.map(async (item, idx) => {
                 const result = await Storage.get(item.ozlife.images[0]);
                 const newOzlife = {...item.ozlife, images: result};
-                answers = [...answers, newOzlife];
+                setAnswers(ozlifes => [...ozlifes, newOzlife]);
             }))
-
-            setQuestions(questions);
-            setAnswers(answers);
 
             setLoading(false);
 
@@ -77,33 +72,46 @@ const OzlifeScreen = ({ navigation, route }) => {
         );
     };
 
-    const Main = () => {
-        return (            
-            <View style={styles.container}>
-                <View style={styles.head}>
-                    <Text style={{fontSize: 18, color: '#15b6f1', fontWeight: 'bold'}}>내 오지랖</Text>
-                </View>
-                <View style={styles.tab}>
-                    <Pressable onPress={() => setTabState(0)} style={styles.touch}>
-                        <Text style={tabState === 0 ? styles.tabTextPress : styles.tabText}>내 답변</Text>
-                    </Pressable>
-                    <Pressable onPress={() => setTabState(1)} style={styles.touch}>
-                        <Text style={tabState === 1 ? styles.tabTextPress : styles.tabText}>내 질문</Text>
-                    </Pressable>
-                </View>
-            </View>
-        )
-    }
-
-    return (
+    return (            
         <SafeAreaView style={styles.container}>
+            <View style={styles.head}>
+                <Text style={{fontSize: 18, color: '#15b6f1', fontWeight: 'bold'}}>내 오지랖</Text>
+            </View>
+            <View style={styles.tab}>
+                <Pressable 
+                    onPress={() => {
+                        setTabState(0)
+                    }} 
+                    style={styles.touch}
+                >
+                    <Text style={tabState === 0 ? styles.tabTextPress : styles.tabText}>내 답변</Text>
+                </Pressable>
+                <Pressable 
+                    onPress={() => {
+                        setTabState(1)
+                    }}
+                    style={styles.touch}
+                >
+                    <Text style={tabState === 1 ? styles.tabTextPress : styles.tabText}>내 질문</Text>
+                </Pressable>
+            </View>
+
+            { tabState === 0 &&
             <FlatList
-                ListHeaderComponent={Main}
-                data={tabState === 0 ? answers : questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
+                data={answers}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
             />
+            }
+            { tabState === 1 &&
+            <FlatList
+                data={questions}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
+                keyExtractor={(item) => item.id}
+                ListEmptyComponent={NoData}
+            />
+            }
         </SafeAreaView>
     )
 };

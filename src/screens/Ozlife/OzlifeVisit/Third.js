@@ -6,16 +6,11 @@ import styles from './styles';
 const Third = ({ navigation, route }) => {
 
   const [member, setMember] = useState(8);
-
-  useEffect(() => {
-    console.log(route.params)
-  }, []);
-
   const next = async () => {
     try {
       navigation.navigate('Fourth', {
         ...route.params,
-        member
+        member: member
       });
     } catch (error) {
       console.log('error :', error);

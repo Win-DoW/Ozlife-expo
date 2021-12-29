@@ -22,8 +22,6 @@ const Fourth = ({ navigation, route }) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
-
-    console.log(currentDate);
   };
 
   return (

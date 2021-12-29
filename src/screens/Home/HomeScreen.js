@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation,  route }) => {
 
       await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
         const result = await Storage.get(item.images[0]);
-        const newOzlife = {...item, images: result};
+        const newOzlife = {...item, image: result};
         setOzlifes(ozlifes => [...ozlifes, newOzlife]);
       }))
 

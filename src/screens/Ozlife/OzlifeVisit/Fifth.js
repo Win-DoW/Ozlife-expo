@@ -21,13 +21,11 @@ const Fifth = ({ navigation, route }) => {
     try {
       setLoading(true);
 
-      console.log(ex)
-
       const keys = await Promise.all(ex.images.map(async (image, idx) => {
         const photo = await fetch(image.uri);
         const photoBlob = await photo.blob();
 
-        const result = await Storage.put(`${ex.owner}/ozlife/${ex.title}/${idx}.jpg`, photoBlob, {
+        const result = await Storage.put(`${ex.userID}/ozlife/${ex.title}/${idx}.jpg`, photoBlob, {
           contentType: 'image/jpeg',
         });
 
@@ -40,7 +38,7 @@ const Fifth = ({ navigation, route }) => {
         name,
         promotion,
         original_price,
-        discount_price
+        discount_price,
       }}));
       
       setLoading(false);
