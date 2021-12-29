@@ -24,7 +24,6 @@ export const getUser = /* GraphQL */ `
           id
           ozlifeID
           userID
-          reviewer
           reviews
           createdAt
           updatedAt

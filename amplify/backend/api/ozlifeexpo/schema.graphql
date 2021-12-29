@@ -12,6 +12,7 @@ type User
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
   reviewItem: [Review] @connection(keyName: "reviewByUser", fields: ["id"])
   storeItem: [Store] @connection(keyName: "storeByUser", fields: ["id"])
+  ozlifeItem: [Ozlife] @connection(keyName: "ozlifeByUser", fields: ["id"])
 }
 
 type Store
@@ -19,8 +20,6 @@ type Store
   @key(name: "storeByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
-  userID: ID!
-  owner: String!
   name: String!
   profile: String
   images: [String]
@@ -32,15 +31,18 @@ type Store
   latitude: Float
   createdAt: String
 
+  userID: ID!
+  user: User @connection(fields: ["userID"])
   ozlifeItem: [Ozlife] @connection(keyName: "byStore", fields: ["id"])
 }
 
 type Ozlife
   @model
   @key(name: "byStore", fields: ["storeID"])
+  @key(name: "storeByUser", fields: ["userID", "createdAt"])
+  @key(name: "ozlifeByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
-  owner: String
   title: String
   profile: String
   images: [String]
@@ -58,6 +60,9 @@ type Ozlife
   storeID: ID!
   store: Store @connection(fields: ["storeID"])
 
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+
   reviewItem: [Review] @connection(keyName: "byOzlife", fields: ["id"])
 }
 
@@ -67,11 +72,14 @@ type Review
   @key(name: "reviewByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
-  ozlifeID: ID!
-  userID : ID!
   reviews: [String]
   createdAt: String
+
+  ozlifeID: ID!
   ozlife: Ozlife @connection(fields: ["ozlifeID"])
+
+  userID: ID!
+  user: User @connection(fields: ["userID"])
 }
 
 type ChatRoomUser

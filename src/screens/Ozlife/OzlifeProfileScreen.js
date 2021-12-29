@@ -4,9 +4,9 @@ import { View, Text, StyleSheet, FlatList, Image, ImageBackground, Pressable, Sa
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { listUsers } from '../../graphql/queries';
+import { listUsers, listReviews } from '../../graphql/queries';
 
-const OzlifeProfileScreen = ({ route, navigation}) => {
+const OzlifeProfileScreen = ({ route, navigation }) => {
 
     const ozlife = route.params.ozlife;
     const store = ozlife.store;
@@ -16,7 +16,6 @@ const OzlifeProfileScreen = ({ route, navigation}) => {
 
     const [ozlifeImages, setOzlifeImages] = useState([]);
     const [owner, setOwner] = useState({});
-    const [ownerImage, setOwnerImage] = useState('');
     const [date, setDate] = useState('');
 
     const goToPhoto1 = () => {
@@ -62,12 +61,14 @@ const OzlifeProfileScreen = ({ route, navigation}) => {
     const fetchData = async () => {
         try {      
             setLoading(true);
+            
+            console.log(store)
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             setUserId(userKey.attributes.sub);
 
             setDate(ozlife.visit_date.toString().slice(0,10));
-                      
+            
             await Promise.all(ozlife.images.map(async (item, idx) => {
                 const result = await Storage.get(item);
                 setOzlifeImages(ozlifeImages => [...ozlifeImages, result]);
@@ -75,8 +76,10 @@ const OzlifeProfileScreen = ({ route, navigation}) => {
 
             const owner = await API.graphql(graphqlOperation(listUsers, { filter: { id: { eq: ozlife.owner }}}));
             const result = await Storage.get(owner.data.listUsers.items[0].image);
-            setOwner(owner.data.listUsers.items[0]);
-            setOwnerImage(result);
+            setOwner({
+                ...owner.data.listUsers.items[0],
+                image: result
+            });
 
             setLoading(false);
     
@@ -180,7 +183,7 @@ const OzlifeProfileScreen = ({ route, navigation}) => {
 
                     <View style={{...styles.line, paddingBottom: 8}}>
                         <Image
-                            source={{uri: ownerImage}}
+                            source={{uri: owner.image}}
                             style={{width: 28, height: 28, borderRadius: 100, marginRight: 6}}
                         />
                         <Text>{owner.nickname}</Text>
