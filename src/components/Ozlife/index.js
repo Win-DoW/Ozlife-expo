@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import styles from './styles';
 
-const Ozlife = ({ ozlife, userId }) => {
+const Ozlife = ({ ozlife, userID }) => {
 
     const navigation = useNavigation();
 
@@ -32,7 +32,7 @@ const Ozlife = ({ ozlife, userId }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={goToOzlifeProfile}>
             <Image
-                source={{uri: ozlife.images}}
+                source={{uri: ozlife.image}}
                 style={styles.image}
             />
             <View style={styles.textbox}>
@@ -43,7 +43,7 @@ const Ozlife = ({ ozlife, userId }) => {
                 <Text style={{fontSize: 14, fontWeight: '500'}}>{ozlife.title}</Text>
 
                 {
-                    ozlife.owner === userId ?
+                    ozlife.owner === userID ?
 
                     <TouchableOpacity style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}} onPress={goToOzlifeManage}>
                         <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 관리</Text>

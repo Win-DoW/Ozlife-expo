@@ -15,7 +15,6 @@ const OzlifeScreen = ({ navigation, route }) => {
     const [user, setUser] = useState({});
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState([]);
-    const [ozlifes, setOzlifes] = useState(null);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -31,18 +30,18 @@ const OzlifeScreen = ({ navigation, route }) => {
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
+            const user = userData.data.getUser;
 
-            setUser(userData.data.getUser);
+            console.log(user)
+            setUser(user);
 
-            await Promise.all(userData.data.getUser.storeItem.items.map(async (item, idx) => {
-                await Promise.all(item.ozlifeItem.items.map(async (item, idx) => {
-                    const result = await Storage.get(item.images[0]);
-                    const newOzlife = {...item, images: result};
-                    setQuestions(ozlifes => [...ozlifes, newOzlife]);
-                }))
+            await Promise.all(user.ozlifeItem.items.map(async (item, idx) => {
+                const result = await Storage.get(item.images[0]);
+                const newOzlife = {...item, images: result};
+                setQuestions(ozlifes => [...ozlifes, newOzlife]);
             }))
 
-            await Promise.all(userData.data.getUser.reviewItem.items.map(async (item, idx) => {
+            await Promise.all(user.reviewItem.items.map(async (item, idx) => {
                 const result = await Storage.get(item.ozlife.images[0]);
                 const newOzlife = {...item.ozlife, images: result};
                 setAnswers(ozlifes => [...ozlifes, newOzlife]);
@@ -100,7 +99,7 @@ const OzlifeScreen = ({ navigation, route }) => {
             { tabState === 0 &&
             <FlatList
                 data={answers}
-                renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
             />
@@ -108,7 +107,7 @@ const OzlifeScreen = ({ navigation, route }) => {
             { tabState === 1 &&
             <FlatList
                 data={questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
             />

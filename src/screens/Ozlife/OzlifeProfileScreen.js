@@ -1,21 +1,21 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, StyleSheet, FlatList, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { listUsers, listReviews } from '../../graphql/queries';
+import { Storage, Auth } from 'aws-amplify';
 
 const OzlifeProfileScreen = ({ route, navigation }) => {
 
     const ozlife = route.params.ozlife;
     const store = ozlife.store;
+    const owner = ozlife.user;
 
-    const [userId, setUserId] = useState(null);
+    const [userID, setUserID] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
-    const [owner, setOwner] = useState({});
     const [date, setDate] = useState('');
 
     const goToPhoto1 = () => {
@@ -61,25 +61,19 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const fetchData = async () => {
         try {      
             setLoading(true);
-            
-            console.log(store)
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            setUserId(userKey.attributes.sub);
+            setUserID(userKey.attributes.sub);
 
             setDate(ozlife.visit_date.toString().slice(0,10));
-            
+
+            const result = await Storage.get(owner.image);
+            setOwnerImage(result);
+
             await Promise.all(ozlife.images.map(async (item, idx) => {
                 const result = await Storage.get(item);
-                setOzlifeImages(ozlifeImages => [...ozlifeImages, result]);
+                setOzlifeImages(images => [...images, result]);
             }))
-
-            const owner = await API.graphql(graphqlOperation(listUsers, { filter: { id: { eq: ozlife.owner }}}));
-            const result = await Storage.get(owner.data.listUsers.items[0].image);
-            setOwner({
-                ...owner.data.listUsers.items[0],
-                image: result
-            });
 
             setLoading(false);
     
@@ -183,7 +177,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
                     <View style={{...styles.line, paddingBottom: 8}}>
                         <Image
-                            source={{uri: owner.image}}
+                            source={{uri: ownerImage}}
                             style={{width: 28, height: 28, borderRadius: 100, marginRight: 6}}
                         />
                         <Text>{owner.nickname}</Text>
@@ -235,7 +229,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
             </ScrollView>
 
-            {userId === ozlife.owner ?
+            {userID === ozlife.userID ?
             <Pressable style={styles.button} 
                 onPress={() => navigation.navigate("OzlifeManageScreen", {
                     ozlife

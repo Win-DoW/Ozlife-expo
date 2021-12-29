@@ -56,6 +56,7 @@ type Ozlife
   discount_price: Int
   promotion: String
   address: String
+  createdAt: String
 
   storeID: ID!
   store: Store @connection(fields: ["storeID"])

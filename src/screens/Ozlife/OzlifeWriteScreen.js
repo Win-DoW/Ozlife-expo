@@ -3,9 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-na
 
 const OzlifeWriteScreen = ({ navigation, route }) => {
 
-  const owner = route.params.store.owner;
-  const storeID = route.params.store.id;
-  const address = route.params.store.address
+  const store = route.params.store;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,7 +19,7 @@ const OzlifeWriteScreen = ({ navigation, route }) => {
       </View>
 
       <View style={styles.bottom}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('First', { owner, storeID, address })}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('First', { userID: store.userID, storeID: store.id, address: store.address })}>
           <Text style={styles.buttontext}>다음</Text>
         </TouchableOpacity>
       </View>

@@ -36,10 +36,10 @@ const StoreProfileScreen = ({ navigation, route }) => {
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
             let user = await API.graphql(graphqlOperation(getUser, {
                 id: userKey.attributes.sub
-              }))
-              const image = await Storage.get(user.data.getUser.image)  
-              user.data.getUser.image = image
-              setUserData(user.data.getUser)
+            }))
+            const image = await Storage.get(user.data.getUser.image)  
+            user.data.getUser.image = image
+            setUserData(user.data.getUser)
 
             setLoading(false)
         } catch(e) {
@@ -195,7 +195,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
             }
 
             {
-            userData.id === storeData.owner ?
+            userData.id === storeData.userID ?
 
             <Pressable style={styles.request} onPress={request}>
                 <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>오지랖 요청하기</Text>

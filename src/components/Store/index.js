@@ -16,7 +16,7 @@ const Store = ({ store }) => {
     return (
         <Pressable style={styles.container} onPress={() => goToStoreProfile()}>
             <Image
-                source={{uri: store.images}}
+                source={{uri: store.image}}
                 style={styles.image}
             />
             <View style={styles.textbox}>
