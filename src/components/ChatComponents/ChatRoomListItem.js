@@ -7,7 +7,7 @@ import {
     Storage
 } from 'aws-amplify';
 
-const ChatListItem = ({ chatRoom, image }) => {
+const ChatRoomListItem = ({ chatRoom, image }) => {
 
     const [myId, setMyId] = useState(null) // 상대방과 구분되는 나의 ID를 저장
     const [pressIn, setPressIn] = useState(false);
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ChatListItem;
+export default ChatRoomListItem;

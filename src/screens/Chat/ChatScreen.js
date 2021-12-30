@@ -11,7 +11,7 @@ import { listChatRoomUsersSearch } from './graphql/queries'
 import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
 // 채팅방 생성을 위한
 
-import ChatListItem from '../../components/ChatComponents/ChatListItem';
+import ChatRoomListItem from '../../components/ChatComponents/ChatRoomListItem';
 
 const ChatScreen = ({ navigation, route }) => {
 
@@ -153,7 +153,7 @@ const ChatScreen = ({ navigation, route }) => {
 
       <FlatList
         data={chatRooms}
-        renderItem={({item}) => <ChatListItem chatRoom={item.chatRoom} image={myImage}/>}
+        renderItem={({item}) => <ChatRoomListItem chatRoom={item.chatRoom} image={myImage}/>}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>

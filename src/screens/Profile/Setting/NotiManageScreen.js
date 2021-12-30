@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, Switch, SafeAreaView, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const SettingNotiScreen = ({ navigation, route }) => {
+const NotiManageScreen = ({ navigation, route }) => {
     
     const [switchOn1, setSwitchOn1] = useState(true);
     const [switchOn2, setSwitchOn2] = useState(true);
@@ -143,4 +143,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default SettingNotiScreen;
+export default NotiManageScreen;

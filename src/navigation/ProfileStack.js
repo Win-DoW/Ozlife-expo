@@ -2,11 +2,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import ProfileScreen from '../screens/Profile/ProfileScreen';
-import ProfileSettingScreen from '../screens/Profile/ProfileSettingScreen';
 
-import ProfileInformationEditScreen from '../screens/Profile/ProfileSetting/ProfileInformationEditScreen';
-import SettingStoreManageScreen from '../screens/Profile/ProfileSetting/SettingStoreManageScreen'
-import SettingNotiScreen from '../screens/Profile/ProfileSetting/SettingNotiScreen'
+import ProfileSettingScreen from '../screens/Profile/Setting/ProfileSettingScreen';
+import ProfileInformationEditScreen from '../screens/Profile/Setting/ProfileInformationEditScreen';
+import StoreCreateScreen from '../screens/Profile/Setting/StoreCreateScreen'
+import NotiManageScreen from '../screens/Profile/Setting/NotiManageScreen'
 
 const Stack = createStackNavigator();
 
@@ -39,16 +39,16 @@ const ProfileStack = () => {
             />
 
             <Stack.Screen
-                name="SettingStoreManageScreen"
-                component={SettingStoreManageScreen}
+                name="StoreCreateScreen"
+                component={StoreCreateScreen}
                 options={{
                     headerShown: false
                 }}
             />
 
             <Stack.Screen
-                name="SettingNotiScreen"
-                component={SettingNotiScreen}
+                name="NotiManageScreen"
+                component={NotiManageScreen}
                 options={{
                     headerShown: false
                 }}

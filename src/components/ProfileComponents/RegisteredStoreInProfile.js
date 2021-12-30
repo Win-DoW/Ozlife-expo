@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Storage, API, Auth, graphqlOperation } from 'aws-amplify';
 
-const Store = ({ store, navigation }) => {
+const RegisteredStoreInProfile = ({ store, navigation }) => {
 
     const [image, setImage] = useState('')
 
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Store;
+export default RegisteredStoreInProfile;

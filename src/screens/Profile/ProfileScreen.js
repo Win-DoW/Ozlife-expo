@@ -6,7 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { getUser } from '../../graphql/queries'
 
-import ProfileRegisterStore from '../../components/ProfileComponents/ProfileRegisterStore';
+import RegisteredStoreInProfile from '../../components/ProfileComponents/RegisteredStoreInProfile';
 
 const ProfileScreen = ({ navigation, route }) => {
 
@@ -118,7 +118,7 @@ const ProfileScreen = ({ navigation, route }) => {
       <FlatList
         ListHeaderComponent={profileMain}
         data={stores}
-        renderItem={({ item }) => <ProfileRegisterStore store={item} navigation={navigation}/>}
+        renderItem={({ item }) => <RegisteredStoreInProfile store={item} navigation={navigation}/>}
         keyExtractor={(item) => item.id}
         style={{ marginBottom: 25 }}
       />
