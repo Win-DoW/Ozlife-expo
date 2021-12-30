@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
-
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import { Ionicons } from '@expo/vector-icons';
 import { Storage, Auth } from 'aws-amplify';
+
+import AppHeader from '../../utils/Header';
+
 
 const OzlifeProfileScreen = ({ route, navigation }) => {
 
@@ -17,38 +19,6 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
     const [date, setDate] = useState('');
-
-    const goToPhoto1 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[0]
-        })
-    }
-
-    const goToPhoto2 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[1]
-        })
-    }
-
-    const goToPhoto3 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[2]
-        })
-    }
-
-    const goToPhoto4 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[3]
-        })
-    }
-
-    const goToPhotoList = () => {
-        navigation.navigate("StorePhotoList", {
-            images: ozlifeImages,
-            count: ozlifeImages.length,
-            index: 0
-        })
-    }
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -92,32 +62,41 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     
     return(
         <SafeAreaView style={styles.container}>
+            
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={styles.spinnerTextStyle}
+            />
+
+            <AppHeader
+                title={ozlife.name}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back" size={24} color="black" />}
+                leftIconPress={() => navigation.goBack()}
+            />
+
+
             <ScrollView>
 
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
-
                 <View style={styles.imagebox}>
-                    <Pressable style={{width: '50%', aspectRatio: 1 / 1, marginRight: 1}} onPress={goToPhoto1}>
+                    <Pressable style={{width: '50%', aspectRatio: 1 / 1, marginRight: 1}}>
                         <Image
                             source={{uri: ozlifeImages[0]}}
                             style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                         />
                     </Pressable>
                     <View style={{flex: 1, height: '100%', marginRight: 1}}>
-                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}} onPress={ozlifeImages.length > 1 ? goToPhoto2 : null}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
                                 source={ozlifeImages.length > 1 ? { uri: ozlifeImages[1]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                             />
                         </Pressable>
-                        <Pressable style={{width: '100%', flex: 1}} onPress={ozlifeImages.length > 3 ? goToPhoto4 : null}>
+                        <Pressable style={{width: '100%', flex: 1}}>
                             <Image
                                 source={ozlifeImages.length > 3 ? { uri: ozlifeImages[3]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
@@ -125,7 +104,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                         </Pressable>
                     </View>
                     <View style={{flex:1, height: '100%'}}>
-                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}} onPress={ozlifeImages.length > 2 ? goToPhoto3 : null}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
                                 source={ozlifeImages.length > 2 ? { uri: ozlifeImages[2]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
@@ -138,7 +117,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                         >
                             {
                                 ozlifeImages.length > 4 ?
-                                <Pressable style={{alignItems: 'center', justifyContent: 'center'}} onPress={goToPhotoList}>
+                                <Pressable style={{alignItems: 'center', justifyContent: 'center'}}>
                                     <Text style={[styles.imagefont, {marginBottom: 3}]}>{ozlifeImages.length}+</Text>
                                     <Text style={styles.imagefont}>더보기</Text>
                                 </Pressable>

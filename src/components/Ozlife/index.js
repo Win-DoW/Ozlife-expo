@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-
 import styles from './styles';
+
+import { ScreenWidth } from '../../utils/Styles';
 
 const Ozlife = ({ ozlife, userID }) => {
 

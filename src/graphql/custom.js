@@ -25,8 +25,6 @@ export const getUser = /* GraphQL */ `
           reviews
           createdAt
           ozlifeID
-          userID
-          updatedAt
           ozlife {
             id
             title
@@ -44,9 +42,51 @@ export const getUser = /* GraphQL */ `
             address
             createdAt
             storeID
+            store {
+              id
+              name
+              profile
+              images
+              tel
+              address
+              license
+              url
+              longitude
+              latitude
+              createdAt
+              userID
+              updatedAt
+            }
             userID
+            user {
+              id
+              email
+              nickname
+              profile
+              interest
+              region
+              image
+              createdAt
+              updatedAt
+            }
+            reviewItem {
+              nextToken
+            }
             updatedAt
           }
+          userID
+          user {
+            id
+            email
+            nickname
+            profile
+            interest
+            region
+            image
+            createdAt
+            updatedAt
+          }
+          updatedAt
         }
         nextToken
       }
@@ -64,6 +104,20 @@ export const getUser = /* GraphQL */ `
           latitude
           createdAt
           userID
+          user {
+            id
+            email
+            nickname
+            profile
+            interest
+            region
+            image
+            createdAt
+            updatedAt
+          }
+          ozlifeItem {
+            nextToken
+          }
           updatedAt
         }
         nextToken
@@ -86,7 +140,36 @@ export const getUser = /* GraphQL */ `
           address
           createdAt
           storeID
+          store {
+            id
+            name
+            profile
+            images
+            tel
+            address
+            license
+            url
+            longitude
+            latitude
+            createdAt
+            userID
+            updatedAt
+          }
           userID
+          user {
+            id
+            email
+            nickname
+            profile
+            interest
+            region
+            image
+            createdAt
+            updatedAt
+          }
+          reviewItem {
+            nextToken
+          }
           updatedAt
         }
         nextToken
