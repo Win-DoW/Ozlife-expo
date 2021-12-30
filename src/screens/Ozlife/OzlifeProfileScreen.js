@@ -2,23 +2,27 @@ import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Ionicons } from '@expo/vector-icons';
-import { Storage, Auth } from 'aws-amplify';
+import { API, Storage, graphqlOperation } from 'aws-amplify';
+
+import { listReviews } from '../../graphql/queries';
 
 import AppHeader from '../../utils/Header';
 
-
 const OzlifeProfileScreen = ({ route, navigation }) => {
 
+    const userID = route.params.userID;
     const ozlife = route.params.ozlife;
     const store = ozlife.store;
     const owner = ozlife.user;
 
-    const [userID, setUserID] = useState('');
+    const date = ozlife.visit_date.toString().slice(0,10);
+
     const [loading, setLoading] = useState(false);
 
     const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
-    const [date, setDate] = useState('');
+
+    const [review, setReview] = useState({});
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -32,11 +36,6 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
         try {      
             setLoading(true);
 
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            setUserID(userKey.attributes.sub);
-
-            setDate(ozlife.visit_date.toString().slice(0,10));
-
             const result = await Storage.get(owner.image);
             setOwnerImage(result);
 
@@ -44,6 +43,11 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 const result = await Storage.get(item);
                 setOzlifeImages(images => [...images, result]);
             }))
+
+            const reviewsData = await API.graphql(graphqlOperation(listReviews, { filter: { ozlifeID: { eq: ozlife.id }}}));
+            const reviews = reviewsData.data.listReviews.items;
+
+            setReview(reviews.find(item => item.userID === userID));
 
             setLoading(false);
     
@@ -208,7 +212,8 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
             </ScrollView>
 
-            {userID === ozlife.userID ?
+            {
+            userID === owner.id ?
             <Pressable style={styles.button} 
                 onPress={() => navigation.navigate("OzlifeManageScreen", {
                     ozlife
@@ -217,8 +222,13 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 <Text style={styles.buttontext}>오지랖 관리하기</Text>
             </Pressable>
             :
+            review === undefined ?
             <Pressable style={styles.button} onPress={next}>
                 <Text style={styles.buttontext}>오지랖 남기기</Text>
+            </Pressable>
+            :
+            <Pressable style={{...styles.button, backgroundColor: '#ccc'}}>
+                <Text style={styles.buttontext}>오지랖 남기기 예약중</Text>
             </Pressable>
             }
 

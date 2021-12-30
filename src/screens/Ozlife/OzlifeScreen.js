@@ -106,6 +106,7 @@ const OzlifeScreen = ({ navigation, route }) => {
                 renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
+                contentContainerStyle={{marginTop: 20}}
             />
             }
             { tabState === 1 &&
@@ -114,6 +115,7 @@ const OzlifeScreen = ({ navigation, route }) => {
                 renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
+                contentContainerStyle={{marginTop: 20}}
             />
             }
         </SafeAreaView>
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 50,
         borderBottomWidth: 1,
-        borderColor: '#ddd'
+        borderColor: '#ddd',
     },
     tabText: {
         fontSize: 18,

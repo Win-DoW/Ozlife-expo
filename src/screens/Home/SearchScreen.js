@@ -207,6 +207,7 @@ const SearchScreen = ({ navigation,  route }) => {
           }
           keyExtractor={(item) => item.id}
           ListEmptyComponent={nothing}
+          contentContainerStyle={{marginTop: 20}}
         />
       </View>
       
@@ -217,7 +218,7 @@ const SearchScreen = ({ navigation,  route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',    
+    backgroundColor: 'white', 
   },
   rowContainer: {
     flexDirection: 'row',

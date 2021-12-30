@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-import styles from './styles';
-
-import { ScreenWidth } from '../../utils/Styles';
+import { screen } from '../utils/Styles';
 
 const Ozlife = ({ ozlife, userID }) => {
 
@@ -14,25 +12,26 @@ const Ozlife = ({ ozlife, userID }) => {
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {
-            ozlife
+            ozlife, userID
         })
     }
 
     const goToOzlifeWrite = () => {
         navigation.navigate("CommentWriteScreen", {
-            ozlife
+            ozlife, userID
         })
     }
 
     const goToOzlifeManage = () => {
         navigation.navigate("OzlifeManageScreen", {
-            ozlife
+            ozlife, userID
         })
     }
 
     return (
         <TouchableOpacity style={styles.container} onPress={goToOzlifeProfile}>
             <Image
+                resizeMode="contain"
                 source={{uri: ozlife.image}}
                 style={styles.image}
             />
@@ -72,5 +71,27 @@ const Ozlife = ({ ozlife, userID }) => {
         </TouchableOpacity>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        backgroundColor: '#ffffff',
+        marginBottom: 16,
+        marginHorizontal: 20,
+    },
+    image: {
+        width: screen.width*0.3,
+        aspectRatio: 1,        
+        marginRight: 16,
+        borderRadius: 16,
+        borderWidth: 0.5,
+        borderColor: '#ccc'
+    },
+    textbox: {
+        height: screen.width*0.3,
+        justifyContent: 'space-around'
+    }
+})
 
 export default Ozlife;
