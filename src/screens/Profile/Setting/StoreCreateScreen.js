@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { createStore } from '../../../graphql/mutations';
 
-const SettingStoreManageScreen = ({ navigation, route }) => {
+const StoreCreateScreen = ({ navigation, route }) => {
 
     const [inputError, setInputError] = useState(false);
 
@@ -82,7 +82,6 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                 await API.graphql(graphqlOperation(createStore, {
                     input: {
                         userID: userId,
-                        owner: userId,
                         name: storeInfo.storeName,
                         profile: storeInfo.storeProfile,
                         images: keys,
@@ -407,4 +406,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SettingStoreManageScreen;
+export default StoreCreateScreen;

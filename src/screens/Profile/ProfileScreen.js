@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Pressable, Image, FlatList } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { getUser } from '../../graphql/queries'
+import { getUser } from './graphql/queries'
 
-import ProfileRegisterStore from '../../components/ProfileComponents/ProfileRegisterStore';
+import RegisteredStoreInProfile from '../../components/ProfileComponents/RegisteredStoreInProfile';
 
 const ProfileScreen = ({ navigation, route }) => {
 
+  const [userData, setUserData] = useState({})
+  const [userStores, setUserStores] = useState([])
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchUserData()
+      fetchProfileData()
     })
 
     return unsubscribe;
   }, [navigation])
 
-  const [userData, setUserData] = useState({})
-  const [stores, setStores] = useState([])
-  const [loading, setLoading] = useState(false);
-
-  const fetchUserData = async() => {
+  const fetchProfileData = async() => {
     try {
       setLoading(true)
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
@@ -32,7 +32,7 @@ const ProfileScreen = ({ navigation, route }) => {
       const image = await Storage.get(user.data.getUser.image)  
       user.data.getUser.image = image
       setUserData(user.data.getUser)
-      setStores(user.data.getUser.storeItem.items)
+      setUserStores(user.data.getUser.storeItem.items)
       setLoading(false)
     } catch (e) {
       setLoading(false)
@@ -44,39 +44,64 @@ const ProfileScreen = ({ navigation, route }) => {
     navigation.navigate('ProfileSettingScreen');
   }
 
-  const profileMain = () => {
+  const ProfileContent = () => {
     return (
       <View style={styles.container}>
-        <View style={styles.mainprofile}>
-          <Image source={{ uri: userData.image }} style={styles.profileimage} />
-          <View style={{ height: 88, marginLeft: 16, justifyContent: "center" }}>
-            <Text style={{ fontSize: 12, color: "#aaaaaa" }}>전문 오지라퍼</Text>
-            <Text style={{ fontSize: 20, fontWeight: "500", marginVertical: 5 }}>{userData.nickname}</Text>
+        <View style={styles.userProfileBox}>
+          <Image
+            source={{ uri: userData.image }}
+            style={styles.profileImage}
+          />
+
+          <View style={styles.userProfileData}>
+            <Text style={{ fontSize: 12, color: "#aaaaaa", lineHeight: 17 }}>
+              전문 오지라퍼
+            </Text>
+            <Text style={{ fontSize: 20, fontWeight: "500", lineHeight: 29 }}>
+              {userData.nickname}
+            </Text>
+
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Ionicons name="ios-heart-sharp" size={24} color="#ff4444" />
-              <Text style={{ fontSize: 12, fontWeight: "500", color: "#ff4444", marginRight: 6, }}>1231</Text>
-              <Pressable>
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#aaaaaa" }}>찜목록</Text>
-              </Pressable>
+              <Text style={{ fontSize: 12, fontWeight: "500", color: "#ff4444", marginLeft: 4 }}>
+                1231
+              </Text>
+              <TouchableOpacity style={{ paddingHorizontal: 6, paddingVertical: 6 }}>
+                <Text style={{ fontSize: 12, fontWeight: "500", color: "#aaaaaa" }}>
+                  찜목록
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
   
-        <View style={styles.self_info}>
-          <Text style={styles.mainfont}>자기소개</Text>
-          <Text style={{fontSize: 14}}>{userData.profile}</Text>
-        </View>
-  
-        <View style={styles.keyword}>
-          <Text style={styles.mainfont}>키워드</Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.keywordtext}># {userData.interest}</Text>
+        <View style={styles.selfInfo}>
+          <Text style={styles.sectionTitleText}>
+            자기소개
+          </Text>
+          <View style={{ marginTop: 8 }}>
+            <Text style={{fontSize: 14}}>
+              {userData.profile}
+            </Text>
           </View>
         </View>
   
-        { stores.length > 0 ?
-          <View style={styles.storeinfo}>
-            <Text style={styles.mainfont}>가게정보</Text>
+        <View style={styles.keyword}>
+          <Text style={styles.sectionTitleText}>
+            키워드
+          </Text>
+          <View style={{ marginTop: 8 }}>
+            <Text style={styles.keywordTagText}>
+              #{userData.interest}
+            </Text>
+          </View>
+        </View>
+  
+        { userStores.length > 0 ?
+          <View style={styles.storeInfo}>
+            <Text style={styles.sectionTitleText}>
+              가게정보
+            </Text>
           </View>
           :
           null
@@ -97,30 +122,22 @@ const ProfileScreen = ({ navigation, route }) => {
         textStyle={styles.spinnerTextStyle}
       />
 
-      <View style={styles.title}>
-        <View style={{ flex: 2, justifyContent: "center" }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold", marginLeft: 20 }}>
+      <View style={styles.headerBox}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
             내 프로필
           </Text>
-        </View>
-        <View
-          style={{
-            flex: 0.5,
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Pressable style={{ marginRight: 15 }} onPress={goToSetting}>
+
+          <TouchableOpacity style={{ paddingHorizontal: 5, paddingVertical: 5 }} onPress={goToSetting}>
             <Ionicons name="settings-outline" size={24} color="#777777" />
-          </Pressable>
-        </View>
+          </TouchableOpacity>
       </View>
+
       <FlatList
-        ListHeaderComponent={profileMain}
-        data={stores}
-        renderItem={({ item }) => <ProfileRegisterStore store={item} navigation={navigation}/>}
+        ListHeaderComponent={ProfileContent}
+        data={userStores}
+        renderItem={({ item }) => <RegisteredStoreInProfile store={item} navigation={navigation}/>}
         keyExtractor={(item) => item.id}
-        style={{ marginBottom: 25 }}
+        style={{ marginBottom: 10 }}
       />
     </SafeAreaView>
   );
@@ -131,51 +148,58 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
-  title: {
+  headerBox: {
     flexDirection: "row",
-    width: "100%",
     height: 56,
-    backgroundColor: "white",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingLeft: 15,
+    paddingRight: 10,
     borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
   },
-  mainprofile: {
-    height: 120,
+  userProfileBox: {
+    marginTop: 16,
     marginHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 16,
     borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
-    marginBottom: 16,
   },
-  profileimage: {
+  profileImage: {
     width: 88,
-    aspectRatio: 1 / 1,
-    borderRadius: 100,
+    height: 88,
+    borderRadius: 44,
   },
-  self_info: {
+  userProfileData: {
+    height: 88,
+    marginLeft: 16,
+    justifyContent: 'center'
+  },
+  selfInfo: {
+    marginTop: 16,
     marginHorizontal: 20,
-    marginBottom: 24
   },
-  mainfont: {
+  sectionTitleText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8
+    lineHeight: 27
   },
   keyword: {
+    marginTop: 24,
     marginHorizontal: 20,
-    marginBottom: 24
   },
-  keywordtext: {
+  keywordTagText: {
     fontSize: 16,
+    lineHeight: 24,
     fontWeight: '300',
-    marginRight: 5,
     color: '#aaaaaa'
   },
-  storeinfo: {
-    marginHorizontal: 20
+  storeInfo: {
+    marginTop: 24,
+    marginHorizontal: 20,
+    marginBottom: 8
   },
   spinnerTextStyle: {
     color: '#FFF',

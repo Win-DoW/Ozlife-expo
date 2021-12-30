@@ -243,7 +243,9 @@ const styles = StyleSheet.create({
     },
     imageFirst: {
         flex: 1,
-        marginRight: 1
+        marginRight: 1,
+        width: undefined,
+        height: undefined
     },
     storeTextBox: {
         paddingHorizontal: 28,

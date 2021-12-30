@@ -4,9 +4,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { getUser } from '../../graphql/queries';
+import { getUser } from '../../../graphql/queries';
 
-import ProfileSettingList from '../../components/ProfileSettingList';
+import ProfileSettingList from '../../../components/ProfileSettingList';
 
 const ProfileSettingScreen = ({ navigation, route }) => {
 
@@ -50,11 +50,11 @@ const ProfileSettingScreen = ({ navigation, route }) => {
     }
 
     const goToStoreManage = () => {
-        navigation.navigate('SettingStoreManageScreen')
+        navigation.navigate('StoreCreateScreen')
     }
 
     const goToSettingNoti = () => {
-        navigation.navigate('SettingNotiScreen')
+        navigation.navigate('NotiManageScreen')
     }
 
     const goToBack = () => {

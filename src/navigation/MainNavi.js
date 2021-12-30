@@ -4,6 +4,8 @@ import * as React from 'react';
 import MainTab from './MainTab';
 import StoreProfileScreen from '../screens/Profile/StoreProfile/StoreProfileScreen'
 
+import ChatRoomScreen from '../screens/Chat/ChatRoomScreen';
+
 import OzlifeDetailScreen from '../screens/Ozlife/OzlifeDetailScreen';
 import OzlifeManageScreen from '../screens/Ozlife/OzlifeManageScreen';
 import OzlifeMapScreen from '../screens/Ozlife/OzlifeMapScreen';
@@ -41,8 +43,14 @@ const MainNavi = () => {
                     headerShown: false
                 }} 
             />
-            
 
+            <Stack.Screen 
+                name="ChatRoomScreen" 
+                component={ChatRoomScreen}
+                options={{
+                    headerShown: false
+                }} 
+            />
 
             <Stack.Screen
                 name="OzlifeDetailScreen"
