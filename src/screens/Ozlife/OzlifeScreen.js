@@ -27,23 +27,27 @@ const OzlifeScreen = ({ navigation, route }) => {
     const fetchData = async () => {
         try {      
             setLoading(true);
+            setQuestions([]);
+            setAnswers([]);
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
             const user = userData.data.getUser;
+            const ozlifes = user.ozlifeItem.items;
+            const reviews = user.reviewItem.items;
 
             console.log(user)
             setUser(user);
 
-            await Promise.all(user.ozlifeItem.items.map(async (item, idx) => {
+            await Promise.all(ozlifes.map(async (item, idx) => {
                 const result = await Storage.get(item.images[0]);
-                const newOzlife = {...item, images: result};
+                const newOzlife = {...item, image: result};
                 setQuestions(ozlifes => [...ozlifes, newOzlife]);
             }))
 
-            await Promise.all(user.reviewItem.items.map(async (item, idx) => {
+            await Promise.all(reviews.map(async (item, idx) => {
                 const result = await Storage.get(item.ozlife.images[0]);
-                const newOzlife = {...item.ozlife, images: result};
+                const newOzlife = {...item.ozlife, image: result};
                 setAnswers(ozlifes => [...ozlifes, newOzlife]);
             }))
 
@@ -102,6 +106,7 @@ const OzlifeScreen = ({ navigation, route }) => {
                 renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
+                contentContainerStyle={{marginTop: 20}}
             />
             }
             { tabState === 1 &&
@@ -110,6 +115,7 @@ const OzlifeScreen = ({ navigation, route }) => {
                 renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
+                contentContainerStyle={{marginTop: 20}}
             />
             }
         </SafeAreaView>
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 50,
         borderBottomWidth: 1,
-        borderColor: '#ddd'
+        borderColor: '#ddd',
     },
     tabText: {
         fontSize: 18,

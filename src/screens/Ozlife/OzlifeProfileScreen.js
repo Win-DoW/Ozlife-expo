@@ -1,54 +1,28 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground, Pressable, SafeAreaView, ScrollView } from 'react-native'
-
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Ionicons } from '@expo/vector-icons';
+import { API, Storage, graphqlOperation } from 'aws-amplify';
 
-import { Storage, Auth } from 'aws-amplify';
+import { listReviews } from '../../graphql/queries';
+
+import AppHeader from '../../utils/Header';
 
 const OzlifeProfileScreen = ({ route, navigation }) => {
 
+    const userID = route.params.userID;
     const ozlife = route.params.ozlife;
     const store = ozlife.store;
     const owner = ozlife.user;
 
-    const [userID, setUserID] = useState('');
+    const date = ozlife.visit_date.toString().slice(0,10);
+
     const [loading, setLoading] = useState(false);
 
     const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
-    const [date, setDate] = useState('');
 
-    const goToPhoto1 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[0]
-        })
-    }
-
-    const goToPhoto2 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[1]
-        })
-    }
-
-    const goToPhoto3 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[2]
-        })
-    }
-
-    const goToPhoto4 = () => {
-        navigation.navigate("StorePhoto", {
-            image: ozlifeImages[3]
-        })
-    }
-
-    const goToPhotoList = () => {
-        navigation.navigate("StorePhotoList", {
-            images: ozlifeImages,
-            count: ozlifeImages.length,
-            index: 0
-        })
-    }
+    const [review, setReview] = useState({});
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -62,11 +36,6 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
         try {      
             setLoading(true);
 
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            setUserID(userKey.attributes.sub);
-
-            setDate(ozlife.visit_date.toString().slice(0,10));
-
             const result = await Storage.get(owner.image);
             setOwnerImage(result);
 
@@ -74,6 +43,11 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 const result = await Storage.get(item);
                 setOzlifeImages(images => [...images, result]);
             }))
+
+            const reviewsData = await API.graphql(graphqlOperation(listReviews, { filter: { ozlifeID: { eq: ozlife.id }}}));
+            const reviews = reviewsData.data.listReviews.items;
+
+            setReview(reviews.find(item => item.userID === userID));
 
             setLoading(false);
     
@@ -92,32 +66,41 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     
     return(
         <SafeAreaView style={styles.container}>
+            
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={styles.spinnerTextStyle}
+            />
+
+            <AppHeader
+                title={ozlife.name}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back" size={24} color="black" />}
+                leftIconPress={() => navigation.goBack()}
+            />
+
+
             <ScrollView>
 
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
-
                 <View style={styles.imagebox}>
-                    <Pressable style={{width: '50%', aspectRatio: 1 / 1, marginRight: 1}} onPress={goToPhoto1}>
+                    <Pressable style={{width: '50%', aspectRatio: 1 / 1, marginRight: 1}}>
                         <Image
                             source={{uri: ozlifeImages[0]}}
                             style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                         />
                     </Pressable>
                     <View style={{flex: 1, height: '100%', marginRight: 1}}>
-                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}} onPress={ozlifeImages.length > 1 ? goToPhoto2 : null}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
                                 source={ozlifeImages.length > 1 ? { uri: ozlifeImages[1]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                             />
                         </Pressable>
-                        <Pressable style={{width: '100%', flex: 1}} onPress={ozlifeImages.length > 3 ? goToPhoto4 : null}>
+                        <Pressable style={{width: '100%', flex: 1}}>
                             <Image
                                 source={ozlifeImages.length > 3 ? { uri: ozlifeImages[3]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
@@ -125,7 +108,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                         </Pressable>
                     </View>
                     <View style={{flex:1, height: '100%'}}>
-                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}} onPress={ozlifeImages.length > 2 ? goToPhoto3 : null}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
                                 source={ozlifeImages.length > 2 ? { uri: ozlifeImages[2]} : null}
                                 style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
@@ -138,7 +121,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                         >
                             {
                                 ozlifeImages.length > 4 ?
-                                <Pressable style={{alignItems: 'center', justifyContent: 'center'}} onPress={goToPhotoList}>
+                                <Pressable style={{alignItems: 'center', justifyContent: 'center'}}>
                                     <Text style={[styles.imagefont, {marginBottom: 3}]}>{ozlifeImages.length}+</Text>
                                     <Text style={styles.imagefont}>더보기</Text>
                                 </Pressable>
@@ -229,7 +212,8 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
             </ScrollView>
 
-            {userID === ozlife.userID ?
+            {
+            userID === owner.id ?
             <Pressable style={styles.button} 
                 onPress={() => navigation.navigate("OzlifeManageScreen", {
                     ozlife
@@ -238,8 +222,13 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 <Text style={styles.buttontext}>오지랖 관리하기</Text>
             </Pressable>
             :
+            review === undefined ?
             <Pressable style={styles.button} onPress={next}>
                 <Text style={styles.buttontext}>오지랖 남기기</Text>
+            </Pressable>
+            :
+            <Pressable style={{...styles.button, backgroundColor: '#ccc'}}>
+                <Text style={styles.buttontext}>오지랖 남기기 예약중</Text>
             </Pressable>
             }
 

@@ -85,7 +85,7 @@ const HomeScreen = ({ navigation,  route }) => {
       <FlatList
         ListHeaderComponent={Main}
         data={ozlifes}
-        renderItem={({item}) => <Ozlife ozlife={item} userId={user.id} />}
+        renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>

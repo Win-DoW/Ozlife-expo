@@ -180,7 +180,7 @@ const SearchScreen = ({ navigation,  route }) => {
         style={{padding:20}}
       />
 
-      <View style={styles.section}>
+      <View style={styles.tabMenuContanier}>
         <View style={styles.tab}>
           <Pressable onPress={() => setTabState(0)} style={[styles.touch, tabState === 0 && styles.border]}>
             <Text style={styles.tabText}>오지랖</Text>
@@ -207,6 +207,7 @@ const SearchScreen = ({ navigation,  route }) => {
           }
           keyExtractor={(item) => item.id}
           ListEmptyComponent={nothing}
+          contentContainerStyle={{marginTop: 20}}
         />
       </View>
       
@@ -217,7 +218,7 @@ const SearchScreen = ({ navigation,  route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',    
+    backgroundColor: 'white', 
   },
   rowContainer: {
     flexDirection: 'row',
@@ -253,7 +254,10 @@ const styles = StyleSheet.create({
   section: {
     margin: 20,
   },
-  searchBar: {
+  tabMenuContanier: {
+    paddingHorizontal: 20,
+    borderColor: "#dddddd",
+    borderBottomWidth: 1,
   },
   title: {
     fontSize: 18,
