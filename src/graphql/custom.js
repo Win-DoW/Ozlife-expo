@@ -201,7 +201,14 @@ export const getUserOnChatScreen = /* GraphQL */ `
           updatedAt
           chatRoom {
             id
-            messagesCount
+            lastMessageID
+            lastMessage {
+              id
+              createdAt
+              content
+              userID
+              updatedAt
+            }
             chatRoomUsers {
               items {
                 user {
@@ -211,46 +218,8 @@ export const getUserOnChatScreen = /* GraphQL */ `
                 }
               }
             }
-            lastMessage {
-              id
-              content
-              updatedAt
-              user {
-                id
-                nickname
-              }
-            }
+            messagesCount
           }
-        }
-        nextToken
-      }
-      reviewItem {
-        items {
-          id
-          ozlifeID
-          userID
-          reviews
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      storeItem {
-        items {
-          id
-          userID
-          owner
-          name
-          profile
-          images
-          tel
-          address
-          license
-          url
-          longitude
-          latitude
-          createdAt
-          updatedAt
         }
         nextToken
       }
@@ -352,7 +321,7 @@ export const getUserOnProfileScreen = /* GraphQL */ `
   }
 `;
 
-export const getUserOnProfileSettingScreen = /* GraphQL */ `
+export const getUserOnProfileInformationEditScreen = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id

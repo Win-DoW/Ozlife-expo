@@ -22,6 +22,8 @@ import StoreProfileScreen from 'screens/Profile/Store/StoreProfileScreen'
 import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
 import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
 
+import ChatRoomScreen from 'screens/Chat/ChatRoomScreen';
+
 const Stack = createStackNavigator();
 
 const MainNavi = () => {
@@ -163,6 +165,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="StoreAddScreen"
                 component={StoreAddScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="ChatRoomScreen"
+                component={ChatRoomScreen}
                 options={{
                     headerShown: false
                 }}

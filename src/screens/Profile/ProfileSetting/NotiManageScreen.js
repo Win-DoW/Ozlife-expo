@@ -10,6 +10,7 @@ const NotiManageScreen = ({ navigation, route }) => {
     const [chatSwitch, setChatSwitch] = useState(false);
     const [ozlifeSwitch, setOzlifeSwitch] = useState(false);
     const [extraSwitch, setExtraSwitch] = useState(false);
+    const [timeSwitch, setTimeSwitch] = useState(false);
     const [vibration, setVibration] = useState(false);
     const [sound, setSound] = useState(false);
 
@@ -48,7 +49,20 @@ const NotiManageScreen = ({ navigation, route }) => {
             </View>
 
             <View style={{ marginTop: 17}}>
-                
+                <View style={styles.timeBox}>
+                    <View>
+                        <Text style={styles.title}>방해금지 시간 설정</Text>
+                        <Text style={styles.time}>08:00 ~ 20:00</Text>
+                    </View>
+                    <Switch
+                    value={timeSwitch}
+                    onValueChange={() => setTimeSwitch(!timeSwitch)}
+                    style={{
+                        transform: [{ scaleX: 0.85 }, { scaleY: 0.85 }],
+                    }}
+                    trackColor={{ true: "#15b6f1", false: "#dddddd" }}
+                    />
+                </View>
             </View>
 
             <View style={styles.notiManageBox}>
@@ -74,6 +88,29 @@ const styles = StyleSheet.create({
         marginTop: 17,
         borderTopColor: '#dddddd',
         borderTopWidth: 1
+    },
+    timeBox: {
+        paddingVertical: 16,
+        paddingLeft: 24,
+        paddingRight: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderColor: '#dddddd',
+        borderTopWidth: 1,
+        borderBottomWidth: 1
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: '500',
+        lineHeight: 24
+    },
+    time: {
+        fontSize: 14,
+        fontWeight: '300',
+        color: '#aaaaaa',
+        lineHeight: 20,
+        marginTop: 4
     }
 })
 

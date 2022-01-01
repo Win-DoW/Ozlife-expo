@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 // import { getUser } from '../../graphql/queries';
 
 // 채팅방 생성을 위한
 import { getUserOnChatScreen } from 'graphql/custom'
 import { listChatRoomUsersSearchOnChatScreen } from 'graphql/custom'
-import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
+import { createChatRoom, createChatRoomUser } from 'graphql/mutations';
 // 채팅방 생성을 위한
 
-import ChatRoomListItem from '../../components/ChatComponents/ChatRoomListItem';
+import Header from 'utils/Header';
+import ChatRoomListItem from 'components/ChatComponents/ChatRoomListItem';
 
 const ChatScreen = ({ navigation, route }) => {
 
@@ -22,7 +23,6 @@ const ChatScreen = ({ navigation, route }) => {
 
   const [chatRooms, setChatRooms] = useState([])
   const [loading, setLoading] = useState(false);
-  const [myImage, setMyImage] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -36,12 +36,11 @@ const ChatScreen = ({ navigation, route }) => {
     try {
       setLoading(true)
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-      const fetchUserData = await API.graphql(graphqlOperation(getUserOnChatScreen, {
+      const user = await API.graphql(graphqlOperation(getUserOnChatScreen, {
         id: userKey.attributes.sub
       }))
-      const fetchImage = await Storage.get(fetchUserData.data.getUser.image)
-      setMyImage(fetchImage)
-      setChatRooms(fetchUserData.data.getUser.chatRoomUser.items)
+
+      setChatRooms(user.data.getUser.chatRoomUser.items)
       setLoading(false)
     } catch(e) {
       setLoading(false)
@@ -67,7 +66,7 @@ const ChatScreen = ({ navigation, route }) => {
 
       if (existChatRoom.data.listChatRoomUsers.items.length !== 0) {
         // 채팅방이 존재하면 존재하는 채팅방으로 이동하는 과정
-        console.log("Exist");
+        console.log("이미 채팅방이 존재");
 
         navigation.navigate("ChatRoomScreen", {
           id: existChatRoom.data.listChatRoomUsers.items[0].chatRoomID,
@@ -75,9 +74,8 @@ const ChatScreen = ({ navigation, route }) => {
         });
       } else {
         // 채팅방이 존재하지 않으면 새로운 채팅방을 생성하는 과정
-        console.log("No");
-        // 1. 우선 채팅이 이루어지는 새로운 채팅방을 생성한다.
-        // 추후 작업으로는 그 사람과의 채팅방이 이미 존재하는 경우 그 채팅방으로 이동하도록
+        console.log("채팅방 생성");
+        
         const newChatRoomData = await API.graphql(
           graphqlOperation(createChatRoom, {
             input: {
@@ -88,7 +86,7 @@ const ChatScreen = ({ navigation, route }) => {
         );
 
         if (!newChatRoomData.data) {
-          console.log("Failed to create a chat room");
+          console.log("채팅방 생성 실패");
           return;
         } // 채팅방 생성에 실패한 경우를 의미
 
@@ -143,9 +141,10 @@ const ChatScreen = ({ navigation, route }) => {
         textStyle={styles.spinnerTextStyle}
       />
 
-      <View style={styles.topBar}>
-        <Text style={styles.topBarText}>채팅</Text>
-      </View>
+      <Header
+          title={'채팅'}
+          noIcon={true}
+      />
 
       <TouchableOpacity style={{height: 56, backgroundColor: 'yellow'}} onPress={startToChatting}>
         <Text style={styles.topBarText}>채팅방 생성</Text>
@@ -153,7 +152,7 @@ const ChatScreen = ({ navigation, route }) => {
 
       <FlatList
         data={chatRooms}
-        renderItem={({item}) => <ChatRoomListItem chatRoom={item.chatRoom} image={myImage}/>}
+        renderItem={({item}) => <ChatRoomListItem chatRoom={item.chatRoom} />}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
@@ -165,18 +164,9 @@ const styles = StyleSheet.create({
     flex: 1,    
     backgroundColor: '#ffffff',
   },
-  topBar: {
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  topBarText: {
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
   spinnerTextStyle: {
     color: '#FFF',
-  },
+  }
 })
 
 export default ChatScreen;

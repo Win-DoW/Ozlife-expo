@@ -45,7 +45,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const goToSetting = () => {
     navigation.navigate('ProfileSettingScreen', {
-      name: userData.nickname
+      name: user.nickname
     });
   }
 
