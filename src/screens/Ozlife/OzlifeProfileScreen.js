@@ -79,7 +79,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
             <AppHeader
                 title={ozlife.name}
                 noIcon={false}
-                leftIcon={<Ionicons name="chevron-back" size={24} color="black" />}
+                leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
                 leftIconPress={() => navigation.goBack()}
             />
 

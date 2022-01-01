@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
     },
     leftIcon: {
         position: 'absolute',
-        top: 14,
+        top: 10,
         left: 20,
         justifyContent: 'center'
     },
     rightIcon: {
         position: 'absolute',
-        bottom: 14,
+        top: 10,
         right: 20,
         justifyContent: 'center'
     },

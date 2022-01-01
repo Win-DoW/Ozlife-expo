@@ -2,22 +2,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import MainTab from './MainTab';
-import StoreProfileScreen from '../screens/Profile/StoreProfile/StoreProfileScreen'
+import StoreProfileScreen from 'screens/Profile/StoreProfile/StoreProfileScreen'
 
-import OzlifeDetailScreen from '../screens/Ozlife/OzlifeDetailScreen';
-import OzlifeManageScreen from '../screens/Ozlife/OzlifeManageScreen';
-import OzlifeMapScreen from '../screens/Ozlife/OzlifeMapScreen';
-import OzlifeProfileScreen from '../screens/Ozlife/OzlifeProfileScreen';
-import OzlifeTimeScreen from '../screens/Ozlife/OzlifeTimeScreen';
-import OzlifeWriteScreen from '../screens/Ozlife/OzlifeWriteScreen';
-import First from '../screens/Ozlife/OzlifeVisit/First';
-import Second from '../screens/Ozlife/OzlifeVisit/Second';
-import Third from '../screens/Ozlife/OzlifeVisit/Third';
-import Fourth from '../screens/Ozlife/OzlifeVisit/Fourth';
-import Fifth from '../screens/Ozlife/OzlifeVisit/Fifth';
+import OzlifeDetailScreen from 'screens/Ozlife/OzlifeDetailScreen';
+import OzlifeManageScreen from 'screens/Ozlife/OzlifeManageScreen';
+import OzlifeMapScreen from 'screens/Ozlife/OzlifeMapScreen';
+import OzlifeProfileScreen from 'screens/Ozlife/OzlifeProfileScreen';
+import OzlifeTimeScreen from 'screens/Ozlife/OzlifeTimeScreen';
+import OzlifeWriteScreen from 'screens/Ozlife/OzlifeWriteScreen';
+import First from 'screens/Ozlife/OzlifeVisit/First';
+import Second from 'screens/Ozlife/OzlifeVisit/Second';
+import Third from 'screens/Ozlife/OzlifeVisit/Third';
+import Fourth from 'screens/Ozlife/OzlifeVisit/Fourth';
+import Fifth from 'screens/Ozlife/OzlifeVisit/Fifth';
 
-import CommentWriteScreen from '../screens/Ozlife/CommentWriteScreen';
-import CommentViewScreen from '../screens/Ozlife/CommentViewScreen';
+import CommentWriteScreen from 'screens/Ozlife/CommentWriteScreen';
+import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
+
+import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
+import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
 
 const Stack = createStackNavigator();
 
@@ -147,7 +150,23 @@ const MainNavi = () => {
                     headerShown: false
                 }}
             />
+
+
+            <Stack.Screen
+                name="StoreSearchScreen"
+                component={StoreSearchScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
             
+            <Stack.Screen
+                name="StoreAddScreen"
+                component={StoreAddScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
 
         </Stack.Navigator>
     );

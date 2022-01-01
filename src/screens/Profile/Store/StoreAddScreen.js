@@ -6,9 +6,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as ImagePicker from 'expo-image-picker';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { createStore } from '../../../graphql/mutations';
+import { createStore } from 'graphql/mutations';
 
-const SettingStoreManageScreen = ({ navigation, route }) => {
+const StoreAddScreen = ({ navigation, route }) => {
 
     const [inputError, setInputError] = useState(false);
 
@@ -23,6 +23,8 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
         storeAddress: '',
         storeLicense: '',
         storeUrl: '',
+        storeLongitude: 0,
+        storeLatitude: 0,
     });
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
@@ -82,14 +84,15 @@ const SettingStoreManageScreen = ({ navigation, route }) => {
                 await API.graphql(graphqlOperation(createStore, {
                     input: {
                         userID: userId,
-                        owner: userId,
                         name: storeInfo.storeName,
                         profile: storeInfo.storeProfile,
                         images: keys,
                         tel: storeInfo.storeTel,
                         address: storeInfo.storeAddress,
                         license: storeInfo.storeLicense,
-                        url: storeInfo.storeUrl
+                        url: storeInfo.storeUrl,
+                        longitude: storeLongitude,
+                        latitude: storeLatitude,
                     }
                 }))
 
@@ -407,4 +410,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SettingStoreManageScreen;
+export default StoreAddScreen;

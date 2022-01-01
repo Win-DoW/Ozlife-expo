@@ -5,7 +5,6 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 import ProfileSettingScreen from '../screens/Profile/ProfileSettingScreen';
 
 import ProfileInformationEditScreen from '../screens/Profile/ProfileSetting/ProfileInformationEditScreen';
-import SettingStoreManageScreen from '../screens/Profile/ProfileSetting/SettingStoreManageScreen'
 import SettingNotiScreen from '../screens/Profile/ProfileSetting/SettingNotiScreen'
 
 const Stack = createStackNavigator();
@@ -33,14 +32,6 @@ const ProfileStack = () => {
             <Stack.Screen
                 name="ProfileInformationEditScreen"
                 component={ProfileInformationEditScreen}
-                options={{
-                    headerShown: false
-                }}
-            />
-
-            <Stack.Screen
-                name="SettingStoreManageScreen"
-                component={SettingStoreManageScreen}
                 options={{
                     headerShown: false
                 }}

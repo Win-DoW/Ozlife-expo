@@ -4,9 +4,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { getUser } from '../../graphql/queries';
+import { getUser } from 'graphql/queries';
 
-import ProfileSettingList from '../../components/ProfileSettingList';
+import AppHeader from 'utils/Header';
+import ProfileSettingList from 'components/ProfileSettingList';
 
 const ProfileSettingScreen = ({ navigation, route }) => {
 
@@ -49,8 +50,8 @@ const ProfileSettingScreen = ({ navigation, route }) => {
         navigation.navigate('ProfileInformationEditScreen');
     }
 
-    const goToStoreManage = () => {
-        navigation.navigate('SettingStoreManageScreen')
+    const goToStoreAdd = () => {
+        navigation.navigate('StoreSearchScreen')
     }
 
     const goToSettingNoti = () => {
@@ -75,16 +76,16 @@ const ProfileSettingScreen = ({ navigation, route }) => {
                     textStyle={styles.spinnerTextStyle}
                 />
 
-                <View style={styles.header}>
-                    <Pressable style={styles.backIcon} onPress={goToBack}>
-                        <Ionicons name="chevron-back-outline" size={32} color="#000000" />
-                    </Pressable>
-                    <Text style={styles.headerText}>환경설정</Text>
-                </View>
+            <AppHeader
+                title={"환경설정"}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+                leftIconPress={() => navigation.goBack()}
+            />
 
                 <ProfileSettingList text={userData.nickname + '님 정보 수정'} press={goToProfileEdit} style={{ marginTop: 16 }}/>
 
-                <ProfileSettingList text={'가게 관리'} press={goToStoreManage} style={{ marginTop: 17 }}/>
+                <ProfileSettingList text={'가게 추가'} press={goToStoreAdd} style={{ marginTop: 17 }}/>
 
                 <ProfileSettingList text={'알림'} press={goToSettingNoti} style={{ marginTop: 17 }}/>
 
