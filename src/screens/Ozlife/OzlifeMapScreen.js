@@ -6,13 +6,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 const OzlifeMapScreen = ({ navigation, route }) => {
 
   const ozlife = route.params.ozlife;
-  //const store = ozlife.store;
-
-  const store = {
-    ...ozlife.store,
-    latitude: 45,
-    longitude: 120,
-  }
+  const store = ozlife.store;
 
   const [loading, setLoading] = useState(false);
   const [distance, setDistance] = useState('');

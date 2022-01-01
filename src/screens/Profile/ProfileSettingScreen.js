@@ -49,8 +49,8 @@ const ProfileSettingScreen = ({ navigation, route }) => {
         navigation.navigate('ProfileInformationEditScreen');
     }
 
-    const goToStoreManage = () => {
-        navigation.navigate('StoreAddScreen')
+    const goToStoreAdd = () => {
+        navigation.navigate('StoreSearchScreen')
     }
 
     const goToSettingNoti = () => {
@@ -84,7 +84,7 @@ const ProfileSettingScreen = ({ navigation, route }) => {
 
                 <ProfileSettingList text={userData.nickname + '님 정보 수정'} press={goToProfileEdit} style={{ marginTop: 16 }}/>
 
-                <ProfileSettingList text={'가게 관리'} press={goToStoreManage} style={{ marginTop: 17 }}/>
+                <ProfileSettingList text={'가게 추가'} press={goToStoreAdd} style={{ marginTop: 17 }}/>
 
                 <ProfileSettingList text={'알림'} press={goToSettingNoti} style={{ marginTop: 17 }}/>
 
