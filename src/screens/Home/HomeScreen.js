@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
-import Ozlife from '../../components/Ozlife'
+import Ozlife from 'components/Ozlife'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUser, listOzlives } from '../../graphql/queries';
+import { getUser, listOzlives } from 'graphql/queries';
 
 const HomeScreen = ({ navigation,  route }) => {
 
@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation,  route }) => {
       <View>
 
         <View style={styles.section}>
-          <Image style={{height: 30, width: 100}} source={require('../../assets/images/image-main-ozlife.png')}/>
+          <Image style={{height: 30, width: 100}} source={require('assets/images/image-main-ozlife.png')}/>
         </View>
 
         <View style={styles.section}>
@@ -65,7 +65,7 @@ const HomeScreen = ({ navigation,  route }) => {
 
         <View style={styles.section}>
           <Pressable style={styles.searchBar} onPress={() => navigation.navigate('SearchScreen')}>
-            <Image style={styles.searchIcon} source={require('../../assets/BottomTabIcons/find_2.png')}/>
+            <Image style={styles.searchIcon} source={require('assets/BottomTabIcons/find_2.png')}/>
             <Text style={styles.searchText}>통합검색</Text>
           </Pressable>
         </View>

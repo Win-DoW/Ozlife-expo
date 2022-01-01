@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
-import OzlifeCommentCard from '../../components/OzlifeCommentCard';
+import OzlifeCommentCard from 'components/OzlifeCommentCard';
 
 const OzlifeDetailScreen = () => {
     const route = useRoute();

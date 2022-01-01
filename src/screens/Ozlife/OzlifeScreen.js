@@ -4,9 +4,9 @@ import { useNavigation } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
-import { getUser } from '../../graphql/custom';
+import { getUser } from 'graphql/custom';
 
-import Ozlife from '../../components/Ozlife';
+import Ozlife from 'components/Ozlife';
 
 const OzlifeScreen = ({ navigation, route }) => {
 

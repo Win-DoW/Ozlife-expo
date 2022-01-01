@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-import { screen } from '../utils/Styles';
+import { screen } from 'utils/Styles';
 
 const Ozlife = ({ ozlife, userID }) => {
 

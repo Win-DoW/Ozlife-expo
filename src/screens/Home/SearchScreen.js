@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
 import SearchBar from 'react-native-platform-searchbar';
 
-import Ozlifer from '../../components/Ozlifer'
-import Ozlife from '../../components/Ozlife'
-import Store from '../../components/Store'
+import Ozlifer from 'components/Ozlifer'
+import Ozlife from 'components/Ozlife'
+import Store from 'components/Store'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUser, listUsers, listOzlives, listStores } from '../../graphql/queries';
+import { getUser, listUsers, listOzlives, listStores } from 'graphql/queries';
 
 const SearchScreen = ({ navigation,  route }) => {
 

@@ -6,7 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
-import { listOzlives } from '../../graphql/queries';
+import { listOzlives } from 'graphql/queries';
 
 const CommentWriteScreen = (props) => {
 
