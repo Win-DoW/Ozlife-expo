@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Pressable, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Pressable, Image, ScrollView, ImageBackground } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Storage, API, Auth, graphqlOperation } from 'aws-amplify';
@@ -14,7 +14,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
     const owner = store.user;
 
     const [storeImages, setStoreImages] = useState([])
-    const [ownerImage, setOwnerImage] = useState('');
+    const [ownerImage, setOwnerImage] = useState();
     const [loading, setLoading] = useState(false);
     const [btnState, setBtnState] = useState(0);
     const [ozlifes, setOzlifes] = useState([])
@@ -33,8 +33,6 @@ const StoreProfileScreen = ({ navigation, route }) => {
             setLoading(true)
             setOzlifes([])
             setStoreImages([])
-
-            console.log(route.params)
 
             await Promise.all(store.images.map(async(image, idx) => {
                 const newImage = await Storage.get(image)
@@ -67,32 +65,48 @@ const StoreProfileScreen = ({ navigation, route }) => {
     const FlatListHeader = () => {
         return (
             <View>
-                <View style={styles.imageTotalBox}>
-                    <Image
-                        style={styles.imageFirst}
-                        source={storeImages.length > 0 ? {uri: storeImages[0]} : require('../../../../assets/ProfileImage/store_none_image.png')}
-                    />
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, marginRight: 1}}>
+                <View style={styles.imagebox}>
+                    <Pressable style={{width: '50%', aspectRatio: 1 / 1, marginRight: 1}}>
+                        <Image
+                            source={{uri: storeImages[0]}}
+                            style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
+                        />
+                    </Pressable>
+                    <View style={{flex: 1, height: '100%', marginRight: 1}}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
-                                style={{...styles.imageFirst, marginBottom: 1}}
-                                source={storeImages.length > 1 ? {uri: storeImages[1]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 1 ? { uri: storeImages[1]} : null}
+                                style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                             />
+                        </Pressable>
+                        <Pressable style={{width: '100%', flex: 1}}>
                             <Image
-                                style={styles.imageFirst}
-                                source={storeImages.length > 2 ? {uri: storeImages[2]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 3 ? { uri: storeImages[3]} : null}
+                                style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                             />
-                        </View>
-                        <View style={{flex: 1}}>
+                        </Pressable>
+                    </View>
+                    <View style={{flex:1, height: '100%'}}>
+                        <Pressable style={{width: '100%', flex: 1, marginBottom: 1}}>
                             <Image
-                                style={{...styles.imageFirst, marginBottom: 1}}
-                                source={storeImages.length > 3 ? {uri: storeImages[3]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 2 ? { uri: storeImages[2]} : null}
+                                style={{width: '100%', height: '100%', backgroundColor: 'gray'}}
                             />
-                            <Image
-                                style={styles.imageFirst}
-                                source={storeImages.length > 4 ? {uri: storeImages[4]} : require('../../../../assets/ProfileImage/store_none_image.png')}
-                            />
-                        </View>
+                        </Pressable>
+                        <ImageBackground
+                            style={[styles.backgroundimage, {backgroundColor: storeImages.length > 4 ? 'black' : 'gray'}]}
+                            source={storeImages.length > 4 ? { uri: storeImages[4]} : null}
+                            imageStyle={{opacity: 0.5}}
+                        >
+                            {
+                                storeImages.length > 4 ?
+                                <Pressable style={{alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={[styles.imagefont, {marginBottom: 3}]}>{storeImages.length}+</Text>
+                                    <Text style={styles.imagefont}>더보기</Text>
+                                </Pressable>
+                                : null
+                            }
+                        </ImageBackground>
                     </View>
                 </View>
 
@@ -256,14 +270,22 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#15b6f1'
     },
-    imageTotalBox: {
-        flexDirection: 'row',
-        height: 180,
-        marginBottom: 12
+    imagebox: {
+        width: '100%',
+        aspectRatio: 2 / 1,
+        backgroundColor: '#ffffff',
+        flexDirection: 'row'
     },
-    imageFirst: {
+    backgroundimage: {
+        width: '100%',
         flex: 1,
-        marginRight: 1
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imagefont: {
+        fontSize: 12,
+        fontWeight: '300',
+        color: '#ffffff'
     },
     storeTextBox: {
         paddingVertical: 16,
