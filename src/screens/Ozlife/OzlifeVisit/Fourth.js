@@ -5,16 +5,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
 
 const Fourth = ({ navigation, route }) => {
-
-  const next = async () => {
-    try {
-      navigation.navigate('Fifth', {
-        ...route.params,
-        visit_date: date
-      });
-    } catch (error) {
-      console.log('error :', error);
-    }
+  const next = () => {
+    console.log(date)
+    navigation.navigate('Fifth', {
+      ...route.params,
+      visit_date: date
+    });
   }
   
   const [date, setDate] = useState(new Date());

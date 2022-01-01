@@ -73,7 +73,8 @@ const StoreAddScreen = ({ navigation, route }) => {
                 await API.graphql(graphqlOperation(createStore, {
                     input: {
                         userID,
-                        ...store
+                        ...store,
+                        images: keys,
                     }
                 }))
 
@@ -90,17 +91,17 @@ const StoreAddScreen = ({ navigation, route }) => {
     }
 
     const imagePicker = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [3, 3],
-        quality: 1,
-      });
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [3, 3],
+            quality: 1,
+        });
 
-      if (!result.cancelled) {
-        setImages([...images, {id: imageIdx, uri: result.uri}]);
-        setImageIdx(imageIdx + 1);
-      }
+        if (!result.cancelled) {
+            setImages([...images, {id: imageIdx, uri: result.uri}]);
+            setImageIdx(imageIdx + 1);
+        }
     };
 
     const deleteStoreImage = (idx) => {
@@ -109,23 +110,23 @@ const StoreAddScreen = ({ navigation, route }) => {
 
     const SettingStoreImage = ({ data }) => {
 
-      return (
-        <ImageBackground
-          style={styles.image}
-          imageStyle={{ borderRadius: 4 }}
-          source={{ uri: data.uri }}
-        >
-          <TouchableOpacity
-            style={styles.imagePlusBtn}
-            onPress={() => deleteStoreImage(data.id)}
-          >
-            <Image
-              style={{ height: 35, width: 35 }}
-              source={require("../../../assets/images/icon-minus.png")}
-            />
-          </TouchableOpacity>
-        </ImageBackground>
-      );
+        return (
+            <ImageBackground
+                style={styles.image}
+                imageStyle={{ borderRadius: 4 }}
+                source={{ uri: data.uri }}
+            >
+                <TouchableOpacity
+                    style={styles.imagePlusBtn}
+                    onPress={() => deleteStoreImage(data.id)}
+                >
+                    <Image
+                        style={{ height: 35, width: 35 }}
+                        source={require("../../../assets/images/icon-minus.png")}
+                    />
+                </TouchableOpacity>
+            </ImageBackground>
+        );
     };
 
     return (
