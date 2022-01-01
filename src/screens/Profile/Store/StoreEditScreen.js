@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -11,9 +10,6 @@ import AppHeader from 'utils/Header';
 
 const StoreEditScreen = ({ navigation, route }) => {
 
-    const [inputError, setInputError] = useState(false);
-
-    const [loading, setLoading] = useState(false);
     const [store, setStore] = useState({
         id: route.params.store.id,
         userID: route.params.store?.userID,
@@ -55,51 +51,32 @@ const StoreEditScreen = ({ navigation, route }) => {
         }
     }
 
-    const checkInputData = () => {
-        console.log(store)
-        if (store.name != '' && store.profile != '' && store.tel != '' && store.address != '' && store.license != '' && store.url != '' && images.length != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    const checkAndRegister = async() => {
+    const StoreUpdate = async() => {
         try {
-            if(checkInputData()) {
-                // 입력이 완료되어 가게 등록이 가능한 상태
-                setInputError(false);
-                setLoading(true);
+            console.log(store)
 
-                console.log(store)
+            // 이미지 처리
+            const keys = await Promise.all(images.map(async (image, idx) => {
+                const photo = await fetch(image.uri)
+                const photoBlob = await photo.blob();
 
-                // 이미지 처리
-                const keys = await Promise.all(images.map(async (image, idx) => {
-                    const photo = await fetch(image.uri)
-                    const photoBlob = await photo.blob();
+                const result = await Storage.put(`${store.userID}/${store.name}/${idx}.jpg`, photoBlob, {
+                    contentType: 'image/jpeg',
+                });
 
-                    const result = await Storage.put(`${store.userID}/${store.name}/${idx}.jpg`, photoBlob, {
-                        contentType: 'image/jpeg',
-                    });
+                return result.key;
+            }))
 
-                    return result.key;
-                }))
+            // 가게 수정
+            const store = await API.graphql(graphqlOperation(updateStore, {
+                input: {
+                    ...store,
+                    images: keys,
+                }
+            }))
 
-                // 가게 수정
-                const store = await API.graphql(graphqlOperation(updateStore, {
-                    input: {
-                        ...store,
-                        images: keys,
-                    }
-                }))
+            navigation.pop();
 
-                setLoading(false);
-
-                navigation.pop();
-
-            } else {
-                setInputError(true);
-            }
         } catch (e) {
             console.log(e)
         }
@@ -150,14 +127,6 @@ const StoreEditScreen = ({ navigation, route }) => {
             behavior={Platform.OS == 'ios' ? 'padding' : 'null'}
         >
             <SafeAreaView style={styles.container}>
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
 
                 <AppHeader
                     title={"가게 수정"}
@@ -275,7 +244,7 @@ const StoreEditScreen = ({ navigation, route }) => {
 
                 <Pressable 
                     style={styles.button} 
-                    onPress={() => checkAndRegister()}
+                    onPress={() => StoreUpdate()}
                 >
                     <Text style={styles.buttontext}>가게 수정</Text>
                 </Pressable>

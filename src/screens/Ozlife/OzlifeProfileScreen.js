@@ -136,7 +136,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
                     <View style={{marginVertical: 8, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',}}>
                         <Text style={{fontSize: 16, fontWeight: '500'}}>{ozlife.name}</Text>
-                        <Text style={styles.text, {color: '#ff9a2d', marginLeft: 10}}>{ozlife.visit_date}</Text>
+                        <Text style={styles.text, {color: '#ff9a2d', marginLeft: 10}}>{ozlife.visit_date.slice(0, 10)}</Text>
                     </View>
 
                     <Text style={{fontSize: 14, fontWeight: 'normal', marginVertical: 8}}>{ozlife.profile}</Text>

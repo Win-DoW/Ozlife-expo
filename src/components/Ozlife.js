@@ -9,9 +9,9 @@ const Ozlife = ({ ozlife, userID }) => {
 
     const navigation = useNavigation();
 
-    const visit_date = dayjs(ozlife.visit_date).format().slice(0, 10);
-    const current_date = dayjs().format().slice(0, 10);
-    const status = (visit_date === current_date);
+    const visit_date = dayjs(ozlife.visit_date).format();
+    const current_date = dayjs().format();
+    const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {

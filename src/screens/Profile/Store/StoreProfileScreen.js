@@ -34,6 +34,8 @@ const StoreProfileScreen = ({ navigation, route }) => {
             setOzlifes([])
             setStoreImages([])
 
+            console.log(route.params)
+
             await Promise.all(store.images.map(async(image, idx) => {
                 const newImage = await Storage.get(image)
                 setStoreImages(images => [...images, newImage])
@@ -42,7 +44,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
             const image = await Storage.get(owner.image)
             setOwnerImage(image)
 
-            const ozlifes = route.params.store.ozlifeItem.items;
+            const ozlifes = store.ozlifeItem.items;
             await Promise.all(ozlifes.map(async (item, idx) => {
                 const result = await Storage.get(item.images[0]);
                 const newOzlife = {...item, image: result};
