@@ -21,6 +21,7 @@ import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
 import StoreProfileScreen from 'screens/Profile/Store/StoreProfileScreen'
 import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
 import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
+import StoreEditScreen from 'screens/Profile/Store/StoreEditScreen';
 
 const Stack = createStackNavigator();
 
@@ -163,6 +164,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="StoreAddScreen"
                 component={StoreAddScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="StoreEditScreen"
+                component={StoreEditScreen}
                 options={{
                     headerShown: false
                 }}

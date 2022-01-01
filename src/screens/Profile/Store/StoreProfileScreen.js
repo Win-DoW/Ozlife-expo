@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, ScrollView, Pressable } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
-
 import { Storage, API, Auth, graphqlOperation } from 'aws-amplify';
-import { getUser } from '../../../graphql/queries';
+
+import AppHeader from 'utils/Header';
+import Ozlife from 'components/Ozlife'
 
 const StoreProfileScreen = ({ navigation, route }) => {
 
-    const storeData = route.params.store
+    const store = route.params.store;
+    const userID = route.params.userID;
+    const owner = store.user;
 
-    const [images, setImages] = useState([])
-    const [userData, setUserData] = useState({})
+    const [storeImages, setStoreImages] = useState([])
+    const [ownerImage, setOwnerImage] = useState('');
     const [loading, setLoading] = useState(false);
-    const [btnState, setBtnState] = useState(0)
+    const [btnState, setBtnState] = useState(0);
+    const [ozlifes, setOzlifes] = useState([])
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -27,19 +31,23 @@ const StoreProfileScreen = ({ navigation, route }) => {
     const fetchData = async() => {
         try {
             setLoading(true)
+            setOzlifes([])
+            setStoreImages([])
 
-            await Promise.all(storeData.images.map(async(image, idx) => {
-                const fetchImage = await Storage.get(image)
-                setImages(images => [...images, fetchImage])
+            await Promise.all(store.images.map(async(image, idx) => {
+                const newImage = await Storage.get(image)
+                setStoreImages(images => [...images, newImage])
             }))
 
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-            let user = await API.graphql(graphqlOperation(getUser, {
-                id: userKey.attributes.sub
+            const image = await Storage.get(owner.image)
+            setOwnerImage(image)
+
+            const ozlifes = route.params.store.ozlifeItem.items;
+            await Promise.all(ozlifes.map(async (item, idx) => {
+                const result = await Storage.get(item.images[0]);
+                const newOzlife = {...item, image: result};
+                setOzlifes(ozlifes => [...ozlifes, newOzlife]);
             }))
-            const image = await Storage.get(user.data.getUser.image)  
-            user.data.getUser.image = image
-            setUserData(user.data.getUser)
 
             setLoading(false)
         } catch(e) {
@@ -50,69 +58,54 @@ const StoreProfileScreen = ({ navigation, route }) => {
 
     const request = () => {
         navigation.navigate("OzlifeWriteScreen", {
-            store: storeData
+            store
         })
-    }
-
-    const goToBack = () => {
-        navigation.pop()
     }
 
     const FlatListHeader = () => {
         return (
             <View>
-                <View style={styles.HeaderTopBox}>
-                    <TouchableOpacity onPress={goToBack}>
-                        <Ionicons name="chevron-back-outline" size={32} color="#000000" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.headerStoreEditBtn}>
-                        <MaterialCommunityIcons name="square-edit-outline" size={24} color="#15b6f1" />
-                        <Text style={styles.headerStoreEditBtnText}>가게 수정하기</Text>
-                    </TouchableOpacity>
-                </View>
-
                 <View style={styles.imageTotalBox}>
                     <Image
                         style={styles.imageFirst}
-                        source={images.length > 0 ? { uri: images[0]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                        source={storeImages.length > 0 ? {uri: storeImages[0]} : require('../../../../assets/ProfileImage/store_none_image.png')}
                     />
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{flex: 1, marginRight: 1}}>
                             <Image
                                 style={{...styles.imageFirst, marginBottom: 1}}
-                                source={images.length > 1 ? { uri: images[1]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 1 ? {uri: storeImages[1]} : require('../../../../assets/ProfileImage/store_none_image.png')}
                             />
                             <Image
                                 style={styles.imageFirst}
-                                source={images.length > 2 ? { uri: images[2]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 2 ? {uri: storeImages[2]} : require('../../../../assets/ProfileImage/store_none_image.png')}
                             />
                         </View>
                         <View style={{flex: 1}}>
                             <Image
                                 style={{...styles.imageFirst, marginBottom: 1}}
-                                source={images.length > 3 ? { uri: images[3]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 3 ? {uri: storeImages[3]} : require('../../../../assets/ProfileImage/store_none_image.png')}
                             />
                             <Image
                                 style={styles.imageFirst}
-                                source={images.length > 4 ? { uri: images[4]} : require('../../../../assets/ProfileImage/store_none_image.png')}
+                                source={storeImages.length > 4 ? {uri: storeImages[4]} : require('../../../../assets/ProfileImage/store_none_image.png')}
                             />
                         </View>
                     </View>
                 </View>
 
                 <View style={styles.storeTextBox}>
-                    <View style={{marginBottom: 7}}>
-                        <Text style={styles.storeName}>{storeData.name}</Text>
-                    </View>
+                    <Text style={styles.storeName}>{store.name}</Text>
 
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 15}}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
                         <Ionicons name="ios-heart-sharp" size={24} color="#ff4444" style={{marginRight: 4}}/>
                         <Text style={styles.heartCountText}>1231</Text>
                     </View>
 
-                    <View>
-                        <Text style={styles.storeProfileText}>{storeData.profile}</Text>
+                    <View style={{alignItems: 'center', paddingHorizontal: 28, marginTop: 12}}>
+                        <Text style={{fontSize: 14}}>{store.profile}</Text>
                     </View>
+                    
                 </View>
 
                 <View style={{height: 16, backgroundColor: '#efefef'}}/>
@@ -137,27 +130,53 @@ const StoreProfileScreen = ({ navigation, route }) => {
 
     const InfoItem = () => {
         return (
-            <View style={{paddingHorizontal: 20}}>
-                <View style={styles.infoBox}>
+            <View style={{paddingHorizontal: 20, marginTop: -20}}>
+                <View style={{...styles.line, paddingBottom: 8}}>
                     <Image
-                        style={styles.infoImage}
-                        source={{ uri: userData.image}}
+                        source={{uri: ownerImage}}
+                        style={{width: 28, height: 28, borderRadius: 100, marginRight: 6}}
                     />
-                    <Text style={styles.infoText}>{userData.nickname}</Text>
+                    <Text>{owner.nickname}</Text>
                 </View>
 
-                <View style={styles.infoBox}>
-                    <Ionicons name="md-call-outline" size={16} color="black" style={{marginRight: 10}}/>
-                    <Text style={styles.infoText}>{storeData.tel}</Text>
+                <View style={styles.line}>
+                    <Image
+                        source={require('../../../assets/images/icon-callnum.png')}
+                        style={{width: 16, height: 16, marginHorizontal: 8}}
+                    />
+                    <Text>{store.tel}</Text>
                 </View>
 
-                <View style={styles.infoBox}>
-                    <Ionicons name="location-outline" size={16} color="black" style={{marginRight: 10}}/>
-                    <Text style={styles.infoText}>{storeData.address}</Text>
+                <View style={styles.line}>
+                    <Image
+                        source={require('../../../assets/images/icon-location.png')}
+                        style={{width: 16, height: 16, marginHorizontal: 8}}
+                    />
+                    <Text>{store.address}</Text>
                 </View>
 
-                <View style={styles.infoBox}>
-                    <Text style={styles.infoText}>다른 사이트에서 보기</Text>
+                <View>
+                    <Text style={styles.text, {paddingVertical: 14}}>다른 사이트에서 보기</Text>
+                    <View style={{flexDirection: 'row', marginBottom: 60}}>
+                        <Pressable>
+                            <Image
+                                source={require('../../../assets/images/kakao-logo.png')}
+                                style={{width: 40, height: 40, marginRight: 8}}
+                            />
+                        </Pressable>
+                        <Pressable>
+                            <Image
+                                source={require('../../../assets/images/naver-logo.png')}
+                                style={{width: 40, height: 40, marginRight: 8}}
+                            />
+                        </Pressable>
+                        <Pressable>
+                            <Image
+                                source={require('../../../assets/images/bamin-logo.png')}
+                                style={{width: 40, height: 40, marginRight: 8}}
+                            />
+                        </Pressable>
+                    </View>
                 </View>
             </View>
         )
@@ -173,36 +192,44 @@ const StoreProfileScreen = ({ navigation, route }) => {
                 //Text style of the Spinner Text
                 textStyle={styles.spinnerTextStyle}
             />
-            {
-                btnState == 0 ?
-                <ScrollView>
-                    {
-                        FlatListHeader()
-                    }
-                    {
-                        InfoItem()
-                    }
-                </ScrollView>
-                :
-                null
-                // 오지랖 관련 FlatList 만들면 될듯
-                // <FlatList
-                //     data={}
-                //     renderItem={}
-                //     keyExtractor={}
-                //     ListHeaderComponent={FlatListHeader}
-                // />
+
+            <AppHeader
+                title={store.name}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+                leftIconPress={() => navigation.goBack()}
+                rightIcon={
+                    <TouchableOpacity style={styles.headerStoreEditBtn}>
+                        <MaterialCommunityIcons name="square-edit-outline" size={24} color="#15b6f1" />
+                        <Text style={styles.headerStoreEditBtnText}>가게 수정</Text>
+                    </TouchableOpacity>
+                }
+                rightIconPress={() => navigation.navigate("StoreEditScreen", {store})}
+            />
+
+            {btnState == 0 ?
+            <ScrollView>
+                {
+                    FlatListHeader()
+                }
+                {
+                    InfoItem()
+                }
+            </ScrollView>
+            :
+            <FlatList
+                data={ozlifes}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={userID} /> }
+                keyExtractor={(item) => item.id}
+                ListHeaderComponent={FlatListHeader}
+            />
             }
 
-            {
-            userData.id === storeData.userID ?
-
+            {userID === owner.id ?
             <Pressable style={styles.request} onPress={request}>
                 <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>오지랖 요청하기</Text>
             </Pressable>
-
             :
-
             <Pressable style={styles.request}>
                 <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>채팅하기</Text>
             </Pressable>
@@ -219,18 +246,10 @@ const styles = StyleSheet.create({
     spinnerTextStyle: {
         color: '#FFF',
     },
-    HeaderTopBox: {
-        flexDirection: 'row',
-        height: 56,
-        paddingLeft: 8,
-        paddingRight: 20,
-        paddingVertical: 8,
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
     headerStoreEditBtn: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 4,
     },
     headerStoreEditBtnText: {
         fontSize: 12,
@@ -246,8 +265,7 @@ const styles = StyleSheet.create({
         marginRight: 1
     },
     storeTextBox: {
-        paddingHorizontal: 28,
-        paddingBottom: 16,
+        paddingVertical: 16,
         alignItems: 'center'
     },
     storeName: {
@@ -259,15 +277,13 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#f44'
     },
-    storeProfileText: {
-        fontSize: 14,
-    },
     buttonContainer: {
         height: 48,
         flexDirection: 'row',
         paddingHorizontal: 20,
         borderBottomColor: '#ddd',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        marginBottom: 20,
     },
     selectBtn: {
         flex: 1,
@@ -282,20 +298,15 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    infoImage: {
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        marginRight: 6
-    },
-    infoBox: {
-        paddingVertical: 10,
-        flexDirection: 'row',
+    line: {
+        flexDirection: 'row', 
+        justifyContent: 'flex-start', 
         alignItems: 'center',
-        borderBottomColor: '#ddd',
-        borderBottomWidth: 1
+        paddingVertical: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd'
     },
-    infoText: {
+    text: {
         fontSize: 14,
         fontWeight: '500'
     },

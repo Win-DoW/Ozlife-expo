@@ -15,8 +15,6 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const store = ozlife.store;
     const owner = ozlife.user;
 
-    const date = ozlife.visit_date.toString().slice(0,10);
-
     const [loading, setLoading] = useState(false);
 
     const [ownerImage, setOwnerImage] = useState();
@@ -35,6 +33,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const fetchData = async () => {
         try {      
             setLoading(true);
+            setOzlifeImages([]);
 
             const result = await Storage.get(owner.image);
             setOwnerImage(result);
@@ -137,7 +136,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
                     <View style={{marginVertical: 8, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',}}>
                         <Text style={{fontSize: 16, fontWeight: '500'}}>{ozlife.name}</Text>
-                        <Text style={styles.text, {color: '#ff9a2d', marginLeft: 10}}>{date}</Text>
+                        <Text style={styles.text, {color: '#ff9a2d', marginLeft: 10}}>{ozlife.visit_date}</Text>
                     </View>
 
                     <Text style={{fontSize: 14, fontWeight: 'normal', marginVertical: 8}}>{ozlife.profile}</Text>

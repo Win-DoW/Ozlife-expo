@@ -199,11 +199,11 @@ const SearchScreen = ({ navigation,  route }) => {
           data={ tabState === 0 ? ozlifes : tabState === 1 ? users : stores }
           renderItem={({item}) => 
             tabState === 0 ?
-            <Ozlife ozlife={item} userId={user.id} />
+            <Ozlife ozlife={item} userID={user.id} />
             : tabState === 1 ?
             <Ozlifer user={item} />
             :
-            <Store store={item} />
+            <Store store={item} userID={user.id} />
           }
           keyExtractor={(item) => item.id}
           ListEmptyComponent={nothing}
