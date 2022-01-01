@@ -10,29 +10,32 @@ import RegisteredStoreInProfile from 'components/ProfileComponents/RegisteredSto
 
 const ProfileScreen = ({ navigation, route }) => {
 
-  const [userData, setUserData] = useState({})
-  const [userStores, setUserStores] = useState([])
+  const [user, setUser] = useState({})
+  const [store, setStores] = useState([])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchProfileData()
+      fetchData()
     })
 
     return unsubscribe;
   }, [navigation])
 
-  const fetchProfileData = async() => {
+  const fetchData = async() => {
     try {
       setLoading(true)
+
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-      let user = await API.graphql(graphqlOperation(getUserOnProfileScreen, {
+      const userData = await API.graphql(graphqlOperation(getUserOnProfileScreen, {
         id: userKey.attributes.sub
       }))
-      const image = await Storage.get(user.data.getUser.image)  
-      user.data.getUser.image = image
-      setUserData(user.data.getUser)
-      setUserStores(user.data.getUser.storeItem.items)
+      const user = userData.data.getUser;
+      const image = await Storage.get(user.image);
+
+      setUser({...user, image});
+      setStores(user.storeItem.items)
+
       setLoading(false)
     } catch (e) {
       setLoading(false)
@@ -51,7 +54,7 @@ const ProfileScreen = ({ navigation, route }) => {
       <View style={styles.container}>
         <View style={styles.userProfileBox}>
           <Image
-            source={{ uri: userData.image }}
+            source={{ uri: user.image }}
             style={styles.profileImage}
           />
 
@@ -60,7 +63,7 @@ const ProfileScreen = ({ navigation, route }) => {
               전문 오지라퍼
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500", lineHeight: 29 }}>
-              {userData.nickname}
+              {user.nickname}
             </Text>
 
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -83,7 +86,7 @@ const ProfileScreen = ({ navigation, route }) => {
           </Text>
           <View style={{ marginTop: 8 }}>
             <Text style={{fontSize: 14}}>
-              {userData.profile}
+              {user.profile}
             </Text>
           </View>
         </View>
@@ -94,12 +97,12 @@ const ProfileScreen = ({ navigation, route }) => {
           </Text>
           <View style={{ marginTop: 8 }}>
             <Text style={styles.keywordTagText}>
-              #{userData.interest}
+              #{user.interest}
             </Text>
           </View>
         </View>
   
-        { userStores.length > 0 ?
+        { store.length > 0 ?
           <View style={styles.storeInfo}>
             <Text style={styles.sectionTitleText}>
               가게정보
@@ -136,7 +139,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
       <FlatList
         ListHeaderComponent={ProfileContent}
-        data={userStores}
+        data={store}
         renderItem={({ item }) => <RegisteredStoreInProfile store={item} navigation={navigation}/>}
         keyExtractor={(item) => item.id}
         style={{ marginBottom: 10 }}
