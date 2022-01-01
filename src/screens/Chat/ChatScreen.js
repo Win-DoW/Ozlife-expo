@@ -119,8 +119,8 @@ const ChatScreen = ({ navigation, route }) => {
         );
 
         navigation.navigate("ChatRoomScreen", {
-          id: newChatRoom.id,
-          name: '이름',
+          chatRoomId: newChatRoom.id,
+          otherUserName: '이름',
         });
       }
     } catch (e) {

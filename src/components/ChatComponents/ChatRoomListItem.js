@@ -36,8 +36,8 @@ const ChatRoomListItem = ({ chatRoom }) => {
 
   const goToChatRoom = () => {
     navigation.navigate("ChatRoomScreen", {
-      id: chatRoom.id,
-      name: otherUser.nickname,
+      chatRoomId: chatRoom.id,
+      otherUserName: otherUser.nickname,
     });
   };
 
@@ -72,7 +72,7 @@ const ChatRoomListItem = ({ chatRoom }) => {
               : null}
           </Text>
           {chatRoom.lastMessage &&
-          chatRoom.lastMessage.user.id ===
+          chatRoom.lastMessage.userID ===
             myId ? null : chatRoom.messagesCount === 0 ? null : ( // 마지막 메세지가 내가 보낸 메세지라면 읽은 상태라는 것이므로 남은 개수 표시 X // 마지막 메세지가 내가 보낸 메세지가 아니지만 메세지 카운트가 0이라면 표시 X
             // 마지막 메세지가 내가 보낸 메세지가 아니지만 메세지 카운트가 존재하면 표시 O
             <View style={styles.countBox}>
