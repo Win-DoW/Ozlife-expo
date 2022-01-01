@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Pressable, Image, ScrollView } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Storage, API, Auth, graphqlOperation } from 'aws-amplify';
@@ -111,18 +111,18 @@ const StoreProfileScreen = ({ navigation, route }) => {
                 <View style={{height: 16, backgroundColor: '#efefef'}}/>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
+                    <Pressable
                         style={[styles.selectBtn, btnState == 0 ? styles.selectedBtn : null]}
                         onPress={() => setBtnState(0)}
                     >
                         <Text style={styles.selectBtnText}>정보</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.selectBtn, btnState == 1 ? styles.selectedBtn : null]}
                         onPress={() => setBtnState(1)}
                     >
                         <Text style={styles.selectBtnText}>오지랖</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         )
@@ -199,12 +199,11 @@ const StoreProfileScreen = ({ navigation, route }) => {
                 leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
                 leftIconPress={() => navigation.goBack()}
                 rightIcon={
-                    <TouchableOpacity style={styles.headerStoreEditBtn}>
+                    <Pressable style={styles.headerStoreEditBtn} onPress={() => navigation.navigate("StoreEditScreen", {store})}>
                         <MaterialCommunityIcons name="square-edit-outline" size={24} color="#15b6f1" />
                         <Text style={styles.headerStoreEditBtnText}>가게 수정</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 }
-                rightIconPress={() => navigation.navigate("StoreEditScreen", {store})}
             />
 
             {btnState == 0 ?
@@ -226,12 +225,12 @@ const StoreProfileScreen = ({ navigation, route }) => {
             }
 
             {userID === owner.id ?
-            <Pressable style={styles.request} onPress={request}>
-                <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>오지랖 요청하기</Text>
+            <Pressable style={styles.button} onPress={request}>
+                <Text style={styles.buttontext}>오지랖 요청하기</Text>
             </Pressable>
             :
-            <Pressable style={styles.request}>
-                <Text style={{fontSize: 16, fontWeight: '500', color: '#ffffff'}}>채팅하기</Text>
+            <Pressable style={styles.button}>
+                <Text style={styles.buttontext}>채팅하기</Text>
             </Pressable>
             }
         </SafeAreaView>
@@ -310,12 +309,19 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500'
     },
-    request: {
+    button: {
+        position: 'absolute',
+        bottom: 0,
         width: '100%',
         height: 60,
         backgroundColor: '#15b6f1',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    buttontext: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#ffffff'
     },
 })
 

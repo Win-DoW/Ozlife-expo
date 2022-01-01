@@ -13,13 +13,22 @@ const StoreEditScreen = ({ navigation, route }) => {
 
     const [inputError, setInputError] = useState(false);
 
-    const [userID, setUserID] = useState('');
-
     const [loading, setLoading] = useState(false);
-    const [btnState, setBtnState] = useState(false);
-    const [store, setStore] = useState(route.params.store);
+    const [store, setStore] = useState({
+        id: route.params.store.id,
+        userID: route.params.store?.userID,
+        name: route.params.store.name,
+        profile: route.params.store.profile,
+        tel: route.params.store.tel,
+        address: route.params.store.address,
+        license: route.params.store.license,
+        url: route.params.store.url,
+        longitude: route.params.store.longitude,
+        latitude: route.params.store.latitude,
+    });
+
     const [images, setImages] = useState([]);
-    const [imageIdx, setImageIdx] = useState(0);
+    const [imageIdx, setImageIdx] = useState(route.params.store.images.length);
 
     const ref_name = useRef();
     const ref_profile = useRef();
@@ -29,19 +38,25 @@ const StoreEditScreen = ({ navigation, route }) => {
     const ref_url = useRef();
 
     useEffect(() => {
-        fetchUserKey();
+        fetchData();
     }, [])
 
-    const fetchUserKey = async() => {
+    const fetchData = async() => {
         try {
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-            setUserID(userKey.attributes.sub);
+            setImages([]);
+
+            await Promise.all(route.params.store.images.map(async(image, idx) => {
+                const newImage = await Storage.get(image)
+                setImages(images => [...images, {id: idx, uri: newImage}])
+            }))
+
         } catch (e) {
             console.log(e)
         }
     }
 
     const checkInputData = () => {
+        console.log(store)
         if (store.name != '' && store.profile != '' && store.tel != '' && store.address != '' && store.license != '' && store.url != '' && images.length != 0) {
             return true;
         } else {
@@ -56,22 +71,23 @@ const StoreEditScreen = ({ navigation, route }) => {
                 setInputError(false);
                 setLoading(true);
 
+                console.log(store)
+
                 // 이미지 처리
                 const keys = await Promise.all(images.map(async (image, idx) => {
                     const photo = await fetch(image.uri)
                     const photoBlob = await photo.blob();
 
-                    const result = await Storage.put(`${userID}/${store.name}/${idx}.jpg`, photoBlob, {
+                    const result = await Storage.put(`${store.userID}/${store.name}/${idx}.jpg`, photoBlob, {
                         contentType: 'image/jpeg',
                     });
 
                     return result.key;
                 }))
 
-                // 가게 생성
-                await API.graphql(graphqlOperation(updateStore, {
+                // 가게 수정
+                const store = await API.graphql(graphqlOperation(updateStore, {
                     input: {
-                        userID,
                         ...store,
                         images: keys,
                     }
@@ -79,7 +95,7 @@ const StoreEditScreen = ({ navigation, route }) => {
 
                 setLoading(false);
 
-                navigation.navigate('MainTab', { screen: 'ProfileScreen' });
+                navigation.pop();
 
             } else {
                 setInputError(true);
@@ -144,7 +160,7 @@ const StoreEditScreen = ({ navigation, route }) => {
                 />
 
                 <AppHeader
-                    title={"가게 등록"}
+                    title={"가게 수정"}
                     noIcon={false}
                     leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
                     leftIconPress={() => navigation.goBack()}
@@ -175,7 +191,7 @@ const StoreEditScreen = ({ navigation, route }) => {
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStore({...store, 'profile': value})}
                             onSubmitEditing={() => Keyboard.dismiss()}
-                            value={store.info}
+                            value={store.profile}
                             multiline={true}
                         />
                     </View>
@@ -261,7 +277,7 @@ const StoreEditScreen = ({ navigation, route }) => {
                     style={styles.button} 
                     onPress={() => checkAndRegister()}
                 >
-                    <Text style={styles.buttontext}>가게 등록</Text>
+                    <Text style={styles.buttontext}>가게 수정</Text>
                 </Pressable>
 
             </SafeAreaView>

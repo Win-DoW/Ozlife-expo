@@ -30,10 +30,10 @@ const StoreAddScreen = ({ navigation, route }) => {
     const ref_url = useRef();
 
     useEffect(() => {
-        fetchUserKey();
+        fetchData();
     }, [])
 
-    const fetchUserKey = async() => {
+    const fetchData = async() => {
         try {
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
             setUserID(userKey.attributes.sub);
@@ -176,7 +176,7 @@ const StoreAddScreen = ({ navigation, route }) => {
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setStore({...store, 'profile': value})}
                             onSubmitEditing={() => Keyboard.dismiss()}
-                            value={store.info}
+                            value={store.profile}
                             multiline={true}
                         />
                     </View>
