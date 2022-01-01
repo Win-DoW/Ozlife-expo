@@ -2,7 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import MainTab from './MainTab';
-import StoreProfileScreen from 'screens/Profile/StoreProfile/StoreProfileScreen'
 
 import OzlifeDetailScreen from 'screens/Ozlife/OzlifeDetailScreen';
 import OzlifeManageScreen from 'screens/Ozlife/OzlifeManageScreen';
@@ -19,6 +18,7 @@ import Fifth from 'screens/Ozlife/OzlifeVisit/Fifth';
 import CommentWriteScreen from 'screens/Ozlife/CommentWriteScreen';
 import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
 
+import StoreProfileScreen from 'screens/Profile/Store/StoreProfileScreen'
 import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
 import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
 
