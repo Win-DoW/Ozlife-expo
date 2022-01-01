@@ -2,18 +2,16 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, Switch, SafeAreaView, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import Header from 'utils/Header';
+import NotiManageList from 'components/ProfileComponents/NotiManageList';
+
 const NotiManageScreen = ({ navigation, route }) => {
-    
-    const [switchOn1, setSwitchOn1] = useState(true);
-    const [switchOn2, setSwitchOn2] = useState(true);
-    const [switchOn3, setSwitchOn3] = useState(false);
-    const [switchOn4, setSwitchOn4] = useState(false);
-    const [switchOn5, setSwitchOn5] = useState(false);
-    const onToggleSwitch1 = () => setSwitchOn1(!switchOn1);
-    const onToggleSwitch2 = () => setSwitchOn2(!switchOn2);
-    const onToggleSwitch3 = () => setSwitchOn3(!switchOn3);
-    const onToggleSwitch4 = () => setSwitchOn4(!switchOn4);
-    const onToggleSwitch5 = () => setSwitchOn5(!switchOn5);
+
+    const [chatSwitch, setChatSwitch] = useState(false);
+    const [ozlifeSwitch, setOzlifeSwitch] = useState(false);
+    const [extraSwitch, setExtraSwitch] = useState(false);
+    const [vibration, setVibration] = useState(false);
+    const [sound, setSound] = useState(false);
 
     const goToBack = () => {
         navigation.pop()
@@ -22,125 +20,61 @@ const NotiManageScreen = ({ navigation, route }) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
 
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.backIcon} onPress={goToBack}>
-                    <Ionicons name="chevron-back-outline" size={32} color="#000000" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>알림</Text>
+            <Header
+                title={'알림'}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back-outline" size={32} color="#000000" />}
+                leftIconPress={goToBack}
+            />
+
+            <View style={styles.notiManageBox}>
+                <NotiManageList
+                    title={'채팅알림'}
+                    switchState={chatSwitch}
+                    setSwitchState={setChatSwitch}
+                />
+
+                <NotiManageList
+                    title={'오지랖 도착 알림'}
+                    switchState={ozlifeSwitch}
+                    setSwitchState={setOzlifeSwitch}
+                />
+
+                <NotiManageList
+                    title={'기타 알림'}
+                    switchState={extraSwitch}
+                    setSwitchState={setExtraSwitch}
+                />
             </View>
 
-            <View style={[styles.view, {marginTop: 17}]}>
-                <Text style={styles.text}>채팅알림</Text>
-                <Switch
-                    value={switchOn1} 
-                    onValueChange={onToggleSwitch1}
-                    style={{ transform: [{ scaleX: 0.85 }, { scaleY: 0.85}], marginRight: 16,}}
-                    trackColor={{true: '#15b6f1', false: 'grey'}}/>
+            <View style={{ marginTop: 17}}>
+                
             </View>
-            <View style={styles.subview}>
-                <Text style={styles.text}>오지랖 도착 알림</Text>
-                <Switch
-                    value={switchOn2} 
-                    onValueChange={onToggleSwitch2}
-                    style={{ transform: [{ scaleX: 0.85 }, { scaleY: 0.85}], marginRight: 16,}}
-                    trackColor={{true: '#15b6f1', false: 'grey'}}/>
+
+            <View style={styles.notiManageBox}>
+                <NotiManageList
+                    title={'진동'}
+                    switchState={vibration}
+                    setSwitchState={setVibration}
+                />
+
+                <NotiManageList
+                    title={'사운드'}
+                    switchState={sound}
+                    setSwitchState={setSound}
+                />
             </View>
-            <View style={styles.subview}>
-                <Text style={styles.text}>기타 알림</Text>
-            </View>
-            <View style={[styles.timeview, {marginTop: 17}]}>
-                <View>
-                    <Text style={styles.text}>방해금지 시간 설정</Text>
-                    <Text style={styles.subtext}>08:00 ~ 20:00</Text>
-                </View>
-                <Switch
-                    value={switchOn3} 
-                    onValueChange={onToggleSwitch3}
-                    style={{ transform: [{ scaleX: 0.85 }, { scaleY: 0.85}], marginRight: 16,}}
-                    trackColor={{true: '#15b6f1', false: 'grey'}}/>
-            </View>
-            <View style={[styles.view, {marginTop: 17}]}>
-                <Text style={styles.text}>진동</Text>
-                <Switch
-                    value={switchOn4} 
-                    onValueChange={onToggleSwitch4}
-                    style={{ transform: [{ scaleX: 0.85 }, { scaleY: 0.85}], marginRight: 16,}}
-                    trackColor={{true: '#15b6f1', false: 'grey'}}/>
-            </View>
-            <View style={styles.subview}>
-                <Text style={styles.text}>사운드</Text>
-                <Switch
-                    value={switchOn5} 
-                    onValueChange={onToggleSwitch5}
-                    style={{ transform: [{ scaleX: 0.85 }, { scaleY: 0.85}], marginRight: 16,}}
-                    trackColor={{true: '#15b6f1', false: 'grey'}}/>
-            </View>
+
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    view: {
-        width: '100%',
-        height: 56,
-        backgroundColor: '#ffffff',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderColor: '#dddddd',
-        borderWidth: 1
-    },
-    subview: {
-        width: '100%',
-        height: 56,
-        backgroundColor: '#ffffff',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottomColor: '#dddddd',
-        borderBottomWidth: 1
-    },
-    timeview: {
-        width: '100%',
-        height: 72,
-        backgroundColor: '#ffffff',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderColor: '#dddddd',
-        borderWidth: 1
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: '500',
-        marginLeft: 24
-    },
-    subtext: {
-        fontSize: 14,
-        fontWeight: '300',
-        marginLeft: 24,
-        color: '#aaaaaa',
-        marginTop: 4
-    },
-    header: {
-        width: '100%',
-        height: 56,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 17,
-        borderBottomColor: '#DDDDDD',
-        borderBottomWidth: 1
-    },
-    backIcon: {
-        position: 'absolute',
-        left: 8
-    },
-    headerText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
+    notiManageBox: {
+        marginTop: 17,
+        borderTopColor: '#dddddd',
+        borderTopWidth: 1
+    }
 })
 
 export default NotiManageScreen;

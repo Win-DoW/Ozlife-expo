@@ -351,4 +351,20 @@ export const getUserOnProfileScreen = /* GraphQL */ `
     }
   }
 `;
+
+export const getUserOnProfileSettingScreen = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      nickname
+      profile
+      interest
+      region
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
 // Profile queries
