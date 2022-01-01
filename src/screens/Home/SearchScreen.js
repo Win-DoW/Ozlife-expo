@@ -7,7 +7,8 @@ import Ozlife from 'components/Ozlife'
 import Store from 'components/Store'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUser, listUsers, listOzlives, listStores } from 'graphql/queries';
+import { getUser, listUsers, listOzlives } from 'graphql/queries';
+import { listStoresOnSearchScreen } from 'graphql/custom';
 
 const SearchScreen = ({ navigation,  route }) => {
 
@@ -48,7 +49,7 @@ const SearchScreen = ({ navigation,  route }) => {
 
       const users = await API.graphql(graphqlOperation(listUsers));
       const ozlifes = await API.graphql(graphqlOperation(listOzlives));
-      const stores = await API.graphql(graphqlOperation(listStores));
+      const stores = await API.graphql(graphqlOperation(listStoresOnSearchScreen));
 
       await Promise.all(users.data.listUsers.items.map(async (item, idx) => {
         const result = await Storage.get(item.image);
