@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { getUser } from './graphql/queries';
+import { getUserOnProfileScreen } from 'graphql/custom';
 
 import ProfileSettingList from '../../components/ProfileComponents/ProfileSettingList';
 
@@ -25,7 +25,7 @@ const ProfileSettingScreen = ({ navigation, route }) => {
         try {
             setLoading(true);
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-            const user = await API.graphql(graphqlOperation(getUser, {
+            const user = await API.graphql(graphqlOperation(getUserOnProfileScreen, {
                 id: userKey.attributes.sub
             }))
             setUserData(user.data.getUser)

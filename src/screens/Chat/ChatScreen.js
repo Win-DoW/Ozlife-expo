@@ -6,8 +6,8 @@ import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
 // import { getUser } from '../../graphql/queries';
 
 // 채팅방 생성을 위한
-import { getUser } from './graphql/queries'
-import { listChatRoomUsersSearch } from './graphql/queries'
+import { getUserOnChatScreen } from 'graphql/custom'
+import { listChatRoomUsersSearchOnChatScreen } from 'graphql/custom'
 import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
 // 채팅방 생성을 위한
 
@@ -36,7 +36,7 @@ const ChatScreen = ({ navigation, route }) => {
     try {
       setLoading(true)
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-      const fetchUserData = await API.graphql(graphqlOperation(getUser, {
+      const fetchUserData = await API.graphql(graphqlOperation(getUserOnChatScreen, {
         id: userKey.attributes.sub
       }))
       const fetchImage = await Storage.get(fetchUserData.data.getUser.image)
@@ -57,7 +57,7 @@ const ChatScreen = ({ navigation, route }) => {
       // 존재하면 그 채팅방으로 이동
       // 존재하지 않으면 새로운 채팅방 생성 후 이동
       const existChatRoom = await API.graphql(
-        graphqlOperation(listChatRoomUsersSearch, {
+        graphqlOperation(listChatRoomUsersSearchOnChatScreen, {
           filter: {
             userID: { eq: userId },
             otherUserID: { eq: ownerId },

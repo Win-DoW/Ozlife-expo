@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { getUser } from './graphql/queries'
+import { getUserOnProfileScreen } from 'graphql/custom'
 
 import RegisteredStoreInProfile from '../../components/ProfileComponents/RegisteredStoreInProfile';
 
@@ -26,7 +26,7 @@ const ProfileScreen = ({ navigation, route }) => {
     try {
       setLoading(true)
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-      let user = await API.graphql(graphqlOperation(getUser, {
+      let user = await API.graphql(graphqlOperation(getUserOnProfileScreen, {
         id: userKey.attributes.sub
       }))
       const image = await Storage.get(user.data.getUser.image)  

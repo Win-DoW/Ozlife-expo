@@ -179,3 +179,176 @@ export const getUser = /* GraphQL */ `
     }
   }
 `;
+
+// Chat queries
+export const getUserOnChatScreen = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      nickname
+      profile
+      interest
+      region
+      image
+      chatRoomUser {
+        items {
+          id
+          userID
+          otherUserID
+          chatRoomID
+          createdAt
+          updatedAt
+          chatRoom {
+            id
+            messagesCount
+            chatRoomUsers {
+              items {
+                user {
+                  id
+                  nickname
+                  image
+                }
+              }
+            }
+            lastMessage {
+              id
+              content
+              updatedAt
+              user {
+                id
+                nickname
+              }
+            }
+          }
+        }
+        nextToken
+      }
+      reviewItem {
+        items {
+          id
+          ozlifeID
+          userID
+          reviews
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      storeItem {
+        items {
+          id
+          userID
+          owner
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getChatRoomCountOnChatScreen = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
+      messagesCount
+      lastMessage {
+        userID
+      }
+    }
+  }
+`;
+
+export const getChatRoomLastOnChatScreen = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
+      lastMessageID
+      lastMessage {
+        userID
+      }
+    }
+  }
+`;
+
+export const listChatRoomUsersSearchOnChatScreen = /* GraphQL */ `
+  query ListChatRoomUsers(
+    $filter: ModelChatRoomUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatRoomUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        otherUserID
+        chatRoomID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+// Chat queries
+
+
+// Chat mutations
+export const updateChatRoomCountOnChatScreen = /* GraphQL */ `
+  mutation UpdateChatRoom(
+    $input: UpdateChatRoomInput!
+    $condition: ModelChatRoomConditionInput
+  ) {
+    updateChatRoom(input: $input, condition: $condition) {
+      messagesCount
+    }
+  }
+`;
+// Chat mutations
+
+// Profile queries
+export const getUserOnProfileScreen = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      nickname
+      profile
+      interest
+      region
+      image
+      storeItem {
+        items {
+          id
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          userID
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+// Profile queries
