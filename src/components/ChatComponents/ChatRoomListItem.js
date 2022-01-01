@@ -7,7 +7,7 @@ import {
     Storage
 } from 'aws-amplify';
 
-const ChatListItem = (props) => {
+const ChatRoomListItem = (props) => {
 
     const { chatRoom, image } = props // 현재 연결되어 있는 채팅방에 대한 정보
 
@@ -150,4 +150,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ChatListItem;
+export default ChatRoomListItem;
