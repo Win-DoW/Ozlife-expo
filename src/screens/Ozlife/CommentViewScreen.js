@@ -1,96 +1,41 @@
 import React, {useState, useEffect} from 'react'
 import { Image, View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, SafeAreaView, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import { Ionicons } from '@expo/vector-icons';
 
-import Spinner from 'react-native-loading-spinner-overlay';
+import AppHeader from 'utils/Header';
 
-import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
+const CommentViewScreen = ({ navigation, route }) => {
 
-import { createReview } from 'graphql/mutations';
+    const ozlife = route.params.ozlife;
+    const userID = route.params.userID;
+    const questions = ozlife.question;
+    const reviews = route.params.reviews;
 
-const CommentViewScreen = (props) => {
-
-    const ozlife = props.route.params.ozlife;
-    const reviews = props.route.params.reviews;
-
-    const [userId, setUserId] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const navigation = useNavigation();    
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            fetchData();
-        });
-    
-        return unsubscribe;
-    }, [navigation]);
-    
-    const fetchData = async () => {
-        try {      
-            setLoading(true);
-
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            setUserId(userKey.attributes.sub);
-
-            setLoading(false);
-    
-        } catch (e) {
-            setLoading(false);
-            console.log(e);
-        }
-    }
-
-    const next = async () => {
-        try {
-            setLoading(true);
-      
-            await API.graphql(graphqlOperation(createReview, { input: {
-                reviewer: userId,
-                reviews: reviews,
-                ozlifeId: ozlife.id
-            }}));
-      
-            setLoading(false);
-
-            navigation.navigate("OzlifeProfile", {
-                ozlifeId: ozlife.id
-            })
-           
-          } catch (e) {
-            setLoading(false);
-            console.log(e);
-        }
-    }
 
     return (
         <SafeAreaView style={styles.container}>
 
+            <AppHeader
+                title={"오지랖 미리보기"}
+                noIcon={false}
+                leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+                leftIconPress={() => navigation.goBack()}
+            />
+
+            <View style={{ ...styles.rowContainer, ...styles.border}}>
+                <Image
+                    source={{uri: ozlife.image}}
+                    style={{width: 64, height: 48}}
+                />
+                <View style={{marginLeft: 20}}>
+                    <Text style={styles.text, {fontWeight:'bold'}}>{ozlife.name}</Text>
+                    <Text style={styles.text}>{ozlife.title}</Text>
+                </View>
+            </View>
+
             <ScrollView>
 
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
-
-                <View>
-                    <View style={{ ...styles.rowContainer, ...styles.border}}>
-                        <Image
-                            source={{uri: ozlife.images}}
-                            style={{width: 64, height: 48}}
-                        />
-                        <View style={{marginLeft: 20}}>
-                            <Text style={styles.text, {fontWeight:'bold'}}>{ozlife.name}</Text>
-                            <Text style={styles.text}>{ozlife.title}</Text>
-                        </View>
-                    </View>
-                </View>
-
-                {ozlife.question.map((question, index) => {
+                {questions.map((question, index) => {
                     return (
                         <View style={styles.section} key={index}>
                             <View>
@@ -106,7 +51,7 @@ const CommentViewScreen = (props) => {
                 
             </ScrollView>
 
-            <TouchableOpacity style={styles.button} onPress={next}>
+            <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttontext}>작성 완료</Text>
             </TouchableOpacity>
 
@@ -126,7 +71,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     border: {
-        borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: '#ddd'
     },

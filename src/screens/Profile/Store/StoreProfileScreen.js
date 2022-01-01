@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Pressable, Image, ScrollView, ImageBackground } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Storage, API, Auth, graphqlOperation } from 'aws-amplify';
+import { Storage } from 'aws-amplify';
 
 import AppHeader from 'utils/Header';
 import Ozlife from 'components/Ozlife'
