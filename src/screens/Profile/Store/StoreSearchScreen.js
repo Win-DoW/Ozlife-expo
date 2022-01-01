@@ -1,294 +1,110 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import SearchBar from 'react-native-platform-searchbar';
+import * as Location from 'expo-location';
+import axios from 'axios';
 
-import * as ImagePicker from 'expo-image-picker';
-
-import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { createStore } from 'graphql/mutations';
+import AppHeader from 'utils/Header';
 
 const StoreSearchScreen = ({ navigation, route }) => {
 
-    const [inputError, setInputError] = useState(false);
-
-    const [userId, setUserId] = useState('');
-
     const [loading, setLoading] = useState(false);
-    const [btnState, setBtnState] = useState(false);
-    const [storeInfo, setStoreInfo] = useState({        
-        storeName: '',
-        storeProfile: '',
-        storeTel: '',
-        storeAddress: '',
-        storeLicense: '',
-        storeUrl: '',
-        storeLongitude: 0,
-        storeLatitude: 0,
-    });
-    const [images, setImages] = useState([]);
-    const [imageIdx, setImageIdx] = useState(0);
 
-    const ref_storeName = useRef();
-    const ref_storeProfile = useRef();
-    const ref_storeTel = useRef();
-    const ref_storeAddress = useRef();
-    const ref_storeLicense = useRef();
-    const ref_storeUrl = useRef();
+    const [places, setPlaces] = useState([]);
+    const [search, setSearch] = useState('');
+
+    const [longitude, setLongitude] = useState(0)
+    const [latitude, setLatitude] = useState(0)
 
     useEffect(() => {
-        fetchUserKey();
-    }, [])
-
-    const fetchUserKey = async() => {
-        try {
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-            setUserId(userKey.attributes.sub);
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    const goToBack = () => {
-        navigation.pop()
-    }
-
-    const checkInputData = () => {
-        if (storeInfo.storeName != '' && storeInfo.storeProfile != '' && storeInfo.storeTel != '' && storeInfo.storeAddress != '' && storeInfo.storeLicense != '' && storeInfo.storeUrl != '' && images.length != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    const checkAndRegister = async() => {
-        try {
-            if(checkInputData()) {
-                // 입력이 완료되어 가게 등록이 가능한 상태
-                setInputError(false);
-                setLoading(true);
-
-                // 이미지 처리
-                const keys = await Promise.all(images.map(async (image, idx) => {
-                    const photo = await fetch(image.uri)
-                    const photoBlob = await photo.blob();
-
-                    const result = await Storage.put(`${userId}/${storeInfo.storeName}/${idx}.jpg`, photoBlob, {
-                        contentType: 'image/jpeg',
-                    });
-
-                    return result.key;
-                }))
-
-                // 가게 생성
-                await API.graphql(graphqlOperation(createStore, {
-                    input: {
-                        userID: userId,
-                        name: storeInfo.storeName,
-                        profile: storeInfo.storeProfile,
-                        images: keys,
-                        tel: storeInfo.storeTel,
-                        address: storeInfo.storeAddress,
-                        license: storeInfo.storeLicense,
-                        url: storeInfo.storeUrl,
-                        longitude: storeLongitude,
-                        latitude: storeLatitude,
-                    }
-                }))
-
-                setLoading(false);
-                navigation.pop();
-
-            } else {
-                setInputError(true);
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
             }
-        } catch (e) {
-            console.log(e)
+        
+            let location = await Location.getCurrentPositionAsync({});
+            setLatitude(location.coords.latitude);
+            setLongitude(location.coords.longitude);
+        })();
+    }, []);
+
+    const searchPlaces = async () => {
+        const url = "https://dapi.kakao.com/v2/local/search/keyword.json";
+        const config = {
+            headers: {
+                "Authorization": "KakaoAK fa6c86b49ad8cb5ee3fed7c98a3227ee",
+            },
+            params: {
+                "query": search,
+                "x": longitude,
+                "y": latitude,
+                "radius": 10000,
+            },
+        };
+        
+        const { data } = await axios.get(url, config);
+    
+        setPlaces(data.documents);
+    }
+    
+    const PlaceInfo = ({info}) => {
+
+        const selectPlace = (info) => {
+            navigation.navigate('StoreAddScreen', {
+                store : {
+                    name: info.place_name,
+                    profile: '',
+                    tel: info.phone,
+                    address: info.road_address_name,
+                    license: '',
+                    url: info.place_url,
+                    longitude: info.x,
+                    latitude: info.y,
+                }
+            });
         }
+
+        const distance = (info.distance >= 1000) ? `${Math.round(info.distance/100)/10}km` : `${info.distance}m`;
+        
+        return (
+            <TouchableOpacity onPress={() => selectPlace(info)} style={styles.place}>
+
+            <View style={styles.rowContainer}>
+                <Text style={styles.name}>{info.place_name}</Text>
+                <Text style={styles.extra}>{info.category_group_name}</Text>
+            </View>
+
+            <View style={styles.rowContainer}>
+                <Text style={styles.address}>{info.road_address_name}</Text>
+                <Text style={styles.extra}>{distance}</Text>
+            </View>
+
+            </TouchableOpacity>
+        )
     }
-
-    const imagePicker = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [3, 3],
-        quality: 1,
-      });
-
-      if (!result.cancelled) {
-        setImages([...images, {id: imageIdx, uri: result.uri}]);
-        setImageIdx(imageIdx + 1);
-      }
-    };
-
-    const deleteStoreImage = (idx) => {
-        setImages(images.filter(item => item.id != idx))
-    }
-
-    const SettingStoreImage = ({ data }) => {
-
-      return (
-        <ImageBackground
-          style={styles.image}
-          imageStyle={{ borderRadius: 4 }}
-          source={{ uri: data.uri }}
-        >
-          <TouchableOpacity
-            style={styles.imagePlusBtn}
-            onPress={() => deleteStoreImage(data.id)}
-          >
-            <Image
-              style={{ height: 35, width: 35 }}
-              source={require("../../../assets/images/icon-minus.png")}
-            />
-          </TouchableOpacity>
-        </ImageBackground>
-      );
-    };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS == 'ios' ? 'padding' : 'null'}
-        >
-            <SafeAreaView style={styles.container}>
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
+        <SafeAreaView style={styles.container}>
+            <SearchBar
+                placeholder="가게 검색"
+                cancelText="취소"
+                onChangeText={(text) => setSearch(text)}
+                value={search}
+                onSubmitEditing={() => searchPlaces()}
+                theme="light"
+                platform="ios"
+                style={{padding:20}}
+            />
 
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.backIcon} onPress={goToBack}>
-                        <Ionicons name="chevron-back-outline" size={32} color="#000000" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>가게 정보</Text>
-                    <TouchableOpacity style={styles.headerCompleteBtn} onPress={btnState ? checkAndRegister : null}>
-                        <Text style={[styles.headerCompleteText, {color: btnState ? '#15b6f1' : '#dddddd'}]}>완료</Text>
-                    </TouchableOpacity>
-                </View>
-                <ScrollView>
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>현재 가게가 있습니까?</Text>
-                        <View style={styles.buttonBox}>
-                            <TouchableOpacity style={[btnState ? styles.storeExistBtn : styles.storeNoneExistBtn, {marginRight: 16}]} onPress={() => setBtnState(true)}>
-                                <Text style={btnState ? styles.storeExistText : styles.storeNoneExistText}>네</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={btnState ? styles.storeNoneExistBtn : styles.storeExistBtn} onPress={() => setBtnState(false)}>
-                                <Text style={btnState ? styles.storeNoneExistText : styles.storeExistText}>아니오</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            inputError ?
-                            <Text style={styles.errorText}>모든 항목을 입력해주세요.</Text>
-                            :
-                            null
-                        }
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>가게 이름</Text>
-                        <TextInput
-                            ref={ref_storeName}
-                            style={styles.textinput}
-                            placeholder="가게 이름을 적어주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeName': value})}
-                            onSubmitEditing={() => ref_storeProfile.current.focus()}
-                            returnKeyType="next"
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>가게 설명</Text>
-                        <TextInput
-                            ref={ref_storeProfile}
-                            style={styles.textinput}
-                            placeholder="가게 설명을 적어주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeProfile': value})}
-                            onSubmitEditing={() => Keyboard.dismiss()}
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>가게 사진 추가 <Text style={styles.optionText}>(1개씩 다수 선택 가능)</Text></Text>
-                        <View style={styles.imageContainer}>
-                            <View style={styles.imageview}>
-                                <Text style={styles.imageAddText}>사진추가</Text>
-                                <TouchableOpacity style={styles.imagePlusBtn} onPress={imagePicker}>
-                                    <Image style={{height: 35, width: 35}} source={require('../../../assets/images/icon-plus.png')}/>
-                                </TouchableOpacity>
-                            </View>
-                            <FlatList
-                                data={images}
-                                renderItem={({item}) => <SettingStoreImage data={item} />}
-                                keyExtractor={( item ) => item.id}
-                                showsHorizontalScrollIndicator={false}
-                                horizontal
-                            />
-                        </View>
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>전화번호</Text>
-                        <TextInput
-                            ref={ref_storeTel}
-                            style={styles.textinput}
-                            placeholder="전화번호를 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeTel': value})}
-                            onSubmitEditing={() => ref_storeAddress.current.focus()}
-                            returnKeyType='next'
-                            keyboardType='number-pad'
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>가게 위치</Text>
-                        <TextInput
-                            ref={ref_storeAddress}
-                            style={styles.textinput}
-                            placeholder="가게 위치를 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeAddress': value})}
-                            onSubmitEditing={() => ref_storeLicense.current.focus()}
-                            returnKeyType='next'
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>사업자등록증</Text>
-                        <TextInput
-                            ref={ref_storeLicense}
-                            style={styles.textinput}
-                            placeholder="사업자등록번호를 입력하세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeLicense': value})}
-                            onSubmitEditing={() => ref_storeUrl.current.focus()}
-                            returnKeyType='next'
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>가게 URL</Text>
-                        <TextInput
-                            ref={ref_storeUrl}
-                            style={styles.textinput}
-                            placeholder="가게 URL을 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStoreInfo({...storeInfo, 'storeUrl': value})}
-                            onSubmitEditing={() => Keyboard.dismiss()}
-                            returnKeyType='done'
-                        />
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        </KeyboardAvoidingView>
-    )
+            <FlatList
+                data={places}
+                renderItem={({item}) => <PlaceInfo info={item}/>}
+                keyExtractor={(item) => item.id}
+            />
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -296,117 +112,32 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF'
     },
-    header: {
-        width: '100%',
-        height: 56,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 24
-    },
-    backIcon: {
-        position: 'absolute',
-        left: 8
-    },
-    headerText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    headerCompleteBtn: {
-        position: 'absolute',
-        right: 24
-    },
-    headerCompleteText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    formBox: {
-        paddingHorizontal: 24,
-        marginBottom: 25
-    },
-    formBoxTitle: {
+    name: {
         fontSize: 16,
         fontWeight: '500',
-        marginBottom: 8
     },
-    buttonBox: {
-        flexDirection: 'row'
-    },
-    storeExistBtn: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 40,
-        backgroundColor: '#15b6f1'
-    },
-    storeExistText: {
+    address: {
         fontSize: 14,
-        color: '#FFFFFF'
+        fontWeight: '300',
+        color: '#aaa',
     },
-    storeNoneExistBtn: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#CCCCCC'
-    },
-    storeNoneExistText: {
+    extra: {
         fontSize: 14,
-        color: '#CCCCCC'
+        fontWeight: '500',
+        color: '#777',
     },
-    textinput: {
-        fontSize: 14,
-        height: 36,
-        color: '#666',
-        borderBottomColor: '#dddddd',
-        borderBottomWidth: 1,
+    place: {
+        width: '100%',
+        paddingVertical: 8,
+        paddingHorizontal: 24,
+        borderTopWidth: 1,
+        borderColor: '#ddd',
     },
-    imageview: {
-        width: 66,
-        height: 66,
-        marginRight: 16,
-        borderWidth: 1,
-        borderColor: '#cccccc',
-        borderRadius: 4,
-        backgroundColor: '#efefef',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    imagePlusBtn: {
-        position: 'absolute',
-        bottom: -10,
-        right: -10,
-    },
-    imageAddText: {
-        fontSize: 12,
-        color: '#AAAAAA'
-    },
-    imageContainer: {
-        flexDirection: 'row'
-    },
-    image: {
-        height: 66,
-        width: 66,
-        justifyContent: 'flex-end',
-        marginRight: 16,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#cccccc',
-        borderRadius: 4,
-        overflow: 'visible'
-    },
-    optionText: {
-        fontSize: 14,
-        color: '#AAAAAA'
-    },
-    errorText: {
-        fontSize: 12,
-        lineHeight: 24,
-        color: '#FF4444',
-        fontWeight: '400',
-        marginTop: 8
+    rowContainer: {
+        justifyContent: 'space-between', 
+        alignItems:'center', 
+        flexDirection: 'row',
+        marginVertical: 2,
     }
 })
 
