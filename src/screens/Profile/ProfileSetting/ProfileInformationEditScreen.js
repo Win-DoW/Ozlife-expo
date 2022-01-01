@@ -3,8 +3,10 @@ import { View, Text, Pressable, SafeAreaView, StyleSheet, ScrollView, TextInput,
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { getUser } from '../../../graphql/queries'
-import { updateUser } from '../../../graphql/mutations'
+import { getUserOnProfileSettingScreen } from 'graphql/custom'
+import { updateUser } from 'graphql/mutations'
+
+import Header from 'utils/Header';
 
 import RNPickerSelect from 'react-native-picker-select';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -38,7 +40,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
           bypassCache: false,
         });
         let user = await API.graphql(
-          graphqlOperation(getUser, {
+          graphqlOperation(getUserOnProfileSettingScreen, {
             id: userKey.attributes.sub,
           })
         );
@@ -131,12 +133,13 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                     textStyle={styles.spinnerTextStyle}
                 />
 
-                <View style={styles.header}>
-                    <Pressable style={styles.backIcon} onPress={goToBack}>
-                        <Ionicons name="chevron-back-outline" size={32} color="#000000" />
-                    </Pressable>
-                    <Text style={styles.headerText}>정보 수정</Text>
-                </View>
+                <Header
+                    title={'정보 수정'}
+                    noIcon={false}
+                    leftIcon={<Ionicons name="chevron-back-outline" size={32} color="#000000" />}
+                    leftIconPress={goToBack}
+                />
+
                 <ScrollView style={styles.scrollContainer} overScrollMode='always'>
                     <View style={styles.formBox}>
                         <Text style={styles.formMainText}>닉네임</Text>
@@ -206,22 +209,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF'
-    },
-    header: {
-        width: '100%',
-        height: 56,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    backIcon: {
-        position: 'absolute',
-        left: 8
-    },
-    headerText: {
-        fontSize: 18,
-        fontWeight: 'bold',
     },
     scrollContainer: {
         paddingHorizontal: 24

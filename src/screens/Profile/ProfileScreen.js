@@ -6,7 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { getUserOnProfileScreen } from 'graphql/custom'
 
-import RegisteredStoreInProfile from '../../components/ProfileComponents/RegisteredStoreInProfile';
+import RegisteredStoreInProfile from 'components/ProfileComponents/RegisteredStoreInProfile';
 
 const ProfileScreen = ({ navigation, route }) => {
 
@@ -41,7 +41,9 @@ const ProfileScreen = ({ navigation, route }) => {
   }
 
   const goToSetting = () => {
-    navigation.navigate('ProfileSettingScreen');
+    navigation.navigate('ProfileSettingScreen', {
+      name: userData.nickname
+    });
   }
 
   const ProfileContent = () => {
