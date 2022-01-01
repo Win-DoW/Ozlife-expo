@@ -4,9 +4,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Ionicons } from '@expo/vector-icons';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
 
-import { listReviews } from '../../graphql/queries';
+import { listReviews } from 'graphql/queries';
 
-import AppHeader from '../../utils/Header';
+import AppHeader from 'utils/Header';
 
 const OzlifeProfileScreen = ({ route, navigation }) => {
 

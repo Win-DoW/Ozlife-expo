@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Pressable, Image, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { screen } from '../utils/Styles';
+import { screen } from 'utils/Styles';
 
 const Ozlifer = ({ user }) => {
 

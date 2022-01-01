@@ -4,7 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import styles from './styles';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { createOzlife } from '../../../graphql/mutations';
+import { createOzlife } from 'graphql/mutations';
 
 const Fifth = ({ navigation, route }) => {
 

@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Pressable, ScrollView, FlatList, Image } from 'react-native';
 
-import PickOzlifer from '../../components/PickOzlifer';
-import QuestionListItem from '../../components/QuestionListItem';
+import PickOzlifer from 'components/PickOzlifer';
+import QuestionListItem from 'components/QuestionListItem';
 
-import MyPickUserData from '../../data/MyPickUserData';
-import QuestionListData from '../../data/QuestionListData';
+import MyPickUserData from 'data/MyPickUserData';
+import QuestionListData from 'data/QuestionListData';
 
 const OzlifeManageScreen = () => {
 

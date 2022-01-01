@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Text, View, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { screen } from '../utils/Styles';
+import { screen } from 'utils/Styles';
 
 const Store = ({ store }) => {
     

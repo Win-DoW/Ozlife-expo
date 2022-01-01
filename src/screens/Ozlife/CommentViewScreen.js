@@ -6,7 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
-import { createReview } from '../../graphql/mutations';
+import { createReview } from 'graphql/mutations';
 
 const CommentViewScreen = (props) => {
 

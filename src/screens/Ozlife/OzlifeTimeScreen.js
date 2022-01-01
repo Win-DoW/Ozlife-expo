@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 
 import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { createReview } from '../../graphql/mutations';
+import { createReview } from 'graphql/mutations';
 
 const OzlifeTimeScreen = ({ navigation, route }) => {
 
