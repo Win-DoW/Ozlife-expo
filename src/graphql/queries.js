@@ -11,6 +11,8 @@ export const getUser = /* GraphQL */ `
       interest
       region
       image
+      status
+      noti_token
       chatRoomUser {
         items {
           id
@@ -67,8 +69,6 @@ export const getUser = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -96,6 +96,8 @@ export const listUsers = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -138,6 +140,8 @@ export const getStore = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -169,8 +173,6 @@ export const getStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -210,6 +212,8 @@ export const listStores = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -239,8 +243,6 @@ export const getOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      status
-      noti_token
       createdAt
       storeID
       store {
@@ -264,6 +266,8 @@ export const getOzlife = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -281,6 +285,8 @@ export const getOzlife = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -333,8 +339,6 @@ export const listOzlives = /* GraphQL */ `
         discount_price
         promotion
         address
-        status
-        noti_token
         createdAt
         storeID
         store {
@@ -361,6 +365,8 @@ export const listOzlives = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -395,8 +401,6 @@ export const getReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        status
-        noti_token
         createdAt
         storeID
         store {
@@ -423,6 +427,8 @@ export const getReview = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -440,6 +446,8 @@ export const getReview = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -486,8 +494,6 @@ export const listReviews = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -502,6 +508,8 @@ export const listReviews = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -526,6 +534,8 @@ export const getChatRoomUser = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -587,6 +597,8 @@ export const listChatRoomUsers = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -645,6 +657,8 @@ export const getChatRoom = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -711,6 +725,8 @@ export const getMessage = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -772,6 +788,8 @@ export const listMessages = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -819,6 +837,8 @@ export const messagesByChatRoom = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }

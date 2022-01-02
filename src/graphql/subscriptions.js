@@ -11,6 +11,8 @@ export const onCreateUser = /* GraphQL */ `
       interest
       region
       image
+      status
+      noti_token
       chatRoomUser {
         items {
           id
@@ -67,8 +69,6 @@ export const onCreateUser = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -91,6 +91,8 @@ export const onUpdateUser = /* GraphQL */ `
       interest
       region
       image
+      status
+      noti_token
       chatRoomUser {
         items {
           id
@@ -147,8 +149,6 @@ export const onUpdateUser = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -171,6 +171,8 @@ export const onDeleteUser = /* GraphQL */ `
       interest
       region
       image
+      status
+      noti_token
       chatRoomUser {
         items {
           id
@@ -227,8 +229,6 @@ export const onDeleteUser = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -264,6 +264,8 @@ export const onCreateStore = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -295,8 +297,6 @@ export const onCreateStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -331,6 +331,8 @@ export const onUpdateStore = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -362,8 +364,6 @@ export const onUpdateStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -398,6 +398,8 @@ export const onDeleteStore = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -429,8 +431,6 @@ export const onDeleteStore = /* GraphQL */ `
           discount_price
           promotion
           address
-          status
-          noti_token
           createdAt
           storeID
           userID
@@ -459,8 +459,6 @@ export const onCreateOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      status
-      noti_token
       createdAt
       storeID
       store {
@@ -484,6 +482,8 @@ export const onCreateOzlife = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -501,6 +501,8 @@ export const onCreateOzlife = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -548,8 +550,6 @@ export const onUpdateOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      status
-      noti_token
       createdAt
       storeID
       store {
@@ -573,6 +573,8 @@ export const onUpdateOzlife = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -590,6 +592,8 @@ export const onUpdateOzlife = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -637,8 +641,6 @@ export const onDeleteOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
-      status
-      noti_token
       createdAt
       storeID
       store {
@@ -662,6 +664,8 @@ export const onDeleteOzlife = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -679,6 +683,8 @@ export const onDeleteOzlife = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -731,8 +737,6 @@ export const onCreateReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        status
-        noti_token
         createdAt
         storeID
         store {
@@ -759,6 +763,8 @@ export const onCreateReview = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -776,6 +782,8 @@ export const onCreateReview = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -817,8 +825,6 @@ export const onUpdateReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        status
-        noti_token
         createdAt
         storeID
         store {
@@ -845,6 +851,8 @@ export const onUpdateReview = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -862,6 +870,8 @@ export const onUpdateReview = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -903,8 +913,6 @@ export const onDeleteReview = /* GraphQL */ `
         discount_price
         promotion
         address
-        status
-        noti_token
         createdAt
         storeID
         store {
@@ -931,6 +939,8 @@ export const onDeleteReview = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -948,6 +958,8 @@ export const onDeleteReview = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -982,6 +994,8 @@ export const onCreateChatRoomUser = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -1038,6 +1052,8 @@ export const onUpdateChatRoomUser = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -1094,6 +1110,8 @@ export const onDeleteChatRoomUser = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -1176,6 +1194,8 @@ export const onCreateChatRoom = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -1235,6 +1255,8 @@ export const onUpdateChatRoom = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -1294,6 +1316,8 @@ export const onDeleteChatRoom = /* GraphQL */ `
           interest
           region
           image
+          status
+          noti_token
           createdAt
           updatedAt
         }
@@ -1328,6 +1352,8 @@ export const onCreateMessage = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -1384,6 +1410,8 @@ export const onUpdateMessage = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
@@ -1440,6 +1468,8 @@ export const onDeleteMessage = /* GraphQL */ `
         interest
         region
         image
+        status
+        noti_token
         chatRoomUser {
           nextToken
         }
