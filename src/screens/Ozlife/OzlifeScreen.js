@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
-import { getUser } from 'graphql/custom';
+import { getUserOnOzlifeScreen } from 'graphql/custom';
 
 import Ozlife from 'components/Ozlife';
 
@@ -31,7 +31,8 @@ const OzlifeScreen = ({ navigation, route }) => {
             setAnswers([]);
 
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-            const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
+            const userData = await API.graphql(graphqlOperation(getUserOnOzlifeScreen, { id: userKey.attributes.sub }));
+
             const user = userData.data.getUser;
             const ozlifes = user.ozlifeItem.items;
             const reviews = user.reviewItem.items;

@@ -1,24 +1,7 @@
-export const getUser = /* GraphQL */ `
+export const getUserOnOzlifeScreen = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
-      email
-      nickname
-      profile
-      interest
-      region
-      image
-      chatRoomUser {
-        items {
-          id
-          userID
-          otherUserID
-          chatRoomID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       reviewItem {
         items {
           id
@@ -85,38 +68,6 @@ export const getUser = /* GraphQL */ `
             image
             createdAt
             updatedAt
-          }
-          updatedAt
-        }
-        nextToken
-      }
-      storeItem {
-        items {
-          id
-          name
-          profile
-          images
-          tel
-          address
-          license
-          url
-          longitude
-          latitude
-          createdAt
-          userID
-          user {
-            id
-            email
-            nickname
-            profile
-            interest
-            region
-            image
-            createdAt
-            updatedAt
-          }
-          ozlifeItem {
-            nextToken
           }
           updatedAt
         }
@@ -312,6 +263,80 @@ export const getUserOnProfileScreen = /* GraphQL */ `
           createdAt
           userID
           updatedAt
+          user {
+            id
+            email
+            nickname
+            profile
+            interest
+            region
+            image
+            createdAt
+            updatedAt
+          }
+          ozlifeItem {
+            items {
+              id
+              title
+              profile
+              images
+              section
+              tag
+              question
+              member
+              visit_date
+              name
+              original_price
+              discount_price
+              promotion
+              address
+              createdAt
+              storeID
+              userID
+              updatedAt
+              store {
+                id
+                name
+                profile
+                images
+                tel
+                address
+                license
+                url
+                longitude
+                latitude
+                createdAt
+                userID
+                user {
+                  id
+                  email
+                  nickname
+                  profile
+                  interest
+                  region
+                  image
+                  createdAt
+                  updatedAt
+                }
+                ozlifeItem {
+                  nextToken
+                }
+                updatedAt
+              }
+              user {
+                id
+                email
+                nickname
+                profile
+                interest
+                region
+                image
+                createdAt
+                updatedAt
+              }              
+            }
+            nextToken
+          }
         }
         nextToken
       }
@@ -337,3 +362,102 @@ export const getUserOnProfileInformationEditScreen = /* GraphQL */ `
   }
 `;
 // Profile queries
+
+
+export const listStoresOnSearchScreen = /* GraphQL */ `
+  query ListStores(
+    $filter: ModelStoreFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStores(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        profile
+        images
+        tel
+        address
+        license
+        url
+        longitude
+        latitude
+        createdAt
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          createdAt
+          updatedAt
+        }
+        ozlifeItem {
+          items {
+            id
+            title
+            profile
+            images
+            section
+            tag
+            question
+            member
+            visit_date
+            name
+            original_price
+            discount_price
+            promotion
+            address
+            createdAt
+            storeID
+            userID
+            user {
+              id
+              email
+              nickname
+              profile
+              interest
+              region
+              image
+              createdAt
+              updatedAt
+            }
+            updatedAt
+            store {
+              id
+              name
+              profile
+              images
+              tel
+              address
+              license
+              url
+              longitude
+              latitude
+              createdAt
+              userID
+              updatedAt
+              user {
+                id
+                email
+                nickname
+                profile
+                interest
+                region
+                image
+                createdAt
+                updatedAt
+              }
+            }
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

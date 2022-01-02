@@ -1,26 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import * as ImagePicker from 'expo-image-picker';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { createStore } from 'graphql/mutations';
+import { updateStore } from 'graphql/mutations';
 import AppHeader from 'utils/Header';
-import { CommonActions } from '@react-navigation/native';
 
-const StoreAddScreen = ({ navigation, route }) => {
+const StoreEditScreen = ({ navigation, route }) => {
 
-    const [inputError, setInputError] = useState(false);
+    const [store, setStore] = useState({
+        id: route.params.store.id,
+        userID: route.params.store?.userID,
+        name: route.params.store.name,
+        profile: route.params.store.profile,
+        tel: route.params.store.tel,
+        address: route.params.store.address,
+        license: route.params.store.license,
+        url: route.params.store.url,
+        longitude: route.params.store.longitude,
+        latitude: route.params.store.latitude,
+    });
 
-    const [userID, setUserID] = useState('');
-
-    const [loading, setLoading] = useState(false);
-    const [btnState, setBtnState] = useState(false);
-    const [store, setStore] = useState(route.params.store);
     const [images, setImages] = useState([]);
-    const [imageIdx, setImageIdx] = useState(0);
+    const [imageIdx, setImageIdx] = useState(route.params.store.images.length);
 
     const ref_name = useRef();
     const ref_profile = useRef();
@@ -35,56 +39,44 @@ const StoreAddScreen = ({ navigation, route }) => {
 
     const fetchData = async() => {
         try {
-            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
-            setUserID(userKey.attributes.sub);
+            setImages([]);
+
+            await Promise.all(route.params.store.images.map(async(image, idx) => {
+                const newImage = await Storage.get(image)
+                setImages(images => [...images, {id: idx, uri: newImage}])
+            }))
+
         } catch (e) {
             console.log(e)
         }
     }
 
-    const checkInputData = () => {
-        if (store.name != '' && store.profile != '' && store.tel != '' && store.address != '' && store.license != '' && store.url != '' && images.length != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    const checkAndRegister = async() => {
+    const StoreUpdate = async() => {
         try {
-            if(checkInputData()) {
-                // 입력이 완료되어 가게 등록이 가능한 상태
-                setInputError(false);
-                setLoading(true);
+            console.log(store)
 
-                // 이미지 처리
-                const keys = await Promise.all(images.map(async (image, idx) => {
-                    const photo = await fetch(image.uri)
-                    const photoBlob = await photo.blob();
+            // 이미지 처리
+            const keys = await Promise.all(images.map(async (image, idx) => {
+                const photo = await fetch(image.uri)
+                const photoBlob = await photo.blob();
 
-                    const result = await Storage.put(`${userID}/${store.name}/${idx}.jpg`, photoBlob, {
-                        contentType: 'image/jpeg',
-                    });
+                const result = await Storage.put(`${store.userID}/${store.name}/${idx}.jpg`, photoBlob, {
+                    contentType: 'image/jpeg',
+                });
 
-                    return result.key;
-                }))
+                return result.key;
+            }))
 
-                // 가게 생성
-                await API.graphql(graphqlOperation(createStore, {
-                    input: {
-                        userID,
-                        ...store,
-                        images: keys,
-                    }
-                }))
+            // 가게 수정
+            const store = await API.graphql(graphqlOperation(updateStore, {
+                input: {
+                    ...store,
+                    images: keys,
+                }
+            }))
 
-                setLoading(false);
+            navigation.pop();
 
-                navigation.navigate('MainTab', { screen: 'ProfileScreen' });
-
-            } else {
-                setInputError(true);
-            }
         } catch (e) {
             console.log(e)
         }
@@ -135,17 +127,9 @@ const StoreAddScreen = ({ navigation, route }) => {
             behavior={Platform.OS == 'ios' ? 'padding' : 'null'}
         >
             <SafeAreaView style={styles.container}>
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
 
                 <AppHeader
-                    title={"가게 등록"}
+                    title={"가게 수정"}
                     noIcon={false}
                     leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
                     leftIconPress={() => navigation.goBack()}
@@ -260,9 +244,9 @@ const StoreAddScreen = ({ navigation, route }) => {
 
                 <Pressable 
                     style={styles.button} 
-                    onPress={() => checkAndRegister()}
+                    onPress={() => StoreUpdate()}
                 >
-                    <Text style={styles.buttontext}>가게 등록</Text>
+                    <Text style={styles.buttontext}>가게 수정</Text>
                 </Pressable>
 
             </SafeAreaView>
@@ -378,4 +362,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default StoreAddScreen;
+export default StoreEditScreen;

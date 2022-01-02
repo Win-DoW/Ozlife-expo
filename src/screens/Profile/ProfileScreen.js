@@ -5,13 +5,12 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { getUserOnProfileScreen } from 'graphql/custom'
-
-import RegisteredStoreInProfile from 'components/ProfileComponents/RegisteredStoreInProfile';
+import Store from 'components/Store'
 
 const ProfileScreen = ({ navigation, route }) => {
 
   const [user, setUser] = useState({})
-  const [store, setStores] = useState([])
+  const [stores, setStores] = useState([])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,6 +24,7 @@ const ProfileScreen = ({ navigation, route }) => {
   const fetchData = async() => {
     try {
       setLoading(true)
+      setStores([]);
 
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
       const userData = await API.graphql(graphqlOperation(getUserOnProfileScreen, {
@@ -32,9 +32,15 @@ const ProfileScreen = ({ navigation, route }) => {
       }))
       const user = userData.data.getUser;
       const image = await Storage.get(user.image);
+      const stores = user.storeItem.items;
 
       setUser({...user, image});
-      setStores(user.storeItem.items)
+
+      await Promise.all(stores.map(async (item, idx) => {
+        const result = await Storage.get(item.images[0]);
+        const newStore = {...item, image: result};
+        setStores(stores => [...stores, newStore]);
+      }))
 
       setLoading(false)
     } catch (e) {
@@ -102,7 +108,7 @@ const ProfileScreen = ({ navigation, route }) => {
           </View>
         </View>
   
-        { store.length > 0 ?
+        { stores.length > 0 ?
           <View style={styles.storeInfo}>
             <Text style={styles.sectionTitleText}>
               가게정보
@@ -139,11 +145,12 @@ const ProfileScreen = ({ navigation, route }) => {
 
       <FlatList
         ListHeaderComponent={ProfileContent}
-        data={store}
-        renderItem={({ item }) => <RegisteredStoreInProfile store={item} navigation={navigation}/>}
+        data={stores}
+        renderItem={({item}) => <Store store={item} userID={user.id} />}
         keyExtractor={(item) => item.id}
-        style={{ marginBottom: 10 }}
+        contentContainerStyle={{marginTop: 20}}
       />
+
     </SafeAreaView>
   );
 }

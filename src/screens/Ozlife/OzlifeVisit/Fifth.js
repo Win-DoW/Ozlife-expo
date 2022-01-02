@@ -43,14 +43,7 @@ const Fifth = ({ navigation, route }) => {
       
       setLoading(false);
 
-      navigation.reset({routes: [
-        {
-          name: 'OzlifeProfileScreen',
-          params: { 
-            ozlife: ozlife.data.createOzlife
-          }
-        },
-      ]});
+      navigation.navigate('MainTab', { screen: 'OzlifeScreen' });
 
     } catch (e) {
       setLoading(false);

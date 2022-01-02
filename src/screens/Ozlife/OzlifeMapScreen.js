@@ -20,7 +20,6 @@ const OzlifeMapScreen = ({ navigation, route }) => {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      console.log(location)
       setDistance(getDistanceFromLatLonInKm(location.coords.latitude, location.coords.longitude, store.latitude, store.longitude));
     })();
   }, []);

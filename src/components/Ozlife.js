@@ -3,16 +3,23 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { screen } from 'utils/Styles';
 
+import dayjs from "dayjs";
+
 const Ozlife = ({ ozlife, userID }) => {
 
     const navigation = useNavigation();
 
-    const visitDate = new Date(ozlife.visit_date).toLocaleString('ko-KR');
-    const currentDate = new Date().toLocaleString('ko-KR');
+    const visit_date = dayjs(ozlife.visit_date).format();
+    const current_date = dayjs().format();
+    const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {
-            ozlife, userID
+            ozlife : {
+                ...ozlife,
+                visit_date
+            }, 
+            userID
         })
     }
 
@@ -43,7 +50,7 @@ const Ozlife = ({ ozlife, userID }) => {
                 <Text style={{fontSize: 14, fontWeight: '500'}}>{ozlife.title}</Text>
 
                 {
-                    ozlife.owner === userID ?
+                    ozlife.userID === userID ?
 
                     <TouchableOpacity style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}} onPress={goToOzlifeManage}>
                         <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 관리</Text>
@@ -51,7 +58,7 @@ const Ozlife = ({ ozlife, userID }) => {
 
                     :
 
-                    visitDate.slice(0,10) === currentDate.slice(0,10) && visitDate.slice(-4) === currentDate.slice(-4) ?
+                    status ?
 
                     <TouchableOpacity onPress={goToOzlifeWrite} style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}}>
                         <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 남기기</Text>

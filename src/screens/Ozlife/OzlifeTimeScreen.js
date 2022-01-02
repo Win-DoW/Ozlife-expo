@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-na
 
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { createReview } from 'graphql/mutations';
+import dayjs from "dayjs";
 
 const OzlifeTimeScreen = ({ navigation, route }) => {
 
@@ -17,16 +18,16 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
         6 : '토',
     };
 
-    const visit_date = new Date(ozlife.visit_date);
+    const visit_date = dayjs(ozlife.visit_date);
 
-    const year = visit_date.getFullYear();
-    const month = visit_date.getMonth()+1;
-    const date = visit_date.getDate();
-    const day = toDay[visit_date.getDay()];
+    const year = visit_date.year();
+    const month = visit_date.month()+1;
+    const date = visit_date.date();
+    const day = toDay[visit_date.day()];
 
-    const hours = visit_date.getHours();
-    const minutes = visit_date.getMinutes();
-    const time = hours > 12 ? `오후 ${hours-12}:${minutes} ` : `오전 ${hours}:${minutes} `;
+    const hour = visit_date.hour();
+    const minute = visit_date.minute();
+    const time = hour > 12 ? `오후 ${hour-12}:${minute} ` : `오전 ${hour}:${minute} `;
 
     const next = async () => {
         try {
