@@ -9,7 +9,6 @@ import { updateUser } from 'graphql/mutations'
 import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions'
 import * as Device from 'expo-device';
-import { SendNotification } from 'utils/Noti';
 
 LogBox.ignoreLogs([`Constants.platform.ios.model has been deprecated in favor of expo-device's Device.modelName property.`]);
 
@@ -53,7 +52,6 @@ const HomeScreen = ({ navigation,  route }) => {
         }
 
         token = (await Notifications.getExpoPushTokenAsync()).data;
-        console.log(token);
       } else {
         // 에뮬레이터나 시뮬레이터인 경우
         console.log("Must use physical device for Push Notifications")
@@ -62,7 +60,7 @@ const HomeScreen = ({ navigation,  route }) => {
       // 안드로이드의 경우 설정이 별도로 필요
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
-          name: "default",
+          name: "Ozlife",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [0, 250, 250, 250],
           lightColor: "#FF231F7C",

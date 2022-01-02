@@ -8,7 +8,6 @@ type User
   interest: String
   region: String
   image: String
-  status: Int
   noti_token: String
 
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
@@ -76,6 +75,7 @@ type Review
 {
   id: ID!
   reviews: [String]
+  status: Int
   createdAt: String
 
   ozlifeID: ID!

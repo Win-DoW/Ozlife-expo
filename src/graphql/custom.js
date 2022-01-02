@@ -356,6 +356,7 @@ export const getUserOnProfileInformationEditScreen = /* GraphQL */ `
       interest
       region
       image
+      noti_token
       createdAt
       updatedAt
     }
