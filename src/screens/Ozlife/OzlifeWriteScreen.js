@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import AppHeader from 'utils/Header';
 
 const OzlifeWriteScreen = ({ navigation, route }) => {
 
@@ -7,6 +9,12 @@ const OzlifeWriteScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader
+        title={"오지랖 선택"}
+        noIcon={false}
+        leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+        leftIconPress={() => navigation.goBack()}
+      />
       <View style={styles.formbox}>
           <Text style={styles.text}>필요한 오지랖을 선택해주세요.</Text>
       </View>

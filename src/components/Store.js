@@ -4,14 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { screen } from 'utils/Styles';
 
-const Store = ({ store, userID }) => {
+const Store = ({ store, userID, userReviews }) => {
     
     const navigation = useNavigation();
 
     const goToStoreProfile = () => {
         navigation.navigate("StoreProfileScreen", {
             store,
-            userID
+            userID,
+            userReviews
         })
     }
 

@@ -12,6 +12,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
     const store = route.params.store;
     const userID = route.params.userID;
     const owner = store.user;
+    const userReviews = route.params.userReviews;
 
     const [storeImages, setStoreImages] = useState([])
     const [ownerImage, setOwnerImage] = useState();
@@ -234,7 +235,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
             :
             <FlatList
                 data={ozlifes}
-                renderItem={({item}) => <Ozlife ozlife={item} userID={userID} /> }
+                renderItem={({item}) => <Ozlife ozlife={item} userID={userID} userReviews={userReviews} /> }
                 keyExtractor={(item) => item.id}
                 ListHeaderComponent={FlatListHeader}
             />

@@ -8,6 +8,7 @@ const CommentWriteScreen = ({ navigation, route }) => {
 
     const ozlife = route.params.ozlife;
     const userID = route.params.userID;
+    const reviewID = route.params.reviewID;
     const questions = ozlife.question;
     const [reviews, setReviews] = useState([]);
     
@@ -21,7 +22,9 @@ const CommentWriteScreen = ({ navigation, route }) => {
         navigation.navigate('CommentViewScreen', {
             reviews,
             ozlife,
-            userID              
+            userID,
+            reviewID,
+            status: true,
         });
     }
 

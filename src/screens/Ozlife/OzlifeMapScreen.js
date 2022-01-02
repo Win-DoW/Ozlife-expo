@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { Ionicons } from '@expo/vector-icons';
+import AppHeader from 'utils/Header';
 
 const OzlifeMapScreen = ({ navigation, route }) => {
 
@@ -51,6 +53,14 @@ const OzlifeMapScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      
+      <AppHeader
+        title={ozlife.name}
+        noIcon={false}
+        leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+        leftIconPress={() => navigation.goBack()}
+      />
+
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE} 

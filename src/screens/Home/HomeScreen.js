@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pres
 import Ozlife from 'components/Ozlife'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUser, listOzlives } from 'graphql/queries';
+import { getUserOnHomeScreen } from 'graphql/custom';
+import { listOzlives } from 'graphql/queries';
 import { updateUser } from 'graphql/mutations'
 
 import * as Notifications from 'expo-notifications'
@@ -17,6 +18,7 @@ const HomeScreen = ({ navigation,  route }) => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
   const [ozlifes, setOzlifes] = useState([]);
+  const [userReviews, setUserReviews] = useState([]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -89,10 +91,12 @@ const HomeScreen = ({ navigation,  route }) => {
       setOzlifes([]);
 
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-      const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
+      const userData = await API.graphql(graphqlOperation(getUserOnHomeScreen, { id: userKey.attributes.sub }));
       const ozlifes = await API.graphql(graphqlOperation(listOzlives, { filter: { address: { contains: userData.data.getUser.region }}}));
+      const user = userData.data.getUser;
 
-      setUser(userData.data.getUser);
+      setUser(user);
+      setUserReviews(user.reviewItem.items)
 
       await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
         const result = await Storage.get(item.images[0]);
@@ -126,7 +130,7 @@ const HomeScreen = ({ navigation,  route }) => {
         </View>
 
         <View style={styles.section}>
-          <Pressable style={styles.searchBar} onPress={() => navigation.navigate('SearchScreen')}>
+          <Pressable style={styles.searchBar} onPress={() => navigation.navigate('SearchScreen', { user })}>
             <Image style={styles.searchIcon} source={require('assets/BottomTabIcons/find_2.png')}/>
             <Text style={styles.searchText}>통합검색</Text>
           </Pressable>
@@ -147,7 +151,7 @@ const HomeScreen = ({ navigation,  route }) => {
       <FlatList
         ListHeaderComponent={Main}
         data={ozlifes}
-        renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
+        renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>

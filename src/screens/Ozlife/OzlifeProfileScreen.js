@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, Image, ImageBackground, Pressable, SafeAreaView
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Ionicons } from '@expo/vector-icons';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
-
-import { listReviews } from 'graphql/queries';
+import dayjs from "dayjs";
 
 import AppHeader from 'utils/Header';
 
@@ -14,13 +13,17 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const ozlife = route.params.ozlife;
     const store = ozlife.store;
     const owner = ozlife.user;
+    const userReviews = route.params.userReviews;
+    const status_review = (userReviews.find(item => item.userID === userID));
+
+    const visit_date = ozlife.visit_date;
+    const current_date = dayjs().format();
+    const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
 
     const [loading, setLoading] = useState(false);
 
     const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
-
-    const [review, setReview] = useState({});
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -43,11 +46,6 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 setOzlifeImages(images => [...images, result]);
             }))
 
-            const reviewsData = await API.graphql(graphqlOperation(listReviews, { filter: { ozlifeID: { eq: ozlife.id }}}));
-            const reviews = reviewsData.data.listReviews.items;
-
-            setReview(reviews.find(item => item.userID === userID));
-
             setLoading(false);
     
         } catch (e) {
@@ -56,12 +54,25 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
         }
     }
 
-    const next = () => {
+    const goToOzlifeApply = () => {
         navigation.navigate("OzlifeMapScreen", {
             ozlife
         })
     }
 
+    const goToOzlifeWrite = () => {
+        navigation.navigate("CommentWriteScreen", {
+            ozlife, userID, reviewID: status_review.id
+        })
+    }
+
+    const goToOzlifeView = () => {
+        navigation.navigate("CommentViewScreen", {
+            reviews: status_review.reviews,
+            ozlife,
+            status: false,
+        })
+    }
     
     return(
         <SafeAreaView style={styles.container}>
@@ -212,22 +223,33 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
             </ScrollView>
 
             {
-            userID === owner.id ?
+            ozlife.userID === userID ?
             <Pressable style={styles.button} 
                 onPress={() => navigation.navigate("OzlifeManageScreen", {
                     ozlife
                 })}
             >
-                <Text style={styles.buttontext}>오지랖 관리하기</Text>
+                <Text style={styles.buttontext}>오지랖 관리</Text>
             </Pressable>
             :
-            review === undefined ?
-            <Pressable style={styles.button} onPress={next}>
-                <Text style={styles.buttontext}>오지랖 남기기</Text>
+            status_review === undefined ?
+            <Pressable style={styles.button} onPress={goToOzlifeApply}>
+                <Text style={styles.buttontext}>오지랖 예약</Text>
+            </Pressable>
+            :
+            status_review.status === 0 ?
+            (status ?
+            <Pressable style={styles.button} onPress={goToOzlifeWrite}>
+                <Text style={styles.buttontext}>오지랖 작성</Text>
             </Pressable>
             :
             <Pressable style={{...styles.button, backgroundColor: '#ccc'}}>
-                <Text style={styles.buttontext}>오지랖 남기기 예약중</Text>
+                <Text style={styles.buttontext}>오지랖 예약중</Text>
+            </Pressable>
+            )
+            :
+            <Pressable style={styles.button} onPress={goToOzlifeView}>
+                <Text style={styles.buttontext}>오지랖 완료</Text>
             </Pressable>
             }
 

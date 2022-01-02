@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, FlatList, Text, Pressable, ScrollView, TextInput, ImageBackground, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import RNPickerSelect from 'react-native-picker-select';
-
+import { Ionicons } from '@expo/vector-icons';
+import AppHeader from 'utils/Header';
 import styles from './styles';
 
 const First = ({ navigation, route }) => {
@@ -73,6 +74,14 @@ const First = ({ navigation, route }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
+
+          <AppHeader
+            title={"방문 온라인 피드백"}
+            noIcon={false}
+            leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+            leftIconPress={() => navigation.goBack()}
+          />
+
           <ScrollView>
 
             <View style={styles.formbox}>
@@ -118,11 +127,14 @@ const First = ({ navigation, route }) => {
             </View>
 
             <View style={styles.formbox}>
-              <Text style={styles.text}>구체적인 영역을 설정해주세요.</Text>
+              <Text style={{...styles.text, marginBottom: 12}}>구체적인 영역을 설정해주세요.</Text>
               <RNPickerSelect
-                placeholder={ inputs.interest === '' ? { label: "영역을 선택해주세요.", value: '' } : { label: inputs.section, value: inputs.section } }
-                name="interest"
+                textInputProps={{ underlineColorAndroid: 'transparent'}}
+                placeholder={{ label: "영역을 선택해주세요.", value: '' }}
+                fixAndroidTouchableBug={true}
+                value={inputs.interest}
                 onValueChange={(value) => setInputs({...inputs, 'section': value})}
+                useNativeAndroidPickerStyle={false}
                 items={[
                   { label: '맛보기', value: '맛보기' },
                   { label: '홍보/마케팅', value: '홍보/마케팅' },

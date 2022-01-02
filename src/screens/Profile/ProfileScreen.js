@@ -146,7 +146,7 @@ const ProfileScreen = ({ navigation, route }) => {
       <FlatList
         ListHeaderComponent={ProfileContent}
         data={stores}
-        renderItem={({item}) => <Store store={item} userID={user.id} />}
+        renderItem={({item}) => <Store store={item} userID={user.id} userReviews={user.reviewItem.items} />}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{marginTop: 20}}
       />
