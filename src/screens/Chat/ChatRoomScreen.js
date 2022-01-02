@@ -98,9 +98,11 @@ const ChatRoomScreen = ({ navigation, route }) => {
         const lastMessageUserId = await API.graphql(graphqlOperation(getChatRoomLastOnChatRoomScreen, {
           id: chatRoomId
         }))
+        const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
 
         // 존재할 때 체크해서 변경
-        if(lastMessageUserId.data.getChatRoom.lastMessage && lastMessageUserId.data.getChatRoom.lastMessage.userID !== user.id) {
+        if(lastMessageUserId.data.getChatRoom.lastMessage && lastMessageUserId.data.getChatRoom.lastMessage.userID !== userKey.attributes.sub) {
+          console.log('채팅읽음')
           await API.graphql(graphqlOperation(updateChatRoomCountOnChatRoomScreen, {
             input: {
               id: chatRoomId,
@@ -108,7 +110,6 @@ const ChatRoomScreen = ({ navigation, route }) => {
               messagesCount: 0
             }
           }))
-          console.log('채팅읽음')
         }
       } catch(e) {
         console.log(e)
@@ -194,7 +195,7 @@ const ChatRoomScreen = ({ navigation, route }) => {
       const chatRoomData = await API.graphql(graphqlOperation(getChatRoomCountOnChatRoomScreen, {
         id: chatRoomId
       }))
-
+      
       // 메세지가 존재하는지 여부 확인
       if(chatRoomData.data.getChatRoom.lastMessage) {
         await API.graphql(graphqlOperation(updateChatRoom, {

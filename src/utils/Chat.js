@@ -1,15 +1,14 @@
 import { listChatRoomUsersSearchOnChatScreen } from "graphql/custom";
-import { createChatRoom, createChatRoomUser } from 'graphql/mutations';
-import { useNavigation } from '@react-navigation/native'
-import { API, graphqlOperation } from 'aws-amplify';
+import { createChatRoom, createChatRoomUser } from "graphql/mutations";
+import { API, graphqlOperation } from "aws-amplify";
 
-export const StartToChat = async(userId, otherUserId) => {
+export async function ReturnChatRoomID(userId, otherUserId) {
   // '채팅 시작'등 과 같은 버튼을 클릭했을 경우를 의미
+  
   try {
     // 채팅을 시작할 때 그 사람과의 채팅방이 존재하는지 확인
     // 존재하면 그 채팅방으로 이동
     // 존재하지 않으면 새로운 채팅방 생성 후 이동
-    const navigation = useNavigation();
 
     const existChatRoom = await API.graphql(
       graphqlOperation(listChatRoomUsersSearchOnChatScreen, {
@@ -24,9 +23,10 @@ export const StartToChat = async(userId, otherUserId) => {
       // 채팅방이 존재하면 존재하는 채팅방으로 이동하는 과정
       console.log("이미 채팅방이 존재");
 
-      navigation.navigate("ChatRoomScreen", {
-        chatRoomId: existChatRoom.data.listChatRoomUsers.items[0].chatRoomID,
-      });
+      // navigation.navigate("ChatRoomScreen", {
+      //   chatRoomId: existChatRoom.data.listChatRoomUsers.items[0].chatRoomID,
+      // });
+      return existChatRoom.data.listChatRoomUsers.items[0].chatRoomID
     } else {
       // 채팅방이 존재하지 않으면 새로운 채팅방을 생성하는 과정
       console.log("채팅방 생성");
@@ -73,11 +73,16 @@ export const StartToChat = async(userId, otherUserId) => {
         })
       );
 
-      navigation.navigate("ChatRoomScreen", {
-        chatRoomId: newChatRoom.id,
-      });
+      // navigation.navigate("ChatRoomScreen", {
+      //   chatRoomId: newChatRoom.id,
+      // });
+      return newChatRoom.id
     }
   } catch (e) {
     console.log(e);
   }
-};
+}
+
+export function ToDo(userId, otherUserID) {
+  return userId
+}
