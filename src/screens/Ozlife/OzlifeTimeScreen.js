@@ -29,7 +29,7 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
 
     const hour = visit_date.hour();
     const minute = visit_date.minute();
-    const time = hour > 12 ? `오후 ${hour-12}:${minute} ` : `오전 ${hour}:${minute} `;
+    const time = hour > 12 ? `오후 ${hour-12}시 ${minute}분` : `오전 ${hour}시 ${minute}분`;
 
     const next = async () => {
         try {
