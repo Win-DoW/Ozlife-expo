@@ -164,12 +164,11 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                         <Text style={styles.formMainText}>관심 영역 선택</Text>
                         <View style={styles.interestPicker}>
                             <RNPickerSelect
-                                value={ inputs.interest === '' ? "영역을 선택해주세요." : inputs.interest}
-                                placeholder={ inputs.interest === '' ? { label: "영역을 선택해주세요.", value: '영역을 선택해주세요.' } : { label: inputs.interest, value: inputs.interest }}
+                                value={ inputs.interest }
+                                placeholder={{ label: '영역을 선택해주세요.' }}
                                 name="interest"
                                 onValueChange={(value) => setInputs({...inputs, 'interest': value})}
                                 items={[
-                                    { label: "영역을 선택해주세요.", value: '영역을 선택해주세요.' },
                                     { label: '맛보기', value: '맛보기' },
                                     { label: '홍보/마케팅', value: '홍보/마케팅' },
                                     { label: '메뉴개발', value: '메뉴개발' },
