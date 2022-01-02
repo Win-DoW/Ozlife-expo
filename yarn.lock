@@ -6853,6 +6853,13 @@ react-native-get-random-values@^1.4.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
+react-native-get-random-values@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.7.2.tgz#60a9b6497d22e713779b71139f016a5fcec7ac04"
+  integrity sha512-28KRYGpIG/upV8+k/qFA+TwGW+yGjmtOHaCduJHpOQK1QUTyhiA6E2IgL4UvvU2dybeCTYFmUi9wcEQ0GiWe5g==
+  dependencies:
+    fast-base64-decode "^1.0.0"
+
 react-native-kakao-logo@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-kakao-logo/-/react-native-kakao-logo-1.0.3.tgz#2ed836ef7d2f8a4d6775fdb99390a002b9bb5fd8"
