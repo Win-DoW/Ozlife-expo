@@ -152,7 +152,14 @@ export const getUserOnChatScreen = /* GraphQL */ `
           updatedAt
           chatRoom {
             id
-            messagesCount
+            lastMessageID
+            lastMessage {
+              id
+              createdAt
+              content
+              userID
+              updatedAt
+            }
             chatRoomUsers {
               items {
                 user {
@@ -162,46 +169,8 @@ export const getUserOnChatScreen = /* GraphQL */ `
                 }
               }
             }
-            lastMessage {
-              id
-              content
-              updatedAt
-              user {
-                id
-                nickname
-              }
-            }
+            messagesCount
           }
-        }
-        nextToken
-      }
-      reviewItem {
-        items {
-          id
-          ozlifeID
-          userID
-          reviews
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      storeItem {
-        items {
-          id
-          userID
-          owner
-          name
-          profile
-          images
-          tel
-          address
-          license
-          url
-          longitude
-          latitude
-          createdAt
-          updatedAt
         }
         nextToken
       }
@@ -211,7 +180,7 @@ export const getUserOnChatScreen = /* GraphQL */ `
   }
 `;
 
-export const getChatRoomCountOnChatScreen = /* GraphQL */ `
+export const getChatRoomCountOnChatRoomScreen = /* GraphQL */ `
   query GetChatRoom($id: ID!) {
     getChatRoom(id: $id) {
       messagesCount
@@ -222,7 +191,7 @@ export const getChatRoomCountOnChatScreen = /* GraphQL */ `
   }
 `;
 
-export const getChatRoomLastOnChatScreen = /* GraphQL */ `
+export const getChatRoomLastOnChatRoomScreen = /* GraphQL */ `
   query GetChatRoom($id: ID!) {
     getChatRoom(id: $id) {
       lastMessageID
@@ -256,7 +225,7 @@ export const listChatRoomUsersSearchOnChatScreen = /* GraphQL */ `
 
 
 // Chat mutations
-export const updateChatRoomCountOnChatScreen = /* GraphQL */ `
+export const updateChatRoomCountOnChatRoomScreen = /* GraphQL */ `
   mutation UpdateChatRoom(
     $input: UpdateChatRoomInput!
     $condition: ModelChatRoomConditionInput
@@ -377,7 +346,7 @@ export const getUserOnProfileScreen = /* GraphQL */ `
   }
 `;
 
-export const getUserOnProfileSettingScreen = /* GraphQL */ `
+export const getUserOnProfileInformationEditScreen = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
