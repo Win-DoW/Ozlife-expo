@@ -7,6 +7,16 @@ import AuthNavi from './src/navigation/AuthNavi';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false
+  })
+})
+
 import Amplify from 'aws-amplify';
 import config from './src/aws-exports';
 Amplify.configure(config)
