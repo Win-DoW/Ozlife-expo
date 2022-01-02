@@ -16,8 +16,8 @@ LogBox.ignoreLogs(['Setting a timer']);
 const ChatScreen = ({ navigation, route }) => {
 
   // 채팅방 생성을 위한 변수들
-  const userId = '3ee2134d-e833-4361-86c0-663ccaba21ef'
-  const ownerId = '6ed09320-0fe2-46c6-b54d-05a92a9308b3'
+  // const userId = '3ee2134d-e833-4361-86c0-663ccaba21ef'
+  // const ownerId = '6ed09320-0fe2-46c6-b54d-05a92a9308b3'
   //
 
   const [chatRooms, setChatRooms] = useState([])
@@ -74,9 +74,9 @@ const ChatScreen = ({ navigation, route }) => {
           noIcon={true}
       />
 
-      <TouchableOpacity style={{height: 56, backgroundColor: 'yellow'}} onPress={goToChatRoom}>
+      {/* <TouchableOpacity style={{height: 56, backgroundColor: 'yellow'}} onPress={goToChatRoom}>
         <Text style={styles.topBarText}>채팅방 생성</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <FlatList
         data={chatRooms}

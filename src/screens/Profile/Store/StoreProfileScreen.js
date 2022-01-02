@@ -5,7 +5,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Storage } from 'aws-amplify';
 
 import AppHeader from 'utils/Header';
-import Ozlife from 'components/Ozlife'
+import Ozlife from 'components/Ozlife';
+
+import { ReturnChatRoomID } from 'utils/Chat';
 
 const StoreProfileScreen = ({ navigation, route }) => {
 
@@ -60,6 +62,15 @@ const StoreProfileScreen = ({ navigation, route }) => {
     const request = () => {
         navigation.navigate("OzlifeWriteScreen", {
             store
+        })
+    }
+
+    // 채팅방 이동
+    const goToChatRoom = () => {
+        const result = ReturnChatRoomID(userID, owner.id).then(response => {
+            navigation.navigate('ChatRoomScreen', {
+                chatRoomId: response
+            })
         })
     }
 
@@ -246,7 +257,7 @@ const StoreProfileScreen = ({ navigation, route }) => {
                 <Text style={styles.buttontext}>오지랖 요청하기</Text>
             </Pressable>
             :
-            <Pressable style={styles.button}>
+            <Pressable style={styles.button} onPress={goToChatRoom}>
                 <Text style={styles.buttontext}>채팅하기</Text>
             </Pressable>
             }
