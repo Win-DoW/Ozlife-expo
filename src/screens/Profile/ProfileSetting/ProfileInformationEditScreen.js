@@ -3,7 +3,7 @@ import { View, Text, Pressable, SafeAreaView, StyleSheet, ScrollView, TextInput,
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
-import { getUserOnProfileSettingScreen } from 'graphql/custom'
+import { getUserOnProfileInformationEditScreen } from 'graphql/custom'
 import { updateUser } from 'graphql/mutations'
 
 import Header from 'utils/Header';
@@ -17,7 +17,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
 
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
-        fetchUserData();
+        fetchData();
       });
 
       return unsubscribe;
@@ -33,14 +33,14 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
     });
     const [file, setFile] = useState(undefined);
 
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         const userKey = await Auth.currentAuthenticatedUser({
           bypassCache: false,
         });
         let user = await API.graphql(
-          graphqlOperation(getUserOnProfileSettingScreen, {
+          graphqlOperation(getUserOnProfileInformationEditScreen, {
             id: userKey.attributes.sub,
           })
         );
