@@ -71,6 +71,7 @@ export const createUser = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -153,6 +154,7 @@ export const updateUser = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -235,6 +237,7 @@ export const deleteUser = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -305,6 +308,7 @@ export const createStore = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -374,6 +378,7 @@ export const updateStore = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -443,6 +448,7 @@ export const deleteStore = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -475,6 +481,7 @@ export const createOzlife = /* GraphQL */ `
       promotion
       address
       status
+      noti_token
       createdAt
       storeID
       store {
@@ -566,6 +573,7 @@ export const updateOzlife = /* GraphQL */ `
       promotion
       address
       status
+      noti_token
       createdAt
       storeID
       store {
@@ -657,6 +665,7 @@ export const deleteOzlife = /* GraphQL */ `
       promotion
       address
       status
+      noti_token
       createdAt
       storeID
       store {
@@ -753,6 +762,7 @@ export const createReview = /* GraphQL */ `
         promotion
         address
         status
+        noti_token
         createdAt
         storeID
         store {
@@ -841,6 +851,7 @@ export const updateReview = /* GraphQL */ `
         promotion
         address
         status
+        noti_token
         createdAt
         storeID
         store {
@@ -929,6 +940,7 @@ export const deleteReview = /* GraphQL */ `
         promotion
         address
         status
+        noti_token
         createdAt
         storeID
         store {

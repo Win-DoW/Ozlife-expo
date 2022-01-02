@@ -105,10 +105,6 @@ const HomeScreen = ({ navigation,  route }) => {
           <Image style={{height: 30, width: 100}} source={require('assets/images/image-main-ozlife.png')}/>
         </View>
 
-        <Pressable style={{backgroundColor: 'red', height: 30}} onPress={() => SendNotification("ExponentPushToken[vCZ-7kI8MfqEUWJCEBBZKE]", "Hello", "MyFriend")}>
-          <Text>Hello</Text>
-        </Pressable>
-
         <View style={styles.section}>
           <Text style={styles.title}>
             {user.nickname}님 안녕하세요.
