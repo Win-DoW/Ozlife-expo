@@ -22,6 +22,7 @@ import {
 
 import Header from "utils/Header";
 import ChatMessage from "components/ChatComponents/ChatMessage";
+import { SendNotification } from 'utils/Noti';
 
 const ChatRoomScreen = ({ navigation, route }) => {
 
@@ -180,6 +181,7 @@ const ChatRoomScreen = ({ navigation, route }) => {
         }))
   
         await updateChatRoomLastMessage(newMessageData.data.createMessage.id);
+        SendNotification(otherUser.noti_token, user.nickname, inputMessage);
       }
     } catch(e) {
       console.log(e)
