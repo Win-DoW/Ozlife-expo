@@ -1,9 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, Platform } from 'react-native';
 import Ozlife from 'components/Ozlife'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { getUser, listOzlives } from 'graphql/queries';
+
+import * as Notifications from 'expo-notifications'
+import * as Permissions from 'expo-permissions'
+import * as Device from 'expo-device';
+import { SendNotification } from 'utils/Noti';
 
 const HomeScreen = ({ navigation,  route }) => {
 
@@ -20,6 +25,52 @@ const HomeScreen = ({ navigation,  route }) => {
       unsubscribe;
     }
   }, [navigation]);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, [])
+
+  const registerForPushNotificationsAsync = async() => {
+    try {
+      let token;
+      // 실제 디바이스에서만 동작
+      if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        // 권한 부여 됬는지 확인 후 권한을 요청
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+
+        // 아직까지 권한을 받지 못했다면 알림 푸시 토큰을 받지 못했다고 경고
+        if (finalStatus !== 'granted') {
+          console.log("Failed to get push token for push notification!")
+          return;
+        }
+
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log(token);
+      } else {
+        // 에뮬레이터나 시뮬레이터인 경우
+        console.log("Must use physical device for Push Notifications")
+      }
+
+      // 안드로이드의 경우 설정이 별도로 필요
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: "#FF231F7C",
+        });
+      }
+
+      return token;
+    } catch(e) {
+      console.log(e)
+    }
+  }
 
   const fetchData = async () => {
     try {      

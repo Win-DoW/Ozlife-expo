@@ -68,6 +68,7 @@ export const getUser = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -169,6 +170,7 @@ export const getStore = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID
@@ -238,6 +240,7 @@ export const getOzlife = /* GraphQL */ `
       promotion
       address
       status
+      noti_token
       createdAt
       storeID
       store {
@@ -331,6 +334,7 @@ export const listOzlives = /* GraphQL */ `
         promotion
         address
         status
+        noti_token
         createdAt
         storeID
         store {
@@ -392,6 +396,7 @@ export const getReview = /* GraphQL */ `
         promotion
         address
         status
+        noti_token
         createdAt
         storeID
         store {
@@ -482,6 +487,7 @@ export const listReviews = /* GraphQL */ `
           promotion
           address
           status
+          noti_token
           createdAt
           storeID
           userID

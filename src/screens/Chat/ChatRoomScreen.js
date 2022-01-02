@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, SafeAreaView, StyleSheet, KeyboardAvoidingView, Platform, FlatList, Image, TouchableOpacity, TextInput } from "react-native";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Ionicons } from '@expo/vector-icons';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 import { API, graphqlOperation, Auth, Storage } from "aws-amplify";
 import { messagesByChatRoom, getChatRoom } from 'graphql/queries';
@@ -11,6 +13,7 @@ import {
   deleteChatRoom,
   deleteChatRoomUser
 } from 'graphql/mutations';
+import { onCreateMessage } from 'graphql/subscriptions'
 import {
   getUserOnProfileInformationEditScreen,
   getChatRoomCountOnChatRoomScreen,
@@ -23,9 +26,9 @@ import ChatMessage from "components/ChatComponents/ChatMessage";
 const ChatRoomScreen = ({ navigation, route }) => {
 
   const chatRoomId = route.params.chatRoomId;
-  const otherUserName = route.params.otherUserName;
   
   const [user, setUser] = useState({})
+  const [otherUser, setOtherUser] = useState({})
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,6 +41,29 @@ const ChatRoomScreen = ({ navigation, route }) => {
 
     return unsubscribe;
   }, [navigation]);
+
+  // 실시간 채팅이 가능하도록 계속 구독중
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onCreateMessage)
+    ).subscribe({
+      next: (data) => {
+        const newMessage = data.value.data.onCreateMessage;
+
+        if (newMessage.chatRoomID !== chatRoomId) {
+          console.log("Message is in another room!")
+          return;
+        }
+
+        fetchMessages();
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [])
 
   // 채팅방 나갈 때 상호간에 메세지 전송이 없었다면 그 채팅방은 삭제
   useEffect(() => {
@@ -72,9 +98,11 @@ const ChatRoomScreen = ({ navigation, route }) => {
         const lastMessageUserId = await API.graphql(graphqlOperation(getChatRoomLastOnChatRoomScreen, {
           id: chatRoomId
         }))
+        const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
 
         // 존재할 때 체크해서 변경
-        if(lastMessageUserId.data.getChatRoom.lastMessage && lastMessageUserId.data.getChatRoom.lastMessage.userID !== user.id) {
+        if(lastMessageUserId.data.getChatRoom.lastMessage && lastMessageUserId.data.getChatRoom.lastMessage.userID !== userKey.attributes.sub) {
+          console.log('채팅읽음')
           await API.graphql(graphqlOperation(updateChatRoomCountOnChatRoomScreen, {
             input: {
               id: chatRoomId,
@@ -83,13 +111,13 @@ const ChatRoomScreen = ({ navigation, route }) => {
             }
           }))
         }
-
-        return () => {
-          checkLastMessage();
-        }
       } catch(e) {
         console.log(e)
       }
+    }
+
+    return () => {
+      checkLastMessage();
     }
   }, [])
 
@@ -100,8 +128,23 @@ const ChatRoomScreen = ({ navigation, route }) => {
       const user = await API.graphql(graphqlOperation(getUserOnProfileInformationEditScreen, {
         id: userKey.attributes.sub
       }))
+      const chatRoomData = await API.graphql(graphqlOperation(getChatRoom, {
+        id: chatRoomId
+      }))
+      let otherUser;
+      if(userKey.attributes.sub === chatRoomData.data.getChatRoom.chatRoomUsers.items[0].userID) {
+        otherUser = await API.graphql(graphqlOperation(getUserOnProfileInformationEditScreen, {
+          id: chatRoomData.data.getChatRoom.chatRoomUsers.items[1].userID
+        }))
+      } else {
+        otherUser = await API.graphql(graphqlOperation(getUserOnProfileInformationEditScreen, {
+          id: chatRoomData.data.getChatRoom.chatRoomUsers.items[0].userID
+        }))
+      }
       const image = await Storage.get(user.data.getUser.image)
+      const otherImage = await Storage.get(otherUser.data.getUser.image)
       setUser({...user.data.getUser, image})
+      setOtherUser({...otherUser.data.getUser, image: otherImage})
       setLoading(false)
     } catch (e) {
       console.log("실패")
@@ -137,7 +180,6 @@ const ChatRoomScreen = ({ navigation, route }) => {
         }))
   
         await updateChatRoomLastMessage(newMessageData.data.createMessage.id);
-        fetchMessages();
       }
     } catch(e) {
       console.log(e)
@@ -153,7 +195,7 @@ const ChatRoomScreen = ({ navigation, route }) => {
       const chatRoomData = await API.graphql(graphqlOperation(getChatRoomCountOnChatRoomScreen, {
         id: chatRoomId
       }))
-
+      
       // 메세지가 존재하는지 여부 확인
       if(chatRoomData.data.getChatRoom.lastMessage) {
         await API.graphql(graphqlOperation(updateChatRoom, {
@@ -235,7 +277,7 @@ const ChatRoomScreen = ({ navigation, route }) => {
         />
 
         <Header
-          title={otherUserName}
+          title={otherUser.nickname}
           noIcon={false}
           leftIcon={<Ionicons name="chevron-back-outline" size={32} color="#000000" />}
           leftIconPress={goToBack}
@@ -244,7 +286,7 @@ const ChatRoomScreen = ({ navigation, route }) => {
         <View style={{ backgroundColor: 'rgba(21, 182, 241, 0.3)', flex: 1 }}>
           <FlatList
             data={messages}
-            renderItem={({item}) => <ChatMessage message={item} myId={user.id}/>}
+            renderItem={({item}) => <ChatMessage message={item} myId={user.id} otherUserImage={otherUser.image}/>}
             inverted
             keyExtractor={(item) => item.id}
           />

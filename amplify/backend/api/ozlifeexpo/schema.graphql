@@ -57,6 +57,7 @@ type Ozlife
   promotion: String
   address: String
   status: Int
+  noti_token: String
   createdAt: String
 
   storeID: ID!
