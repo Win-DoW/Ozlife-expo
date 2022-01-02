@@ -70,6 +70,7 @@ export const createUser = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -151,6 +152,7 @@ export const updateUser = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -232,6 +234,7 @@ export const deleteUser = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -301,6 +304,7 @@ export const createStore = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -369,6 +373,7 @@ export const updateStore = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -437,6 +442,7 @@ export const deleteStore = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -468,6 +474,7 @@ export const createOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
+      status
       createdAt
       storeID
       store {
@@ -558,6 +565,7 @@ export const updateOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
+      status
       createdAt
       storeID
       store {
@@ -648,6 +656,7 @@ export const deleteOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
+      status
       createdAt
       storeID
       store {
@@ -743,6 +752,7 @@ export const createReview = /* GraphQL */ `
         discount_price
         promotion
         address
+        status
         createdAt
         storeID
         store {
@@ -830,6 +840,7 @@ export const updateReview = /* GraphQL */ `
         discount_price
         promotion
         address
+        status
         createdAt
         storeID
         store {
@@ -917,6 +928,7 @@ export const deleteReview = /* GraphQL */ `
         discount_price
         promotion
         address
+        status
         createdAt
         storeID
         store {

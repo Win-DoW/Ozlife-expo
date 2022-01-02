@@ -67,6 +67,7 @@ export const getUser = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -167,6 +168,7 @@ export const getStore = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID
@@ -235,6 +237,7 @@ export const getOzlife = /* GraphQL */ `
       discount_price
       promotion
       address
+      status
       createdAt
       storeID
       store {
@@ -327,6 +330,7 @@ export const listOzlives = /* GraphQL */ `
         discount_price
         promotion
         address
+        status
         createdAt
         storeID
         store {
@@ -387,6 +391,7 @@ export const getReview = /* GraphQL */ `
         discount_price
         promotion
         address
+        status
         createdAt
         storeID
         store {
@@ -476,6 +481,7 @@ export const listReviews = /* GraphQL */ `
           discount_price
           promotion
           address
+          status
           createdAt
           storeID
           userID

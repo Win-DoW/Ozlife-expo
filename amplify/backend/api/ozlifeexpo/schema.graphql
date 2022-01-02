@@ -56,6 +56,7 @@ type Ozlife
   discount_price: Int
   promotion: String
   address: String
+  status: Int
   createdAt: String
 
   storeID: ID!
