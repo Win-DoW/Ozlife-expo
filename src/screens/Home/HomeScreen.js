@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, Platform } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, Platform, LogBox } from 'react-native';
 import Ozlife from 'components/Ozlife'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { getUser, listOzlives } from 'graphql/queries';
+import { updateUser } from 'graphql/mutations'
 
 import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions'
 import * as Device from 'expo-device';
 import { SendNotification } from 'utils/Noti';
+
+LogBox.ignoreLogs([`Constants.platform.ios.model has been deprecated in favor of expo-device's Device.modelName property.`]);
 
 const HomeScreen = ({ navigation,  route }) => {
 
@@ -66,7 +69,17 @@ const HomeScreen = ({ navigation,  route }) => {
         });
       }
 
-      return token;
+      if(token) {
+        const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
+        await API.graphql(graphqlOperation(updateUser, {
+          input: {
+            id: userKey.attributes.sub,
+            noti_token: token
+          }
+        }))
+      } else {
+        console.log('토큰이 존재하지 않습니다.')
+      }
     } catch(e) {
       console.log(e)
     }

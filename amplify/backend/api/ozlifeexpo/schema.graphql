@@ -8,6 +8,8 @@ type User
   interest: String
   region: String
   image: String
+  status: Int
+  noti_token: String
 
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
   reviewItem: [Review] @connection(keyName: "reviewByUser", fields: ["id"])
@@ -56,8 +58,6 @@ type Ozlife
   discount_price: Int
   promotion: String
   address: String
-  status: Int
-  noti_token: String
   createdAt: String
 
   storeID: ID!
