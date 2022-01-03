@@ -14,7 +14,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const store = ozlife.store;
     const owner = ozlife.user;
     const userReviews = route.params.userReviews;
-    const status_review = (userReviews.find(item => item.userID === userID));
+    const status_review = (userReviews.find(item => item.ozlifeID === ozlife.id));
 
     const visit_date = ozlife.visit_date;
     const current_date = dayjs().format();
