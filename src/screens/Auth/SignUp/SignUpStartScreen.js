@@ -5,7 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth } from 'aws-amplify';
 
-const SignUpScreen = ({ navigation, route }) => {
+const SignUpStartScreen = ({ navigation, route }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -197,4 +197,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SignUpScreen;
+export default SignUpStartScreen;
