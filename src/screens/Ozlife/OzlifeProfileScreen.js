@@ -56,7 +56,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
     const goToOzlifeApply = () => {
         navigation.navigate("OzlifeMapScreen", {
-            ozlife
+            ozlife, userID
         })
     }
 
@@ -73,7 +73,13 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
             status: false,
         })
     }
-    
+
+    const goToOzlifeManage = () => {
+        navigation.navigate("OzlifeManageScreen", {
+            ozlife, userID
+        })
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             
@@ -224,11 +230,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
             {
             ozlife.userID === userID ?
-            <Pressable style={styles.button} 
-                onPress={() => navigation.navigate("OzlifeManageScreen", {
-                    ozlife
-                })}
-            >
+            <Pressable style={styles.button} onPress={goToOzlifeManage}>
                 <Text style={styles.buttontext}>오지랖 관리</Text>
             </Pressable>
             :

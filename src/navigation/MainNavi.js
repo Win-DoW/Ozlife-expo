@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import MainTab from './MainTab';
 
-import OzlifeDetailScreen from 'screens/Ozlife/OzlifeDetailScreen';
 import OzlifeManageScreen from 'screens/Ozlife/OzlifeManageScreen';
 import OzlifeMapScreen from 'screens/Ozlife/OzlifeMapScreen';
 import OzlifeProfileScreen from 'screens/Ozlife/OzlifeProfileScreen';
@@ -48,16 +47,6 @@ const MainNavi = () => {
                 }} 
             />
             
-
-
-            <Stack.Screen
-                name="OzlifeDetailScreen"
-                component={OzlifeDetailScreen}
-                options={{
-                    headerShown: false
-                }}
-            />
-
             <Stack.Screen
                 name="OzlifeManageScreen"
                 component={OzlifeManageScreen}

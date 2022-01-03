@@ -4,11 +4,13 @@ import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Ionicons } from '@expo/vector-icons';
 import AppHeader from 'utils/Header';
+import { ReturnChatRoomID } from 'utils/Chat';
 
 const OzlifeMapScreen = ({ navigation, route }) => {
 
   const ozlife = route.params.ozlife;
   const store = ozlife.store;
+  const userID = route.params.userID;
 
   const [loading, setLoading] = useState(false);
   const [distance, setDistance] = useState('');
@@ -25,6 +27,14 @@ const OzlifeMapScreen = ({ navigation, route }) => {
       setDistance(getDistanceFromLatLonInKm(location.coords.latitude, location.coords.longitude, store.latitude, store.longitude));
     })();
   }, []);
+
+  const goToChatRoom = () => {
+    const result = ReturnChatRoomID(userID, ozlife.userID).then(response => {
+        navigation.navigate('ChatRoomScreen', {
+            chatRoomId: response
+        })
+    })
+  }
 
   function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
     function deg2rad(deg) { 
@@ -87,7 +97,7 @@ const OzlifeMapScreen = ({ navigation, route }) => {
         <TouchableOpacity style={styles.buttonA} onPress={next}>
           <Text style={styles.buttonAText}>네!</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonB}>
+        <TouchableOpacity style={styles.buttonB} onPress={goToChatRoom}>
           <Text style={styles.buttonBText}>잘 모르겠어요.. (1:1 채팅하기)</Text>
         </TouchableOpacity>
       </View>

@@ -35,16 +35,18 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
         try {
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userID = userKey.attributes.sub;
-      
-            await API.graphql(graphqlOperation(createReview, { input: {
-                userID,
-                ozlifeID: ozlife.id,
-                status: 0,
-            }}));
+
+            await API.graphql(graphqlOperation(createReview, {
+                input: {
+                    userID,
+                    ozlifeID: ozlife.id,
+                    status: 0,
+                }
+            }));
 
             navigation.navigate("MainNavi")
-           
-          } catch (e) {
+
+        } catch (e) {
             console.log(e);
         }
     }

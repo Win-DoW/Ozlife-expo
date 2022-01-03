@@ -102,24 +102,14 @@ const OzlifeScreen = ({ navigation, route }) => {
                 </Pressable>
             </View>
 
-            { tabState === 0 &&
             <FlatList
-                data={answers}
+                data={tabState === 0 ? answers : questions}
                 renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
                 contentContainerStyle={{marginTop: 20}}
             />
-            }
-            { tabState === 1 &&
-            <FlatList
-                data={questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
-                keyExtractor={(item) => item.id}
-                ListEmptyComponent={NoData}
-                contentContainerStyle={{marginTop: 20}}
-            />
-            }
+            
         </SafeAreaView>
     )
 };
