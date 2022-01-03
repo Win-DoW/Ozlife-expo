@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, Text, ScrollView, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
+import AppHeader from 'utils/Header';
 import styles from './styles';
 
 const Second = ({ navigation, route }) => {
@@ -37,6 +38,14 @@ const Second = ({ navigation, route }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
+
+          <AppHeader
+            title={"방문 온라인 피드백"}
+            noIcon={false}
+            leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+            leftIconPress={() => navigation.goBack()}
+          />
+
           <ScrollView>
 
             <View style={styles.formbox}>

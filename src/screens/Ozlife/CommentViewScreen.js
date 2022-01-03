@@ -1,22 +1,43 @@
 import React, {useState, useEffect} from 'react'
 import { Image, View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, SafeAreaView, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { updateReview } from 'graphql/mutations';
+import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import AppHeader from 'utils/Header';
 
 const CommentViewScreen = ({ navigation, route }) => {
 
     const ozlife = route.params.ozlife;
     const userID = route.params.userID;
+    const reviewID = route.params.reviewID;
     const questions = ozlife.question;
     const reviews = route.params.reviews;
+
+    const status = route.params.status;
+
+    const newComment = async () => {
+        try {
+            await API.graphql(graphqlOperation(updateReview, { input: {
+                id: reviewID,
+                status: 1,
+                reviews,
+                userID,
+                ozlifeID: ozlife.id
+            }}));
+        
+            navigation.navigate('MainTab', { screen: 'OzlifeScreen' });
+        
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
 
     return (
         <SafeAreaView style={styles.container}>
 
             <AppHeader
-                title={"오지랖 미리보기"}
+                title={"오지랖 보기"}
                 noIcon={false}
                 leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
                 leftIconPress={() => navigation.goBack()}
@@ -51,9 +72,13 @@ const CommentViewScreen = ({ navigation, route }) => {
                 
             </ScrollView>
 
-            <TouchableOpacity style={styles.button}>
+            {status ?
+            <TouchableOpacity style={styles.button} onPress={() => newComment()}>
                 <Text style={styles.buttontext}>작성 완료</Text>
             </TouchableOpacity>
+            :
+            null
+            }
 
         </SafeAreaView>
     );

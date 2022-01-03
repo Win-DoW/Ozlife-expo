@@ -5,27 +5,34 @@ import { screen } from 'utils/Styles';
 
 import dayjs from "dayjs";
 
-const Ozlife = ({ ozlife, userID }) => {
+const Ozlife = ({ ozlife, userID, userReviews }) => {
 
     const navigation = useNavigation();
 
-    const visit_date = dayjs(ozlife.visit_date).format();
+    const visit_date = ozlife.visit_date;
     const current_date = dayjs().format();
     const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
+    const status_review = (userReviews.find(item => item.userID === userID));
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {
-            ozlife : {
-                ...ozlife,
-                visit_date
-            }, 
-            userID
+            ozlife,
+            userID,
+            userReviews
         })
     }
 
     const goToOzlifeWrite = () => {
         navigation.navigate("CommentWriteScreen", {
-            ozlife, userID
+            ozlife, userID, reviewID: status_review.id
+        })
+    }
+
+    const goToOzlifeView = () => {
+        navigation.navigate("CommentViewScreen", {
+            reviews: status_review.reviews,
+            ozlife,
+            status: false,
         })
     }
 
@@ -50,30 +57,36 @@ const Ozlife = ({ ozlife, userID }) => {
                 <Text style={{fontSize: 14, fontWeight: '500'}}>{ozlife.title}</Text>
 
                 {
-                    ozlife.userID === userID ?
-
-                    <TouchableOpacity style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}} onPress={goToOzlifeManage}>
-                        <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 관리</Text>
-                    </TouchableOpacity>
-
-                    :
-
-                    status ?
-
-                    <TouchableOpacity onPress={goToOzlifeWrite} style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}}>
-                        <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 남기기</Text>
-                    </TouchableOpacity>
-
-                    :
-
-                    <View>
-                        <Text style={{fontSize: 14, fontWeight: 'bold', color: '#15b6f1'}}>{ozlife.name}</Text>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={{fontSize: 14, fontWeight: 'bold', marginRight: 8}}>{ozlife.discount_price}원</Text>
-                            <Text style={{fontSize: 12, fontWeight: '500', color: '#cccccc', textDecorationLine: 'line-through'}}>{ozlife.original_price}원</Text>  
-                        </View>
+                ozlife.userID === userID ?
+                <TouchableOpacity style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}} onPress={goToOzlifeManage}>
+                    <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 관리</Text>
+                </TouchableOpacity>
+                :
+                status_review === undefined ?
+                <View>
+                    <Text style={{fontSize: 14, fontWeight: 'bold', color: '#15b6f1'}}>{ozlife.name}</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={{fontSize: 14, fontWeight: 'bold', marginRight: 8}}>{ozlife.discount_price}원</Text>
+                        <Text style={{fontSize: 12, fontWeight: '500', color: '#cccccc', textDecorationLine: 'line-through'}}>{ozlife.original_price}원</Text>  
                     </View>
+                </View>
+                :
+                status_review.status === 0 ?
+                (status ? 
+                <TouchableOpacity onPress={goToOzlifeWrite} style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}}>
+                    <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 작성</Text>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ccc', borderRadius: 10}}>
+                    <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 예약중</Text>
+                </TouchableOpacity>
+                )
+                :
+                <TouchableOpacity onPress={goToOzlifeView} style={{width: 133, height: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: '#15b6f1', borderRadius: 10}}>
+                    <Text style={{fontSize:14, color: 'white', fontWeight: 'bold'}}>오지랖 완료</Text>
+                </TouchableOpacity>
                 }
+
             </View>
         </TouchableOpacity>
     )

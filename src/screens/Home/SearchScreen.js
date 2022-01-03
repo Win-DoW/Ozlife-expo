@@ -7,14 +7,16 @@ import Ozlife from 'components/Ozlife'
 import Store from 'components/Store'
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUser, listUsers, listOzlives } from 'graphql/queries';
+import { listUsers, listOzlives } from 'graphql/queries';
 import { listStoresOnSearchScreen } from 'graphql/custom';
 
-const SearchScreen = ({ navigation,  route }) => {
+const SearchScreen = ({ navigation, route }) => {
+
+  const user = route.params.user;
+  const userReviews = user.reviewItem.items;
 
   const [loading, setLoading] = useState(false);  
   const [tabState, setTabState] = useState(0);
-  const [user, setUser] = useState({});
 
   const [ozlifesAll, setOzlifesAll] = useState([]);
   const [ozlifes, setOzlifes] = useState([]);
@@ -41,11 +43,6 @@ const SearchScreen = ({ navigation,  route }) => {
       setOzlifesAll([]);
       setUsersAll([]);
       setStoresAll([]);
-
-      const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
-      const userData = await API.graphql(graphqlOperation(getUser, { id: userKey.attributes.sub }));
-
-      setUser(userData.data.getUser);
 
       const users = await API.graphql(graphqlOperation(listUsers));
       const ozlifes = await API.graphql(graphqlOperation(listOzlives));
@@ -200,11 +197,11 @@ const SearchScreen = ({ navigation,  route }) => {
           data={ tabState === 0 ? ozlifes : tabState === 1 ? users : stores }
           renderItem={({item}) => 
             tabState === 0 ?
-            <Ozlife ozlife={item} userID={user.id} />
+            <Ozlife ozlife={item} userID={user.id} userReviews={userReviews}/>
             : tabState === 1 ?
             <Ozlifer user={item} />
             :
-            <Store store={item} userID={user.id} />
+            <Store store={item} userID={user.id} userReviews={userReviews}/>
           }
           keyExtractor={(item) => item.id}
           ListEmptyComponent={nothing}

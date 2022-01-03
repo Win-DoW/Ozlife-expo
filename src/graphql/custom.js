@@ -1,3 +1,27 @@
+export const getUserOnHomeScreen = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      nickname
+      region
+      reviewItem {
+        items {
+          id
+          reviews
+          status
+          createdAt
+          ozlifeID
+          userID
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const getUserOnOzlifeScreen = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
@@ -6,7 +30,7 @@ export const getUserOnOzlifeScreen = /* GraphQL */ `
         items {
           id
           reviews
-          createdAt
+          status
           ozlifeID
           ozlife {
             id
@@ -43,31 +67,16 @@ export const getUserOnOzlifeScreen = /* GraphQL */ `
             userID
             user {
               id
-              email
               nickname
-              profile
-              interest
-              region
               image
-              createdAt
-              updatedAt
-            }
-            reviewItem {
-              nextToken
             }
             updatedAt
           }
           userID
           user {
             id
-            email
             nickname
-            profile
-            interest
-            region
             image
-            createdAt
-            updatedAt
           }
           updatedAt
         }
@@ -109,17 +118,8 @@ export const getUserOnOzlifeScreen = /* GraphQL */ `
           userID
           user {
             id
-            email
             nickname
-            profile
-            interest
-            region
             image
-            createdAt
-            updatedAt
-          }
-          reviewItem {
-            nextToken
           }
           updatedAt
         }
@@ -248,6 +248,18 @@ export const getUserOnProfileScreen = /* GraphQL */ `
       interest
       region
       image
+      reviewItem {
+        items {
+          id
+          reviews
+          status
+          createdAt
+          ozlifeID
+          userID
+          updatedAt
+        }
+        nextToken
+      }
       storeItem {
         items {
           id
@@ -265,14 +277,8 @@ export const getUserOnProfileScreen = /* GraphQL */ `
           updatedAt
           user {
             id
-            email
             nickname
-            profile
-            interest
-            region
             image
-            createdAt
-            updatedAt
           }
           ozlifeItem {
             items {
@@ -309,30 +315,15 @@ export const getUserOnProfileScreen = /* GraphQL */ `
                 userID
                 user {
                   id
-                  email
                   nickname
-                  profile
-                  interest
-                  region
                   image
-                  createdAt
-                  updatedAt
-                }
-                ozlifeItem {
-                  nextToken
                 }
                 updatedAt
               }
               user {
                 id
-                email
                 nickname
-                profile
-                interest
-                region
                 image
-                createdAt
-                updatedAt
               }              
             }
             nextToken

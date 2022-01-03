@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, Text, Pressable, ScrollView, TextInput, ImageBackground, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import { Ionicons } from '@expo/vector-icons';
+import AppHeader from 'utils/Header';
 import styles from './styles';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { createOzlife } from 'graphql/mutations';
@@ -75,6 +76,13 @@ const Fifth = ({ navigation, route }) => {
             textContent={'Loading...'}
             //Text style of the Spinner Text
             textStyle={styles.spinnerTextStyle}
+          />
+
+          <AppHeader
+            title={"방문 온라인 피드백"}
+            noIcon={false}
+            leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
+            leftIconPress={() => navigation.goBack()}
           />
 
           <View style={styles.formbox}>

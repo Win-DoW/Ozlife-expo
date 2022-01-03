@@ -15,6 +15,7 @@ const OzlifeScreen = ({ navigation, route }) => {
     const [user, setUser] = useState({});
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState([]);
+    const [userReviews, setUserReviews] = useState([]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -37,8 +38,8 @@ const OzlifeScreen = ({ navigation, route }) => {
             const ozlifes = user.ozlifeItem.items;
             const reviews = user.reviewItem.items;
 
-            console.log(user)
             setUser(user);
+            setUserReviews(reviews);
 
             await Promise.all(ozlifes.map(async (item, idx) => {
                 const result = await Storage.get(item.images[0]);
@@ -104,7 +105,7 @@ const OzlifeScreen = ({ navigation, route }) => {
             { tabState === 0 &&
             <FlatList
                 data={answers}
-                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
                 contentContainerStyle={{marginTop: 20}}
@@ -113,7 +114,7 @@ const OzlifeScreen = ({ navigation, route }) => {
             { tabState === 1 &&
             <FlatList
                 data={questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} />}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
                 contentContainerStyle={{marginTop: 20}}
