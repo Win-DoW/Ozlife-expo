@@ -47,23 +47,23 @@ const styles = StyleSheet.create({
         padding: 16,
         borderColor: "#dddddd",
         borderBottomWidth: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     titleContainer: {
         justifyContent: 'center',
     },
     leftIcon: {
         position: 'absolute',
-        top: 10,
         left: 10,
         justifyContent: 'center'
     },
     rightIcon: {
         position: 'absolute',
-        top: 10,
         right: 10,
         justifyContent: 'center'
     },
-
     titleText: {
         fontSize: 18,
         fontWeight: '700',
