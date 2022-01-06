@@ -1,12 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, FlatList, Text, Pressable, ScrollView, TextInput, ImageBackground, Image, SafeAreaView, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, FlatList, Text, Pressable, ScrollView, TextInput, ImageBackground, Image, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import AppHeader from 'utils/Header';
 import styles from './styles';
+import SearchBar from 'react-native-platform-searchbar';
+import { screen } from '../../../utils/Styles';
 
 const First = ({ navigation, route }) => {
+
+  const [isModal, setModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [words, setWords] = useState([]);
 
   const [images, setImages] = useState([]);
   const [imageIdx, setImageIdx] = useState(0);
@@ -15,19 +21,46 @@ const First = ({ navigation, route }) => {
     title: '',
     profile: '',
     section: '',
-    tag: ''
   });
+
+  const [tag, setTag] = useState('검색 유입이 쉽도록 검색 유입어를 입력해주세요.')
 
   const next = async () => {
     try {
       navigation.navigate('Second', {
         ...inputs,
         ...route.params,
-        images: images
+        images,
+        tag
       });
     } catch (error) {
       console.log('error :', error);
     }
+  }
+
+  const searchWords = async () => {
+    setWords(words => [...words, search]);
+    setSearch('')
+  }
+
+  const WordItem = ({ word }) => {
+
+    return (
+      <View style={{
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderColor: '#ddd', 
+        borderBottomWidth: 1, 
+        paddingVertical: 10
+      }}>
+        <Text style={{color: '#666', fontSize: 16}}>{word}</Text>
+        <Pressable onPress={() => setWords(words.filter((e)=>(e !== word)))}>
+          <Ionicons name="close-circle-outline" size={24} color="black" />
+        </Pressable>
+      </View>
+
+    )
   }
 
   const imagePicker = async () => {
@@ -74,6 +107,61 @@ const First = ({ navigation, route }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
+
+          <Modal
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            animationType="slide"
+            transparent={true}
+            visible={isModal}
+            onRequestClose={() => {
+              setModal(!isModal);
+            }}
+          >
+            <>
+              <SafeAreaView style={{ flex: 0, backgroundColor: "#ffffff" }} />
+              <SafeAreaView style={styles.container}>
+
+                <View style={styles.headerContainer}>
+                  <TouchableOpacity
+                    style={styles.leftIcon}
+                    onPress={() => {
+                      setTag(words.join(','))
+                      setSearch('');
+                      setModal(false)
+                    }}
+                  >
+                    <Ionicons name="chevron-back-outline" size={32} color="black" />
+                  </TouchableOpacity>
+
+                  <View style={{ ...styles.titleContainer }}>
+                    <SearchBar
+                      placeholder="검색 유입어 추가"
+                      cancelText="취소"
+                      onChangeText={(text) => setSearch(text)}
+                      value={search}
+                      onSubmitEditing={() => searchWords()}
+                      theme="light"
+                      platform="ios"
+                      style={{ width: screen.width - 60 }}
+                    />
+                  </View>
+                </View>
+
+                <View style={{flex: 1, paddingHorizontal: 20, marginVertical: 16}}>
+                  <View style={{borderColor: '#ddd', borderBottomWidth: 1, paddingVertical: 16}}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>검색 유입어</Text>
+                  </View>
+                  
+                  <FlatList
+                    data={words}
+                    renderItem={({item}) => <WordItem word={item} />}
+                    keyExtractor={(item) => item.id}
+                  />
+                </View>
+
+              </SafeAreaView>
+            </>
+          </Modal>
 
           <AppHeader
             title={"방문 온라인 피드백"}
@@ -127,12 +215,12 @@ const First = ({ navigation, route }) => {
             </View>
 
             <View style={styles.formbox}>
-              <Text style={{...styles.text, marginBottom: 12}}>구체적인 영역을 설정해주세요.</Text>
+              <Text style={{...styles.text, marginBottom: 12}}>질문 영역을 설정해주세요.</Text>
               <RNPickerSelect
                 textInputProps={{ underlineColorAndroid: 'transparent'}}
-                placeholder={{ label: "영역을 선택해주세요.", value: '' }}
+                placeholder={{ label: "질문 영역을 설정해주세요.", value: '' }}
                 fixAndroidTouchableBug={true}
-                value={inputs.interest}
+                value={inputs.section}
                 onValueChange={(value) => setInputs({...inputs, 'section': value})}
                 useNativeAndroidPickerStyle={false}
                 items={[
@@ -148,14 +236,10 @@ const First = ({ navigation, route }) => {
               />
             </View>
 
-            <View style={styles.formbox}>
-              <Text style={styles.text}>해시태그를 입력해주세요.</Text>
-              <TextInput 
-                style={styles.textinput} 
-                placeholder='태그를 입력해주세요.'
-                onChangeText={(value) => setInputs({...inputs, 'tag': value})}
-              />
-            </View>            
+            <Pressable style={styles.formbox} onPress={() => setModal(true)}>
+              <Text style={styles.text}>검색 유입어를 입력해주세요.</Text>
+              <Text style={{...styles.textinput, marginTop: 10}}>{tag}</Text>
+            </Pressable>            
 
           </ScrollView>
 
