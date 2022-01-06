@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation, route }) => {
         await Auth.resendSignUp(email)
         navigation.reset({routes: [
           {
-            name: 'ConfirmScreen',
+            name: 'SignUpFinishScreen',
             params: { 
               email,
               password,
