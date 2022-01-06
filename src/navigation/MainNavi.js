@@ -19,10 +19,12 @@ import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
 
 import StoreProfileScreen from 'screens/Profile/Store/StoreProfileScreen'
 import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
+import StoreCheckScreen from 'screens/Profile/Store/StoreCheckScreen';
 import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
 import StoreEditScreen from 'screens/Profile/Store/StoreEditScreen';
 
 import ChatRoomScreen from 'screens/Chat/ChatRoomScreen';
+import StoreFinishScreen from '/screens/Profile/Store/StoreFinishScreen';
 
 const Stack = createStackNavigator();
 
@@ -151,6 +153,14 @@ const MainNavi = () => {
                     headerShown: false
                 }}
             />
+
+            <Stack.Screen
+                name="StoreCheckScreen"
+                component={StoreCheckScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
             
             <Stack.Screen
                 name="StoreAddScreen"
@@ -171,6 +181,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="ChatRoomScreen"
                 component={ChatRoomScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="StoreFinishScreen"
+                component={StoreFinishScreen}
                 options={{
                     headerShown: false
                 }}

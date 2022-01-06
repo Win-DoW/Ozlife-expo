@@ -56,13 +56,11 @@ const StoreSearchScreen = ({ navigation, route }) => {
     const PlaceInfo = ({info}) => {
 
         const selectPlace = (info) => {
-            navigation.navigate('StoreAddScreen', {
+            navigation.navigate('StoreCheckScreen', {
                 store : {
                     name: info.place_name,
-                    profile: '',
                     tel: info.phone,
                     address: info.road_address_name,
-                    license: '',
                     url: info.place_url,
                     longitude: info.x,
                     latitude: info.y,
