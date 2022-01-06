@@ -8,7 +8,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { createStore } from 'graphql/mutations';
 import AppHeader from 'utils/Header';
-import { CommonActions } from '@react-navigation/native';
 
 const StoreAddScreen = ({ navigation, route }) => {
 

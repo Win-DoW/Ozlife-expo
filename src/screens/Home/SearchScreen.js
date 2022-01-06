@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native';
 import SearchBar from 'react-native-platform-searchbar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Ozlifer from 'components/Ozlifer'
 import Ozlife from 'components/Ozlife'
 import Store from 'components/Store'
+import { screen } from '../../utils/Styles';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { listUsers } from 'graphql/queries';
@@ -167,16 +169,29 @@ const SearchScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar
-        placeholder="통합검색"
-        cancelText="취소"
-        onChangeText={(text) => setSearch(text)}
-        value={search}
-        onSubmitEditing={() => searchItems()}
-        theme="light"
-        platform="ios"
-        style={{padding:20}}
-      />
+
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          style={styles.leftIcon}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back-outline" size={32} color="black" />
+        </TouchableOpacity>
+
+        <View style={{...styles.titleContainer}}>
+          <SearchBar
+            placeholder="통합검색"
+            cancelText="취소"
+            onChangeText={(text) => setSearch(text)}
+            value={search}
+            onSubmitEditing={() => searchItems()}
+            theme="light"
+            platform="ios"
+            style={{ width: screen.width-60 }}
+          />
+        </View>
+      </View>
+
 
       <View style={styles.tabMenuContanier}>
         <View style={styles.tab}>
@@ -279,6 +294,24 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     fontWeight: 'bold',
+  },
+
+  headerContainer: {
+    height: 56,
+    borderColor: "#dddddd",
+    borderBottomWidth: 1,
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 8,
+    left: 50,
+    justifyContent: 'center',
+  },
+  leftIcon: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    justifyContent: 'center'
   },
 })
 
