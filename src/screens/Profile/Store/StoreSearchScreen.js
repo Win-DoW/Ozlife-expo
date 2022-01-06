@@ -4,12 +4,13 @@ import SearchBar from 'react-native-platform-searchbar';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AnimatedLoader from 'react-native-animated-loader';
 
 import { screen } from '../../../utils/Styles';
 
 const StoreSearchScreen = ({ navigation, route }) => {
 
-    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const [places, setPlaces] = useState([]);
     const [search, setSearch] = useState('');
@@ -19,6 +20,7 @@ const StoreSearchScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         (async () => {
+            setVisible(true);
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
@@ -28,6 +30,7 @@ const StoreSearchScreen = ({ navigation, route }) => {
             let location = await Location.getCurrentPositionAsync({});
             setLatitude(location.coords.latitude);
             setLongitude(location.coords.longitude);
+            setVisible(false);
         })();
     }, []);
 
@@ -88,6 +91,14 @@ const StoreSearchScreen = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+
+            <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../../utils/Loader.json")}
+                animationStyle={{width: 300, height: 300}}
+                speed={1}
+            />
 
             <View style={styles.headerContainer}>
                 <TouchableOpacity
