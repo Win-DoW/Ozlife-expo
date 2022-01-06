@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native';
 import SearchBar from 'react-native-platform-searchbar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import dayjs from "dayjs";
 
 import Ozlifer from 'components/Ozlifer'
 import Ozlife from 'components/Ozlife'
@@ -11,13 +12,14 @@ import { screen } from '../../utils/Styles';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { listUsers } from 'graphql/queries';
 import { listOzlivesOnSearchScreen, listStoresOnSearchScreen } from 'graphql/custom';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const SearchScreen = ({ navigation, route }) => {
 
   const user = route.params.user;
   const userReviews = user.reviewItem.items;
 
-  const [loading, setLoading] = useState(false);  
+  const [visible, setVisible] = useState(false);
   const [tabState, setTabState] = useState(0);
 
   const [ozlifesAll, setOzlifesAll] = useState([]);
@@ -41,7 +43,7 @@ const SearchScreen = ({ navigation, route }) => {
 
   const fetchData = async () => {
     try {      
-      setLoading(true);
+      setVisible(true);
       setOzlifesAll([]);
       setUsersAll([]);
       setStoresAll([]);
@@ -62,16 +64,23 @@ const SearchScreen = ({ navigation, route }) => {
         setStoresAll(stores => [...stores, newStore]);
       }))
 
+      const current_date = dayjs().format();
+
       await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
-        const result = await Storage.get(item.images[0]);
-        const newOzlife = {...item, image: result};
-        setOzlifesAll(ozlifes => [...ozlifes, newOzlife]);
+        const visit_date = item.visit_date;
+        const status = (visit_date.slice(0, 10) >= current_date.slice(0, 10));
+
+        if (status) {
+          const result = await Storage.get(item.images[0]);
+          const newOzlife = { ...item, image: result };
+          setOzlifesAll(ozlifes => [...ozlifes, newOzlife]);
+        }
       }))
 
-      setLoading(false);
+      setVisible(false);
 
     } catch (e) {
-      setLoading(false);
+      setVisible(false);
       console.log(e);
     }
   }
@@ -169,6 +178,14 @@ const SearchScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
+      />
 
       <View style={styles.headerContainer}>
         <TouchableOpacity

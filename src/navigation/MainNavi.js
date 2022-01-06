@@ -13,6 +13,7 @@ import Second from 'screens/Ozlife/OzlifeVisit/Second';
 import Third from 'screens/Ozlife/OzlifeVisit/Third';
 import Fourth from 'screens/Ozlife/OzlifeVisit/Fourth';
 import Fifth from 'screens/Ozlife/OzlifeVisit/Fifth';
+import Final from '../screens/Ozlife/OzlifeVisit/Final';
 
 import CommentWriteScreen from 'screens/Ozlife/CommentWriteScreen';
 import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
@@ -124,6 +125,15 @@ const MainNavi = () => {
             <Stack.Screen
                 name="Fifth"
                 component={Fifth}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+
+            <Stack.Screen
+                name="Final"
+                component={Final}
                 options={{
                     headerShown: false
                 }}

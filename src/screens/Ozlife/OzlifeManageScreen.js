@@ -8,6 +8,7 @@ import { Storage } from 'aws-amplify';
 import Ozlifer from 'components/Ozlifer';
 import AppHeader from 'utils/Header';
 import { ReturnChatRoomID } from 'utils/Chat';
+import { parseZone } from 'moment';
 
 const OzlifeManageScreen = ({ route, navigation }) => {
 
@@ -123,23 +124,34 @@ const OzlifeManageScreen = ({ route, navigation }) => {
                     <Text style={styles.explainText}>의 따뜻한 오지랖이 도착했어요!</Text>
                 </View>
 
-                <OzliferHeader />
+                { reviews.length === 0 ?
+                null
+                :
+                <>
+                    <OzliferHeader />
 
-                <View style={{marginTop: 40}}>
-                    {questions.map((question, i) => {
-                        return (
-                            <View style={styles.section} key={i}>
-                                <View>
-                                    <View style={styles.rowContainer}>
-                                        <Text style={{...styles.title, color: '#15b6f1'}}>Q{i+1}. </Text>
-                                        <Text style={styles.title}>{question}</Text>
+                    <View style={{marginTop: 40}}>
+                        {questions.map((question, i) => {
+                            return (
+                                <View style={styles.section} key={i}>
+                                    <View>
+                                        <View style={styles.rowContainer}>
+                                            <Text style={{...styles.title, color: '#15b6f1'}}>Q{i+1}. </Text>
+                                            <Text style={styles.title}>{question}</Text>
+                                        </View>
+                                        <Text style={styles.answer}>{ozlifer.reviews[i]}</Text>
                                     </View>
-                                    <Text style={styles.answer}>{ozlifer.reviews[i]}</Text>
                                 </View>
-                            </View>
-                        )
-                    })}
-                </View>
+                            )
+                        })}
+                    </View>
+
+                    <Pressable style={styles.button} onPress={goToChatRoom}>
+                        <Text style={styles.buttonFirstText}>채팅으로 추가 질문하기</Text>
+                        <Text style={styles.buttonSecondText}>답변이 필수가 아닙니다.</Text>
+                    </Pressable>
+                </>
+                }
 
             </ScrollView>
         )
@@ -172,13 +184,7 @@ const OzlifeManageScreen = ({ route, navigation }) => {
                 tabState === 0 ?
                 <Applicants/>
                 :
-                <>
-                    <Reviews />
-                    <Pressable style={styles.button} onPress={goToChatRoom}>
-                        <Text style={styles.buttonFirstText}>채팅으로 추가 질문하기</Text>
-                        <Text style={styles.buttonSecondText}>답변이 필수가 아닙니다.</Text>
-                    </Pressable>
-                </>
+                <Reviews/>
             }
             
         </SafeAreaView>

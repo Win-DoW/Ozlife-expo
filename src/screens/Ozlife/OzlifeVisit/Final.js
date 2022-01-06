@@ -3,19 +3,19 @@ import React from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from "react-native";
 import AppHeader from 'utils/Header';
 
-const StoreFinishScreen = ({ navigation, route }) => {
+const Final = ({ navigation, route }) => {
 
-  const store = route.params.store;
+  const ozlife = route.params.ozlife;
   
   return (
     <SafeAreaView style={styles.container}>
 
       <AppHeader
-        title={"가게 등록 완료"}
+        title={"오지랖 등록 완료"}
       />
 
       <Text style={styles.text}>
-        가게 등록을
+        오지랖 등록을
       </Text>
 
       <Text style={styles.text}>
@@ -24,12 +24,12 @@ const StoreFinishScreen = ({ navigation, route }) => {
 
       <View style={styles.bottom}>
         <TouchableOpacity onPress={() =>
-          navigation.navigate("StoreProfileScreen", {
-            store,
-            userID: store.userID,
+          navigation.navigate("OzlifeProfileScreen", {
+            ozlife,
+            userID: ozlife.userID,
           })}
           style={styles.button}>
-          <Text style={styles.buttontext}>가게 상세 보기</Text>
+          <Text style={styles.buttontext}>오지랖 상세 보기</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.reset({ routes: [{ name: 'MainNavi' }] })} style={styles.button}>
           <Text style={styles.buttontext}>홈으로 가기</Text>
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default StoreFinishScreen;
+export default Final;

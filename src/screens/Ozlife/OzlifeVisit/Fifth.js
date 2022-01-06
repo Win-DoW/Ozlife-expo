@@ -6,10 +6,11 @@ import AppHeader from 'utils/Header';
 import styles from './styles';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { createOzlife } from 'graphql/mutations';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const Fifth = ({ navigation, route }) => {
 
-  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const ex = route.params;
 
@@ -20,7 +21,7 @@ const Fifth = ({ navigation, route }) => {
 
   const newOzlife = async () => {
     try {
-      setLoading(true);
+      setVisible(true);
 
       const keys = await Promise.all(ex.images.map(async (image, idx) => {
         const photo = await fetch(image.uri);
@@ -42,12 +43,17 @@ const Fifth = ({ navigation, route }) => {
         discount_price,
       }}));
       
-      setLoading(false);
+      setVisible(false);
 
-      navigation.navigate('MainTab', { screen: 'OzlifeScreen' });
+      navigation.reset({routes: [{
+        name: 'Final',
+        params: {
+            ozlife: ozlife.data.createOzlife,
+        }
+      }]})
 
     } catch (e) {
-      setLoading(false);
+      setVisible(false);
       console.log(e);
     }
   }
@@ -69,13 +75,12 @@ const Fifth = ({ navigation, route }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
 
-          <Spinner
-            //visibility of Overlay Loading Spinner
-            visible={loading}
-            //Text with the Spinner
-            textContent={'Loading...'}
-            //Text style of the Spinner Text
-            textStyle={styles.spinnerTextStyle}
+          <AnimatedLoader
+            visible={visible}
+            overlayColor="rgba(255,255,255,0.75)"
+            source={require("../../../utils/Loader.json")}
+            animationStyle={{ width: 300, height: 300 }}
+            speed={1}
           />
 
           <AppHeader

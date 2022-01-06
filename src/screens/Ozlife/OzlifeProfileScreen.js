@@ -6,6 +6,7 @@ import { API, Storage, graphqlOperation } from 'aws-amplify';
 import dayjs from "dayjs";
 
 import AppHeader from 'utils/Header';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const OzlifeProfileScreen = ({ route, navigation }) => {
 
@@ -14,13 +15,13 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     const store = ozlife.store;
     const owner = ozlife.user;
     const userReviews = route.params.userReviews;
-    const status_review = (userReviews.find(item => item.ozlifeID === ozlife.id));
+    const status_review = userReviews !== undefined && (userReviews.find(item => item.ozlifeID === ozlife.id));
 
     const visit_date = ozlife.visit_date;
     const current_date = dayjs().format();
     const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
 
-    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const [ownerImage, setOwnerImage] = useState();
     const [ozlifeImages, setOzlifeImages] = useState([]);
@@ -35,7 +36,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     
     const fetchData = async () => {
         try {      
-            setLoading(true);
+            setVisible(true);
             setOzlifeImages([]);
 
             const result = await Storage.get(owner.image);
@@ -46,10 +47,10 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
                 setOzlifeImages(images => [...images, result]);
             }))
 
-            setLoading(false);
+            setVisible(false);
     
         } catch (e) {
-            setLoading(false);
+            setVisible(false);
             console.log(e);
         }
     }
@@ -83,13 +84,12 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
     return(
         <SafeAreaView style={styles.container}>
             
-            <Spinner
-                //visibility of Overlay Loading Spinner
-                visible={loading}
-                //Text with the Spinner
-                textContent={'Loading...'}
-                //Text style of the Spinner Text
-                textStyle={styles.spinnerTextStyle}
+            <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../utils/Loader.json")}
+                animationStyle={{width: 300, height: 300}}
+                speed={1}
             />
 
             <AppHeader

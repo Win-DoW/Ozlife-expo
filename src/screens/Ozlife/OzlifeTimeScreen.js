@@ -6,8 +6,11 @@ import { createReview } from 'graphql/mutations';
 import dayjs from "dayjs";
 import { Ionicons } from '@expo/vector-icons';
 import AppHeader from 'utils/Header';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const OzlifeTimeScreen = ({ navigation, route }) => {
+
+    const [visible, setVisible] = useState(false);
 
     const ozlife = route.params.ozlife;
     const toDay = {
@@ -33,6 +36,7 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
 
     const next = async () => {
         try {
+            setVisible(true);
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
             const userID = userKey.attributes.sub;
 
@@ -43,16 +47,26 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
                     status: 0,
                 }
             }));
+            setVisible(false);
 
-            navigation.navigate("MainNavi")
+            navigation.reset({ routes: [{ name: 'MainNavi' }] })
 
         } catch (e) {
             console.log(e);
+            setVisible(false);
         }
     }
 
     return (
         <SafeAreaView style={styles.container}>
+
+            <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../utils/Loader.json")}
+                animationStyle={{ width: 300, height: 300 }}
+                speed={1}
+            />
 
             <AppHeader
                 title={"방문 온라인 피드백"}
@@ -101,7 +115,7 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
                 </View>
 
                 <View style={styles.section}>
-                    <TouchableOpacity style={styles.button} onPress={next}>
+                    <TouchableOpacity style={styles.button} onPress={() => next()}>
                         <Text style={styles.buttonText}>방문 날짜와 시간 확인했어요!</Text>
                     </TouchableOpacity>
                 </View>

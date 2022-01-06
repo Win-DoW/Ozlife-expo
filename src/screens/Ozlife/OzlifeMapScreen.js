@@ -5,6 +5,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Ionicons } from '@expo/vector-icons';
 import AppHeader from 'utils/Header';
 import { ReturnChatRoomID } from 'utils/Chat';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const OzlifeMapScreen = ({ navigation, route }) => {
 
@@ -12,11 +13,12 @@ const OzlifeMapScreen = ({ navigation, route }) => {
   const store = ozlife.store;
   const userID = route.params.userID;
 
-  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [distance, setDistance] = useState('');
 
   useEffect(() => {
     (async () => {
+      setVisible(true);
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
@@ -25,6 +27,8 @@ const OzlifeMapScreen = ({ navigation, route }) => {
 
       let location = await Location.getCurrentPositionAsync({});
       setDistance(getDistanceFromLatLonInKm(location.coords.latitude, location.coords.longitude, store.latitude, store.longitude));
+
+      setVisible(false);
     })();
   }, []);
 
@@ -63,6 +67,14 @@ const OzlifeMapScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
+      />
       
       <AppHeader
         title={ozlife.name}

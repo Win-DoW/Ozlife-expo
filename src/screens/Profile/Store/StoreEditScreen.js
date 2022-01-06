@@ -48,7 +48,7 @@ const StoreEditScreen = ({ navigation, route }) => {
             setVisible(false);
         } catch (e) {
             console.log(e)
-            setVisible(false);
+            setVisible(true);
         }
     }
 
