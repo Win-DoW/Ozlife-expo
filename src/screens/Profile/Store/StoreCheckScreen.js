@@ -10,36 +10,39 @@ const StoreCheckScreen = ({ navigation, route }) => {
     const [visible, setVisible] = useState(false);
 
     const [store, setStore] = useState(route.params.store);
+    const [type, setType] = useState('');
 
     const ref_license = useRef();
 
     const checkStore = async() => {
         try {
             setVisible(true);
-            // const API_KEY = "3LxqPx%2FLspeZheroZjI7VTIyuj1Hjp2PIf7jpS28U22lC2iHecTpn8g7UGISPG16LVZudKBfvgrTgRF7unal7A%3D%3D";
-            // const url = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${API_KEY}&returnType=JSON`;
-            // const config = {
-            //     method: 'post',
-            //     mode: 'no-cors',
-            //     headers: {
-            //         'Access-Control-Allow-Origin': '*',
-            //         'Content-Type': 'application/json; charset=utf-8',
-            //     },
-            //     params: {
-            //         "b_no": [
-            //             "0000000000"
-            //         ],
-            //     },
-            // };
-            
-            // const { data } = await axios.get(url, config);
-            // console.log(data)
 
-            setVisible(false);
-
-            navigation.navigate('StoreAddScreen', {
-                store 
+            const url = 'https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=3LxqPx%2FLspeZheroZjI7VTIyuj1Hjp2PIf7jpS28U22lC2iHecTpn8g7UGISPG16LVZudKBfvgrTgRF7unal7A%3D%3D';
+            const { data } = await axios({
+                method: 'post',
+                url,
+                headers: {}, 
+                data: {
+                    "b_no": [
+                        store.license
+                    ],
+                }
             });
+
+            setVisible(false);            
+
+            const storeInfo = data.data[0];
+            setType(storeInfo.tax_type);
+
+            console.log(storeInfo.b_stt_cd)
+
+            if(storeInfo.b_stt_cd === "01") {
+                navigation.navigate('StoreAddScreen', {
+                    store 
+                });
+            }            
+
         } catch (e) {
             console.log(e)
             setVisible(false);
@@ -68,20 +71,20 @@ const StoreCheckScreen = ({ navigation, route }) => {
                     leftIconPress={() => navigation.goBack()}
                 />
 
-
                 <View style={{...styles.formBox, marginTop: 24}}>
-                        <Text style={styles.formBoxTitle}>사업자등록번호 조회</Text>
-                        <TextInput
-                            ref={ref_license}
-                            style={styles.textinput}
-                            placeholder="사업자등록번호를 입력하세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'license': value})}
-                            returnKeyType='next'
-                            value={store.license}
-                        />
-                    </View>
+                    <Text style={styles.formBoxTitle}>사업자등록번호</Text>
+                    <TextInput
+                        ref={ref_license}
+                        style={styles.textinput}
+                        placeholder="사업자등록번호를 입력하세요."
+                        placeholderTextColor="#ddd"
+                        onChangeText={(value) => setStore({...store, 'license': value})}
+                        returnKeyType='next'
+                        value={store.license}
+                    />
+                </View>
 
+                <Text style={{margin: 20}}>{type}</Text>
 
                 <Pressable 
                     style={styles.button} 

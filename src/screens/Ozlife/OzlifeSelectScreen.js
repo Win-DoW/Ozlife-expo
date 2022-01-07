@@ -76,12 +76,6 @@ const OzlifeSelectScreen = ({ navigation, route }) => {
         contentContainerStyle={{marginTop: 20}}
       />
 
-      <View style={styles.bottom}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OzlifeWriteScreen', )}>
-          <Text style={styles.buttontext}>다음</Text>
-        </TouchableOpacity>
-      </View>
-
     </SafeAreaView>
   );
 }
