@@ -1,21 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native';
 import SearchBar from 'react-native-platform-searchbar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import dayjs from "dayjs";
 
 import Ozlifer from 'components/Ozlifer'
 import Ozlife from 'components/Ozlife'
 import Store from 'components/Store'
+import { screen } from '../../utils/Styles';
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { listUsers, listOzlives } from 'graphql/queries';
-import { listStoresOnSearchScreen } from 'graphql/custom';
+import { listUsers } from 'graphql/queries';
+import { listOzlivesOnSearchScreen, listStoresOnSearchScreen } from 'graphql/custom';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const SearchScreen = ({ navigation, route }) => {
 
   const user = route.params.user;
   const userReviews = user.reviewItem.items;
 
-  const [loading, setLoading] = useState(false);  
+  const [visible, setVisible] = useState(false);
   const [tabState, setTabState] = useState(0);
 
   const [ozlifesAll, setOzlifesAll] = useState([]);
@@ -39,13 +43,13 @@ const SearchScreen = ({ navigation, route }) => {
 
   const fetchData = async () => {
     try {      
-      setLoading(true);
+      setVisible(true);
       setOzlifesAll([]);
       setUsersAll([]);
       setStoresAll([]);
 
       const users = await API.graphql(graphqlOperation(listUsers));
-      const ozlifes = await API.graphql(graphqlOperation(listOzlives));
+      const ozlifes = await API.graphql(graphqlOperation(listOzlivesOnSearchScreen));
       const stores = await API.graphql(graphqlOperation(listStoresOnSearchScreen));
 
       await Promise.all(users.data.listUsers.items.map(async (item, idx) => {
@@ -60,16 +64,23 @@ const SearchScreen = ({ navigation, route }) => {
         setStoresAll(stores => [...stores, newStore]);
       }))
 
+      const current_date = dayjs().format();
+
       await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
-        const result = await Storage.get(item.images[0]);
-        const newOzlife = {...item, image: result};
-        setOzlifesAll(ozlifes => [...ozlifes, newOzlife]);
+        const visit_date = item.visit_date;
+        const status = (visit_date.slice(0, 10) >= current_date.slice(0, 10));
+
+        if (status) {
+          const result = await Storage.get(item.images[0]);
+          const newOzlife = { ...item, image: result };
+          setOzlifesAll(ozlifes => [...ozlifes, newOzlife]);
+        }
       }))
 
-      setLoading(false);
+      setVisible(false);
 
     } catch (e) {
-      setLoading(false);
+      setVisible(false);
       console.log(e);
     }
   }
@@ -167,16 +178,37 @@ const SearchScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar
-        placeholder="통합검색"
-        cancelText="취소"
-        onChangeText={(text) => setSearch(text)}
-        value={search}
-        onSubmitEditing={() => searchItems()}
-        theme="light"
-        platform="ios"
-        style={{padding:20}}
+
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
       />
+
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          style={styles.leftIcon}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back-outline" size={32} color="black" />
+        </TouchableOpacity>
+
+        <View style={{...styles.titleContainer}}>
+          <SearchBar
+            placeholder="통합검색"
+            cancelText="취소"
+            onChangeText={(text) => setSearch(text)}
+            value={search}
+            onSubmitEditing={() => searchItems()}
+            theme="light"
+            platform="ios"
+            style={{ width: screen.width-60 }}
+          />
+        </View>
+      </View>
+
 
       <View style={styles.tabMenuContanier}>
         <View style={styles.tab}>
@@ -279,6 +311,24 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     fontWeight: 'bold',
+  },
+
+  headerContainer: {
+    height: 56,
+    borderColor: "#dddddd",
+    borderBottomWidth: 1,
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 8,
+    left: 50,
+    justifyContent: 'center',
+  },
+  leftIcon: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    justifyContent: 'center'
   },
 })
 

@@ -10,7 +10,7 @@ const OzlifeWriteScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <AppHeader
-        title={"오지랖 선택"}
+        title={"오지랖 요청하기"}
         noIcon={false}
         leftIcon={<Ionicons name="chevron-back-outline" size={32} color="black" />}
         leftIconPress={() => navigation.goBack()}

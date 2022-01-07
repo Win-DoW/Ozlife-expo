@@ -61,10 +61,10 @@ const CommentViewScreen = ({ navigation, route }) => {
                         <View style={styles.section} key={index}>
                             <View>
                                 <View style={styles.rowContainer}>
-                                    <Text style={styles.title, {color: '#15b6f1'}}>Q{index+1}</Text>
-                                    <Text style={styles.title, {marginLeft: 5}}>{question}</Text>
+                                    <Text style={{...styles.title, color: '#15b6f1'}}>Q{index+1}. </Text>
+                                    <Text style={styles.title}>{question}</Text>
                                 </View>
-                                <Text>{reviews[index]}</Text>
+                                <Text style={styles.answer}>{reviews[index]}</Text>
                             </View>
                         </View>
                     )
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     },    
     title: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '700',
         color: '#000',
     },
     text: {
@@ -127,6 +127,10 @@ const styles = StyleSheet.create({
     },
     spinnerTextStyle: {
         color: '#FFF',
+    },
+    answer: {
+        fontSize: 14,
+        marginTop: 8,
     },
 });
 

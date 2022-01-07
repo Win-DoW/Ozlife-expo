@@ -12,7 +12,7 @@ const Ozlife = ({ ozlife, userID, userReviews }) => {
     const visit_date = ozlife.visit_date;
     const current_date = dayjs().format();
     const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
-    const status_review = (userReviews.find(item => item.userID === userID));
+    const status_review = (userReviews.find(item => item.ozlifeID === ozlife.id));
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {

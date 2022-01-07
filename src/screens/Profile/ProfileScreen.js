@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { getUserOnProfileScreen } from 'graphql/custom'
 import Store from 'components/Store'
+import AnimatedLoader from 'react-native-animated-loader';
 
 const ProfileScreen = ({ navigation, route }) => {
 
   const [user, setUser] = useState({})
   const [stores, setStores] = useState([])
-  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -23,7 +23,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const fetchData = async() => {
     try {
-      setLoading(true)
+      setVisible(true);
       setStores([]);
 
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
@@ -42,9 +42,9 @@ const ProfileScreen = ({ navigation, route }) => {
         setStores(stores => [...stores, newStore]);
       }))
 
-      setLoading(false)
+      setVisible(false);
     } catch (e) {
-      setLoading(false)
+      setVisible(false);
       console.log(e)
     }
   }
@@ -124,13 +124,12 @@ const ProfileScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       
-      <Spinner
-        //visibility of Overlay Loading Spinner
-        visible={loading}
-        //Text with the Spinner
-        textContent={"Loading..."}
-        //Text style of the Spinner Text
-        textStyle={styles.spinnerTextStyle}
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
       />
 
       <View style={styles.headerBox}>
@@ -212,9 +211,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginHorizontal: 20,
     marginBottom: 8
-  },
-  spinnerTextStyle: {
-    color: '#FFF',
   },
 });
 

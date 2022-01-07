@@ -3,12 +3,14 @@ import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, Fla
 import SearchBar from 'react-native-platform-searchbar';
 import * as Location from 'expo-location';
 import axios from 'axios';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AnimatedLoader from 'react-native-animated-loader';
 
-import AppHeader from 'utils/Header';
+import { screen } from '../../../utils/Styles';
 
 const StoreSearchScreen = ({ navigation, route }) => {
 
-    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const [places, setPlaces] = useState([]);
     const [search, setSearch] = useState('');
@@ -18,6 +20,7 @@ const StoreSearchScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         (async () => {
+            setVisible(true);
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
@@ -27,6 +30,7 @@ const StoreSearchScreen = ({ navigation, route }) => {
             let location = await Location.getCurrentPositionAsync({});
             setLatitude(location.coords.latitude);
             setLongitude(location.coords.longitude);
+            setVisible(false);
         })();
     }, []);
 
@@ -52,13 +56,11 @@ const StoreSearchScreen = ({ navigation, route }) => {
     const PlaceInfo = ({info}) => {
 
         const selectPlace = (info) => {
-            navigation.navigate('StoreAddScreen', {
+            navigation.navigate('StoreCheckScreen', {
                 store : {
                     name: info.place_name,
-                    profile: '',
                     tel: info.phone,
                     address: info.road_address_name,
-                    license: '',
                     url: info.place_url,
                     longitude: info.x,
                     latitude: info.y,
@@ -87,16 +89,36 @@ const StoreSearchScreen = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <SearchBar
-                placeholder="가게 검색"
-                cancelText="취소"
-                onChangeText={(text) => setSearch(text)}
-                value={search}
-                onSubmitEditing={() => searchPlaces()}
-                theme="light"
-                platform="ios"
-                style={{padding:20}}
+
+            <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../../utils/Loader.json")}
+                animationStyle={{width: 300, height: 300}}
+                speed={1}
             />
+
+            <View style={styles.headerContainer}>
+                <TouchableOpacity
+                    style={styles.leftIcon}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Ionicons name="chevron-back-outline" size={32} color="black" />
+                </TouchableOpacity>
+
+                <View style={{ ...styles.titleContainer }}>
+                    <SearchBar
+                        placeholder="가게검색"
+                        cancelText="취소"
+                        onChangeText={(text) => setSearch(text)}
+                        value={search}
+                        onSubmitEditing={() => searchPlaces()}
+                        theme="light"
+                        platform="ios"
+                        style={{ width: screen.width - 60 }}
+                    />
+                </View>
+            </View>
 
             <FlatList
                 data={places}
@@ -130,7 +152,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingVertical: 8,
         paddingHorizontal: 24,
-        borderTopWidth: 1,
+        borderBottomWidth: 1,
         borderColor: '#ddd',
     },
     rowContainer: {
@@ -138,7 +160,24 @@ const styles = StyleSheet.create({
         alignItems:'center', 
         flexDirection: 'row',
         marginVertical: 2,
-    }
+    },
+    headerContainer: {
+        height: 56,
+        borderColor: "#dddddd",
+        borderBottomWidth: 1,
+    },
+    titleContainer: {
+        position: 'absolute',
+        top: 8,
+        left: 50,
+        justifyContent: 'center',
+    },
+    leftIcon: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        justifyContent: 'center'
+    },
 })
 
 export default StoreSearchScreen;

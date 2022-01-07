@@ -3,27 +3,31 @@ import * as React from 'react';
 
 import MainTab from './MainTab';
 
-import OzlifeDetailScreen from 'screens/Ozlife/OzlifeDetailScreen';
 import OzlifeManageScreen from 'screens/Ozlife/OzlifeManageScreen';
 import OzlifeMapScreen from 'screens/Ozlife/OzlifeMapScreen';
 import OzlifeProfileScreen from 'screens/Ozlife/OzlifeProfileScreen';
 import OzlifeTimeScreen from 'screens/Ozlife/OzlifeTimeScreen';
+
+import OzlifeSelectScreen from 'screens/Ozlife/OzlifeSelectScreen';
 import OzlifeWriteScreen from 'screens/Ozlife/OzlifeWriteScreen';
 import First from 'screens/Ozlife/OzlifeVisit/First';
 import Second from 'screens/Ozlife/OzlifeVisit/Second';
 import Third from 'screens/Ozlife/OzlifeVisit/Third';
 import Fourth from 'screens/Ozlife/OzlifeVisit/Fourth';
 import Fifth from 'screens/Ozlife/OzlifeVisit/Fifth';
+import Final from '../screens/Ozlife/OzlifeVisit/Final';
 
 import CommentWriteScreen from 'screens/Ozlife/CommentWriteScreen';
 import CommentViewScreen from 'screens/Ozlife/CommentViewScreen';
 
 import StoreProfileScreen from 'screens/Profile/Store/StoreProfileScreen'
 import StoreSearchScreen from 'screens/Profile/Store/StoreSearchScreen';
+import StoreCheckScreen from 'screens/Profile/Store/StoreCheckScreen';
 import StoreAddScreen from 'screens/Profile/Store/StoreAddScreen';
 import StoreEditScreen from 'screens/Profile/Store/StoreEditScreen';
 
 import ChatRoomScreen from 'screens/Chat/ChatRoomScreen';
+import StoreFinishScreen from '/screens/Profile/Store/StoreFinishScreen';
 
 const Stack = createStackNavigator();
 
@@ -48,16 +52,6 @@ const MainNavi = () => {
                 }} 
             />
             
-
-
-            <Stack.Screen
-                name="OzlifeDetailScreen"
-                component={OzlifeDetailScreen}
-                options={{
-                    headerShown: false
-                }}
-            />
-
             <Stack.Screen
                 name="OzlifeManageScreen"
                 component={OzlifeManageScreen}
@@ -85,6 +79,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="OzlifeTimeScreen"
                 component={OzlifeTimeScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeSelectScreen"
+                component={OzlifeSelectScreen}
                 options={{
                     headerShown: false
                 }}
@@ -138,6 +140,15 @@ const MainNavi = () => {
                 }}
             />
 
+
+            <Stack.Screen
+                name="Final"
+                component={Final}
+                options={{
+                    headerShown: false
+                }}
+            />
+
             <Stack.Screen
                 name="CommentWriteScreen"
                 component={CommentWriteScreen}
@@ -162,6 +173,14 @@ const MainNavi = () => {
                     headerShown: false
                 }}
             />
+
+            <Stack.Screen
+                name="StoreCheckScreen"
+                component={StoreCheckScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
             
             <Stack.Screen
                 name="StoreAddScreen"
@@ -182,6 +201,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="ChatRoomScreen"
                 component={ChatRoomScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="StoreFinishScreen"
+                component={StoreFinishScreen}
                 options={{
                     headerShown: false
                 }}

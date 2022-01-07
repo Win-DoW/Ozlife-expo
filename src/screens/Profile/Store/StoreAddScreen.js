@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import * as ImagePicker from 'expo-image-picker';
 
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { createStore } from 'graphql/mutations';
 import AppHeader from 'utils/Header';
-import { CommonActions } from '@react-navigation/native';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const StoreAddScreen = ({ navigation, route }) => {
+
+    const [visible, setVisible] = useState(false);
 
     const [inputError, setInputError] = useState(false);
 
     const [userID, setUserID] = useState('');
 
-    const [loading, setLoading] = useState(false);
-    const [btnState, setBtnState] = useState(false);
-    const [store, setStore] = useState(route.params.store);
+    const store = route.params.store;
+
+    const [name, setName] = useState(store.name)
+    const [profile, setProfile] = useState(store.profile)
+    const [tel, setTel] = useState(store.tel)
+    const [address, setAddress] = useState(store.address)
+    const [url, setUrl] = useState(store.url)
+    const [license, setLicense] = useState(store.license)
+
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
 
@@ -26,7 +33,6 @@ const StoreAddScreen = ({ navigation, route }) => {
     const ref_profile = useRef();
     const ref_tel = useRef();
     const ref_address = useRef();
-    const ref_license = useRef();
     const ref_url = useRef();
 
     useEffect(() => {
@@ -35,15 +41,20 @@ const StoreAddScreen = ({ navigation, route }) => {
 
     const fetchData = async() => {
         try {
+            setVisible(true);
+
             const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
             setUserID(userKey.attributes.sub);
+
+            setVisible(false);
         } catch (e) {
             console.log(e)
         }
     }
 
     const checkInputData = () => {
-        if (store.name != '' && store.profile != '' && store.tel != '' && store.address != '' && store.license != '' && store.url != '' && images.length != 0) {
+        console.log(store)
+        if (name != '' && profile != '' && tel != '' && address != '' && url != '' && license != '' && images.length != 0) {
             return true;
         } else {
             return false;
@@ -51,18 +62,19 @@ const StoreAddScreen = ({ navigation, route }) => {
     }
 
     const checkAndRegister = async() => {
-        try {
+        try {            
             if(checkInputData()) {
+                setVisible(true);
+
                 // 입력이 완료되어 가게 등록이 가능한 상태
                 setInputError(false);
-                setLoading(true);
 
                 // 이미지 처리
                 const keys = await Promise.all(images.map(async (image, idx) => {
                     const photo = await fetch(image.uri)
                     const photoBlob = await photo.blob();
 
-                    const result = await Storage.put(`${userID}/${store.name}/${idx}.jpg`, photoBlob, {
+                    const result = await Storage.put(`${userID}/${name}/${idx}.jpg`, photoBlob, {
                         contentType: 'image/jpeg',
                     });
 
@@ -70,23 +82,33 @@ const StoreAddScreen = ({ navigation, route }) => {
                 }))
 
                 // 가게 생성
-                await API.graphql(graphqlOperation(createStore, {
+                const store = await API.graphql(graphqlOperation(createStore, {
                     input: {
                         userID,
-                        ...store,
+                        name,
+                        profile,
+                        tel,
+                        address,
+                        license,
                         images: keys,
                     }
                 }))
 
-                setLoading(false);
+                setVisible(false);
 
-                navigation.navigate('MainTab', { screen: 'ProfileScreen' });
+                navigation.reset({routes: [{
+                    name: 'StoreFinishScreen',
+                    params: {
+                        store: store.data.createStore,
+                    }
+                }]})
 
             } else {
                 setInputError(true);
             }
         } catch (e) {
             console.log(e)
+            setVisible(false);
         }
     }
 
@@ -135,13 +157,13 @@ const StoreAddScreen = ({ navigation, route }) => {
             behavior={Platform.OS == 'ios' ? 'padding' : 'null'}
         >
             <SafeAreaView style={styles.container}>
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
+
+                <AnimatedLoader
+                    visible={visible}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("../../../utils/Loader.json")}
+                    animationStyle={{ width: 300, height: 300 }}
+                    speed={1}
                 />
 
                 <AppHeader
@@ -160,10 +182,10 @@ const StoreAddScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 이름을 적어주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'name': value})}
+                            onChangeText={(value) => setName(value)}
                             onSubmitEditing={() => ref_profile.current.focus()}
                             returnKeyType="next"
-                            value={store.name}
+                            value={name}
                         />
                     </View>
 
@@ -174,9 +196,9 @@ const StoreAddScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 설명을 적어주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'profile': value})}
+                            onChangeText={(value) => setProfile(value)}
                             onSubmitEditing={() => Keyboard.dismiss()}
-                            value={store.profile}
+                            value={profile}
                             multiline={true}
                         />
                     </View>
@@ -207,11 +229,11 @@ const StoreAddScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="전화번호를 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'tel': value})}
+                            onChangeText={(value) => setTel(value)}
                             onSubmitEditing={() => ref_address.current.focus()}
                             returnKeyType='next'
                             keyboardType='number-pad'
-                            value={store.tel}
+                            value={tel}
                         />
                     </View>
 
@@ -222,24 +244,10 @@ const StoreAddScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 위치를 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'address': value})}
-                            onSubmitEditing={() => ref_license.current.focus()}
-                            returnKeyType='next'
-                            value={store.address}
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>사업자등록증</Text>
-                        <TextInput
-                            ref={ref_license}
-                            style={styles.textinput}
-                            placeholder="사업자등록번호를 입력하세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'license': value})}
+                            onChangeText={(value) => setAddress(value)}
                             onSubmitEditing={() => ref_url.current.focus()}
                             returnKeyType='next'
-                            value={store.license}
+                            value={address}
                         />
                     </View>
 
@@ -250,10 +258,10 @@ const StoreAddScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 URL을 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'url': value})}
+                            onChangeText={(value) => setUrl(value)}
                             onSubmitEditing={() => Keyboard.dismiss()}
                             returnKeyType='done'
-                            value={store.url}
+                            value={url}
                         />
                     </View>
                 </ScrollView>

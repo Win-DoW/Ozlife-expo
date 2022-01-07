@@ -7,21 +7,21 @@ import * as ImagePicker from 'expo-image-picker';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { updateStore } from 'graphql/mutations';
 import AppHeader from 'utils/Header';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const StoreEditScreen = ({ navigation, route }) => {
 
-    const [store, setStore] = useState({
-        id: route.params.store.id,
-        userID: route.params.store?.userID,
-        name: route.params.store.name,
-        profile: route.params.store.profile,
-        tel: route.params.store.tel,
-        address: route.params.store.address,
-        license: route.params.store.license,
-        url: route.params.store.url,
-        longitude: route.params.store.longitude,
-        latitude: route.params.store.latitude,
-    });
+    const [visible, setVisible] = useState(false);
+
+    const store = route.params.store;
+
+    const [id, setId] = useState(store.id)
+    const [userID, setUserID] = useState(store.userID)
+    const [name, setName] = useState(store.name)
+    const [profile, setProfile] = useState(store.profile)
+    const [tel, setTel] = useState(store.tel)
+    const [address, setAddress] = useState(store.address)
+    const [url, setUrl] = useState(store.url)
 
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(route.params.store.images.length);
@@ -30,7 +30,6 @@ const StoreEditScreen = ({ navigation, route }) => {
     const ref_profile = useRef();
     const ref_tel = useRef();
     const ref_address = useRef();
-    const ref_license = useRef();
     const ref_url = useRef();
 
     useEffect(() => {
@@ -39,28 +38,30 @@ const StoreEditScreen = ({ navigation, route }) => {
 
     const fetchData = async() => {
         try {
+            setVisible(true);
             setImages([]);
 
             await Promise.all(route.params.store.images.map(async(image, idx) => {
                 const newImage = await Storage.get(image)
                 setImages(images => [...images, {id: idx, uri: newImage}])
             }))
-
+            setVisible(false);
         } catch (e) {
             console.log(e)
+            setVisible(true);
         }
     }
 
     const StoreUpdate = async() => {
         try {
-            console.log(store)
+            setVisible(true);
 
             // 이미지 처리
             const keys = await Promise.all(images.map(async (image, idx) => {
                 const photo = await fetch(image.uri)
                 const photoBlob = await photo.blob();
 
-                const result = await Storage.put(`${store.userID}/${store.name}/${idx}.jpg`, photoBlob, {
+                const result = await Storage.put(`${userID}/${name}/${idx}.jpg`, photoBlob, {
                     contentType: 'image/jpeg',
                 });
 
@@ -70,15 +71,24 @@ const StoreEditScreen = ({ navigation, route }) => {
             // 가게 수정
             const store = await API.graphql(graphqlOperation(updateStore, {
                 input: {
-                    ...store,
+                    id,
+                    name,
+                    profile,
+                    tel,
+                    address,
+                    url,
                     images: keys,
                 }
             }))
 
+            setVisible(false);
+
             navigation.pop();
+            
 
         } catch (e) {
             console.log(e)
+            setVisible(false);
         }
     }
 
@@ -128,6 +138,14 @@ const StoreEditScreen = ({ navigation, route }) => {
         >
             <SafeAreaView style={styles.container}>
 
+                <AnimatedLoader
+                    visible={visible}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("../../../utils/Loader.json")}
+                    animationStyle={{width: 300, height: 300}}
+                    speed={1}
+                />
+
                 <AppHeader
                     title={"가게 수정"}
                     noIcon={false}
@@ -137,17 +155,17 @@ const StoreEditScreen = ({ navigation, route }) => {
 
                 <ScrollView styles={styles.container}>
 
-                    <View style={{...styles.formBox, marginTop: 24}}>
+                <View style={{...styles.formBox, marginTop: 24}}>
                         <Text style={styles.formBoxTitle}>가게 이름</Text>
                         <TextInput
                             ref={ref_name}
                             style={styles.textinput}
                             placeholder="가게 이름을 적어주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'name': value})}
+                            onChangeText={(value) => setName(value)}
                             onSubmitEditing={() => ref_profile.current.focus()}
                             returnKeyType="next"
-                            value={store.name}
+                            value={name}
                         />
                     </View>
 
@@ -158,9 +176,9 @@ const StoreEditScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 설명을 적어주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'profile': value})}
+                            onChangeText={(value) => setProfile(value)}
                             onSubmitEditing={() => Keyboard.dismiss()}
-                            value={store.profile}
+                            value={profile}
                             multiline={true}
                         />
                     </View>
@@ -191,11 +209,11 @@ const StoreEditScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="전화번호를 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'tel': value})}
+                            onChangeText={(value) => setTel(value)}
                             onSubmitEditing={() => ref_address.current.focus()}
                             returnKeyType='next'
                             keyboardType='number-pad'
-                            value={store.tel}
+                            value={tel}
                         />
                     </View>
 
@@ -206,24 +224,10 @@ const StoreEditScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 위치를 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'address': value})}
-                            onSubmitEditing={() => ref_license.current.focus()}
-                            returnKeyType='next'
-                            value={store.address}
-                        />
-                    </View>
-
-                    <View style={styles.formBox}>
-                        <Text style={styles.formBoxTitle}>사업자등록증</Text>
-                        <TextInput
-                            ref={ref_license}
-                            style={styles.textinput}
-                            placeholder="사업자등록번호를 입력하세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'license': value})}
+                            onChangeText={(value) => setAddress(value)}
                             onSubmitEditing={() => ref_url.current.focus()}
                             returnKeyType='next'
-                            value={store.license}
+                            value={address}
                         />
                     </View>
 
@@ -234,10 +238,10 @@ const StoreEditScreen = ({ navigation, route }) => {
                             style={styles.textinput}
                             placeholder="가게 URL을 입력해주세요."
                             placeholderTextColor="#ddd"
-                            onChangeText={(value) => setStore({...store, 'url': value})}
+                            onChangeText={(value) => setUrl(value)}
                             onSubmitEditing={() => Keyboard.dismiss()}
                             returnKeyType='done'
-                            value={store.url}
+                            value={url}
                         />
                     </View>
                 </ScrollView>

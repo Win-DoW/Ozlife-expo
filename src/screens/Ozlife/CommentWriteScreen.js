@@ -59,8 +59,8 @@ const CommentWriteScreen = ({ navigation, route }) => {
                             <View style={styles.section} key={index}>
                                 <View>
                                     <View style={styles.rowContainer}>
-                                        <Text style={styles.title, {color: '#15b6f1'}}>Q{index+1}</Text>
-                                        <Text style={styles.title, {marginLeft: 5}}>{question}</Text>
+                                        <Text style={{...styles.title, color: '#15b6f1'}}>Q{index+1}. </Text>
+                                        <Text style={styles.title}>{question}</Text>
                                     </View>
                                     <TextInput
                                         placeholder="답변을 작성해주세요."

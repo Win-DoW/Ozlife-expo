@@ -89,7 +89,24 @@ const styles = StyleSheet.create({
   promotionPressText: {
     fontSize: 14,
     color: '#fff'
-  }
+  },
+  headerContainer: {
+    height: 56,
+    borderColor: "#dddddd",
+    borderBottomWidth: 1,
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 8,
+    left: 50,
+    justifyContent: 'center',
+  },
+  leftIcon: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    justifyContent: 'center'
+  },
 })
 
 export default styles;

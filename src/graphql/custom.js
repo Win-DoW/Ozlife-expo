@@ -70,6 +70,30 @@ export const getUserOnOzlifeScreen = /* GraphQL */ `
               nickname
               image
             }
+            reviewItem {
+              items {
+                id
+                reviews
+                status
+                createdAt
+                ozlifeID
+                userID
+                user {
+                  id
+                  email
+                  nickname
+                  profile
+                  interest
+                  region
+                  image
+                  noti_token
+                  createdAt
+                  updatedAt
+                }
+                updatedAt
+              }
+              nextToken
+            }
             updatedAt
           }
           userID
@@ -120,6 +144,30 @@ export const getUserOnOzlifeScreen = /* GraphQL */ `
             id
             nickname
             image
+          }
+          reviewItem {
+            items {
+              id
+              reviews
+              status
+              createdAt
+              ozlifeID
+              userID
+              user {
+                id
+                email
+                nickname
+                profile
+                interest
+                region
+                image
+                noti_token
+                createdAt
+                updatedAt
+              }
+              updatedAt
+            }
+            nextToken
           }
           updatedAt
         }
@@ -324,7 +372,31 @@ export const getUserOnProfileScreen = /* GraphQL */ `
                 id
                 nickname
                 image
-              }              
+              }
+              reviewItem {
+                items {
+                  id
+                  reviews
+                  status
+                  createdAt
+                  ozlifeID
+                  userID
+                  user {
+                    id
+                    email
+                    nickname
+                    profile
+                    interest
+                    region
+                    image
+                    noti_token
+                    createdAt
+                    updatedAt
+                  }
+                  updatedAt
+                }
+                nextToken
+              } 
             }
             nextToken
           }
@@ -417,6 +489,30 @@ export const listStoresOnSearchScreen = /* GraphQL */ `
               createdAt
               updatedAt
             }
+            reviewItem {
+              items {
+                id
+                reviews
+                status
+                createdAt
+                ozlifeID
+                userID
+                user {
+                  id
+                  email
+                  nickname
+                  profile
+                  interest
+                  region
+                  image
+                  noti_token
+                  createdAt
+                  updatedAt
+                }
+                updatedAt
+              }
+              nextToken
+            }
             updatedAt
             store {
               id
@@ -444,6 +540,89 @@ export const listStoresOnSearchScreen = /* GraphQL */ `
                 updatedAt
               }
             }
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listOzlivesOnSearchScreen = /* GraphQL */ `
+  query ListOzlives(
+    $filter: ModelOzlifeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOzlives(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        profile
+        images
+        section
+        tag
+        question
+        member
+        visit_date
+        name
+        original_price
+        discount_price
+        promotion
+        address
+        createdAt
+        storeID
+        store {
+          id
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          userID
+          updatedAt
+        }
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          noti_token
+          createdAt
+          updatedAt
+        }
+        reviewItem {
+          items {
+            id
+            reviews
+            status
+            createdAt
+            ozlifeID
+            userID
+            user {
+              id
+              email
+              nickname
+              profile
+              interest
+              region
+              image
+              noti_token
+              createdAt
+              updatedAt
+            }
+            updatedAt
           }
           nextToken
         }
