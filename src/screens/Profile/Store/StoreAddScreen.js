@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import * as ImagePicker from 'expo-image-picker';
 

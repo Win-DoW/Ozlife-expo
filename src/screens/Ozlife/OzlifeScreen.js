@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable, FlatList, Image, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
-import Spinner from 'react-native-loading-spinner-overlay';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 
 import { getUserOnOzlifeScreen } from 'graphql/custom';
 
 import Ozlife from 'components/Ozlife';
+import AnimatedLoader from 'react-native-animated-loader';
 
 const OzlifeScreen = ({ navigation, route }) => {
 
-    const [loading, setLoading] = useState(false);  
+    const [visible, setVisible] = useState(false); 
     const [tabState, setTabState] = useState(0);
     const [user, setUser] = useState({});
     const [questions, setQuestions] = useState([]);
@@ -27,7 +26,7 @@ const OzlifeScreen = ({ navigation, route }) => {
 
     const fetchData = async () => {
         try {      
-            setLoading(true);
+            setVisible(true);
             setQuestions([]);
             setAnswers([]);
 
@@ -53,10 +52,10 @@ const OzlifeScreen = ({ navigation, route }) => {
                 setAnswers(ozlifes => [...ozlifes, newOzlife]);
             }))
 
-            setLoading(false);
+            setVisible(false);
 
         } catch (e) {
-            setLoading(false);
+            setVisible(false);
             console.log(e);
         }
     }
@@ -65,13 +64,9 @@ const OzlifeScreen = ({ navigation, route }) => {
         return (
             <View style={{width: '100%', alignItems: 'center', marginTop: 48}}>
                 <Image source={require('../../assets/icon_logo.png')} style={styles.nothingIcon} />
-                <Text style={styles.nothingText}>아직 오지랖을 답변한 적이 없어요...</Text>
-                <TouchableOpacity style={styles.requestButton}>
-                    { tabState === 0 ?
-                    <Text style={styles.requestText}>오지랖 답변하러 가기</Text>
-                    :
-                    <Text style={styles.requestText}>오지랖 요청하러 가기</Text>
-                    }
+                <Text style={styles.nothingText}>{tabState === 0 ? '아직 오지랖을 답변한 적이 없어요...' : '아직 오지랖을 질문한 적이 없어요...' }</Text>
+                <TouchableOpacity style={styles.requestButton} onPress={() => {tabState === 0 ? navigation.navigate('HomeScreen') : navigation.navigate('OzlifeSelectScreen')}} >
+                    <Text style={styles.requestText}>{tabState === 0 ? '오지랖 답변하러 가기' : '오지랖 요청하러 가기'}</Text>
                     <Image source={require("../../assets/next.png")} style={{width: 10, height: 15}} />
                 </TouchableOpacity>
             </View>
@@ -80,6 +75,15 @@ const OzlifeScreen = ({ navigation, route }) => {
 
     return (            
         <SafeAreaView style={styles.container}>
+
+            <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../utils/Loader.json")}
+                animationStyle={{ width: 300, height: 300 }}
+                speed={1}
+            />
+
             <View style={styles.head}>
                 <Text style={{fontSize: 18, color: '#15b6f1', fontWeight: 'bold'}}>내 오지랖</Text>
             </View>

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { screen } from 'utils/Styles';
 
-const Store = ({ store, userID, userReviews }) => {
+const Store = ({ store, userID, userReviews, state=true }) => {
     
     const navigation = useNavigation();
 
@@ -16,8 +16,14 @@ const Store = ({ store, userID, userReviews }) => {
         })
     }
 
+    const goToOzlifeWrite = () => {
+        navigation.navigate("OzlifeWriteScreen", {
+            store,
+        })
+    }
+
     return (
-        <Pressable style={styles.container} onPress={() => goToStoreProfile()}>
+        <Pressable style={styles.container} onPress={() => state ? goToStoreProfile() : goToOzlifeWrite()}>
             <Image
                 resizeMode="contain"
                 source={{uri: store.image}}

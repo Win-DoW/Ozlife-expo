@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable, Platform, LogBox } from 'react-native';
 import Ozlife from 'components/Ozlife'
+import dayjs from "dayjs";
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { getUserOnHomeScreen } from 'graphql/custom';
@@ -10,12 +11,13 @@ import { updateUser } from 'graphql/mutations'
 import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions'
 import * as Device from 'expo-device';
+import AnimatedLoader from 'react-native-animated-loader';
 
 LogBox.ignoreLogs([`Constants.platform.ios.model has been deprecated in favor of expo-device's Device.modelName property.`]);
 
-const HomeScreen = ({ navigation,  route }) => {
+const HomeScreen = ({ navigation, route }) => {
 
-  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [user, setUser] = useState({});
   const [ozlifes, setOzlifes] = useState([]);
   const [userReviews, setUserReviews] = useState([]);
@@ -87,7 +89,7 @@ const HomeScreen = ({ navigation,  route }) => {
 
   const fetchData = async () => {
     try {      
-      setLoading(true);
+      setVisible(true);
       setOzlifes([]);
 
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
@@ -98,16 +100,23 @@ const HomeScreen = ({ navigation,  route }) => {
       setUser(user);
       setUserReviews(user.reviewItem.items)
 
+      const current_date = dayjs().format();
+
       await Promise.all(ozlifes.data.listOzlives.items.map(async (item, idx) => {
-        const result = await Storage.get(item.images[0]);
-        const newOzlife = {...item, image: result};
-        setOzlifes(ozlifes => [...ozlifes, newOzlife]);
+        const visit_date = item.visit_date;
+        const status = (visit_date.slice(0, 10) >= current_date.slice(0, 10));
+
+        if (status) {
+          const result = await Storage.get(item.images[0]);
+          const newOzlife = { ...item, image: result };
+          setOzlifes(ozlifes => [...ozlifes, newOzlife]);
+        }
       }))
 
-      setLoading(false);
+      setVisible(false);
 
     } catch (e) {
-      setLoading(false);
+      setVisible(false);
       console.log(e);
     }
   }
@@ -148,6 +157,15 @@ const HomeScreen = ({ navigation,  route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
+      />
+
       <FlatList
         ListHeaderComponent={Main}
         data={ozlifes}

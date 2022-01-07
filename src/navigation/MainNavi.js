@@ -7,6 +7,8 @@ import OzlifeManageScreen from 'screens/Ozlife/OzlifeManageScreen';
 import OzlifeMapScreen from 'screens/Ozlife/OzlifeMapScreen';
 import OzlifeProfileScreen from 'screens/Ozlife/OzlifeProfileScreen';
 import OzlifeTimeScreen from 'screens/Ozlife/OzlifeTimeScreen';
+
+import OzlifeSelectScreen from 'screens/Ozlife/OzlifeSelectScreen';
 import OzlifeWriteScreen from 'screens/Ozlife/OzlifeWriteScreen';
 import First from 'screens/Ozlife/OzlifeVisit/First';
 import Second from 'screens/Ozlife/OzlifeVisit/Second';
@@ -77,6 +79,14 @@ const MainNavi = () => {
             <Stack.Screen
                 name="OzlifeTimeScreen"
                 component={OzlifeTimeScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="OzlifeSelectScreen"
+                component={OzlifeSelectScreen}
                 options={{
                     headerShown: false
                 }}
