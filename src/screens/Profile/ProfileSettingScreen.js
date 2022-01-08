@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Auth } from 'aws-amplify';
