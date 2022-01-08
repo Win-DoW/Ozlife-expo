@@ -1,9 +1,49 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { PermissionsAndroid, Platform, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, View, Text, TextInput, SafeAreaView, TouchableOpacity, Image, StyleSheet, Modal, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+import Header from 'utils/Header';
+
+const windowHeight = Dimensions.get('window').height;
 
 const AlarmScreen = ({ navigation, route }) => {
+
+  const [alarm, setAlarm] = useState([])
+
+  const AlarmListItem = ({data}) => {
+    return (
+      <View></View>
+    )
+  }
+
+  const EmptyAlarm = () => {
+    return (
+      <View>
+        <View style={styles.emptyBox}>
+          <Ionicons name="ios-notifications-off-outline" size={40} color="#dddddd" />
+        </View>
+        <View style={{marginTop: 25}}>
+          <Text style={styles.emptyText}>알림이 존재하지 않습니다</Text>
+        </View>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
+
+      <Header
+          title={'알림'}
+          noIcon={true}
+      />
+
+      <FlatList
+        data={alarm}
+        renderItem={({item}) => <AlarmListItem data={item}/>}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={EmptyAlarm}
+      />
+
     </SafeAreaView>
   )
 }
@@ -13,85 +53,22 @@ const styles = StyleSheet.create({
     flex: 1,    
     backgroundColor: '#ffffff',
   },
-  topBar: {
-    flexDirection: 'row',
-    height: 100,
-    paddingHorizontal: 30,
-    backgroundColor: 'transparent',
-    justifyContent: 'space-between',
+  emptyBox: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderColor: '#dddddd',
+    borderWidth: 1,
     alignItems: 'center',
-    borderRadius: 20,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: windowHeight * 0.15
   },
-  topText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  midText: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  smallText: {
+  emptyText: {
     fontSize: 16,
     fontWeight: '500',
-  },
-  section: {
-    marginHorizontal: 20,
-    marginBottom: 10,
-    padding: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 20
-  },
-  spinnerTextStyle: {
-    color: '#FFF',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  modalView: {
-    width: '100%',
-    height: '100%',
-    top: '10%',
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 50,
-    padding: 10,
-    paddingHorizontal: 20,
-    elevation: 2,
-    backgroundColor: '#B993D6',
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  textInput: {
-    fontSize: 20,
-    flexShrink: 1, 
-    padding: 10,
+    color: '#666666',
+    alignSelf: 'center'
   }
 })
 

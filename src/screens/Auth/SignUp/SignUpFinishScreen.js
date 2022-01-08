@@ -375,7 +375,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                 }
                 {
                     firstClick ?
-                    <View style={styles.formBox}>
+                    <View style={{...styles.formBox, marginBottom: 50}}>
                       <Text style={styles.bigText}>인증번호 입력</Text>
                       <TextInput
                         ref={ref_authNumber}

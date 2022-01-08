@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList, ImageBackground, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -13,27 +13,22 @@ const SignUpStoreAddScreen = ({ navigation, route }) => {
 
     const [visible, setVisible] = useState(false);
 
-    const [inputError, setInputError] = useState(false);
-
     const [userID, setUserID] = useState('');
 
     const store = route.params.store;
 
-    const [name, setName] = useState(store.name)
+    const name = store.name;
+    const tel = store.tel;
+    const address = store.address
+    const url = store.url
+    const license = store.license
+
     const [profile, setProfile] = useState(store.profile)
-    const [tel, setTel] = useState(store.tel)
-    const [address, setAddress] = useState(store.address)
-    const [url, setUrl] = useState(store.url)
-    const [license, setLicense] = useState(store.license)
 
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
-
-    const ref_name = useRef();
+ 
     const ref_profile = useRef();
-    const ref_tel = useRef();
-    const ref_address = useRef();
-    const ref_url = useRef();
 
     useEffect(() => {
         fetchData();
@@ -53,59 +48,52 @@ const SignUpStoreAddScreen = ({ navigation, route }) => {
     }
 
     const checkInputData = () => {
-        console.log(store)
-        if (name != '' && profile != '' && tel != '' && address != '' && url != '' && license != '' && images.length != 0) {
+        if (profile != '' && images.length != 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    const checkAndRegister = async() => {
+    const StoreRegister = async() => {
         try {            
-            if(checkInputData()) {
-                setVisible(true);
+       
+            setVisible(true);
 
-                // 입력이 완료되어 가게 등록이 가능한 상태
-                setInputError(false);
+            // 이미지 처리
+            const keys = await Promise.all(images.map(async (image, idx) => {
+                const photo = await fetch(image.uri)
+                const photoBlob = await photo.blob();
 
-                // 이미지 처리
-                const keys = await Promise.all(images.map(async (image, idx) => {
-                    const photo = await fetch(image.uri)
-                    const photoBlob = await photo.blob();
+                const result = await Storage.put(`${userID}/${name}/${idx}.jpg`, photoBlob, {
+                    contentType: 'image/jpeg',
+                });
 
-                    const result = await Storage.put(`${userID}/${name}/${idx}.jpg`, photoBlob, {
-                        contentType: 'image/jpeg',
-                    });
+                return result.key;
+            }))
 
-                    return result.key;
-                }))
+            // 가게 생성
+            const store = await API.graphql(graphqlOperation(createStore, {
+                input: {
+                    userID,
+                    name,
+                    profile,
+                    tel,
+                    address,
+                    license,
+                    images: keys,
+                }
+            }))
 
-                // 가게 생성
-                const store = await API.graphql(graphqlOperation(createStore, {
-                    input: {
-                        userID,
-                        name,
-                        profile,
-                        tel,
-                        address,
-                        license,
-                        images: keys,
-                    }
-                }))
+            setVisible(false);
 
-                setVisible(false);
+            navigation.reset({routes: [{
+                name: 'SignUpStoreFinishScreen',
+                params: {
+                    store: store.data.createStore,
+                }
+            }]})
 
-                navigation.reset({routes: [{
-                    name: 'SignUpStoreFinishScreen',
-                    params: {
-                        store: store.data.createStore,
-                    }
-                }]})
-
-            } else {
-                setInputError(true);
-            }
         } catch (e) {
             console.log(e)
             setVisible(false);
@@ -175,25 +163,19 @@ const SignUpStoreAddScreen = ({ navigation, route }) => {
 
                 <ScrollView styles={styles.container}>
 
-                    <View style={{...styles.formBox, marginTop: 24}}>
+                    <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 이름</Text>
-                        <TextInput
-                            ref={ref_name}
-                            style={styles.textinput}
-                            placeholder="가게 이름을 적어주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setName(value)}
-                            onSubmitEditing={() => ref_profile.current.focus()}
-                            returnKeyType="next"
-                            value={name}
-                        />
+                        <View style={styles.storeInfoBox}>
+                            <Text style={styles.storeInfoText}>{name}</Text>
+                        </View>
+                        
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 설명</Text>
                         <TextInput
                             ref={ref_profile}
-                            style={styles.textinput}
+                            style={styles.textInput}
                             placeholder="가게 설명을 적어주세요."
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setProfile(value)}
@@ -224,54 +206,41 @@ const SignUpStoreAddScreen = ({ navigation, route }) => {
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>전화번호</Text>
-                        <TextInput
-                            ref={ref_tel}
-                            style={styles.textinput}
-                            placeholder="전화번호를 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setTel(value)}
-                            onSubmitEditing={() => ref_address.current.focus()}
-                            returnKeyType='next'
-                            keyboardType='number-pad'
-                            value={tel}
-                        />
+                        <View style={styles.storeInfoBox}>
+                            <Text style={styles.storeInfoText}>{tel}</Text>
+                        </View>
                     </View>
 
                     <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 위치</Text>
-                        <TextInput
-                            ref={ref_address}
-                            style={styles.textinput}
-                            placeholder="가게 위치를 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setAddress(value)}
-                            onSubmitEditing={() => ref_url.current.focus()}
-                            returnKeyType='next'
-                            value={address}
-                        />
+                        <View style={styles.storeInfoBox}>
+                            <Text style={styles.storeInfoText}>{address}</Text>
+                        </View>
                     </View>
 
-                    <View style={{...styles.formBox, marginBottom: 60}}>
+                    <View style={styles.formBox}>
                         <Text style={styles.formBoxTitle}>가게 URL</Text>
-                        <TextInput
-                            ref={ref_url}
-                            style={styles.textinput}
-                            placeholder="가게 URL을 입력해주세요."
-                            placeholderTextColor="#ddd"
-                            onChangeText={(value) => setUrl(value)}
-                            onSubmitEditing={() => Keyboard.dismiss()}
-                            returnKeyType='done'
-                            value={url}
-                        />
+                        <View style={styles.storeInfoBox}>
+                            <Text style={styles.storeInfoText}>{url}</Text>
+                        </View>
                     </View>
+
+                    {
+                        !checkInputData() ?
+                        <View style={{paddingHorizontal: 24, marginTop: 8}}>
+                            <Text style={styles.errorMessage}>가게 설명 입력과 가게 사진 추가가 필요합니다.</Text>
+                        </View>
+                        :
+                        null
+                    }
                 </ScrollView>
 
-                <Pressable 
-                    style={styles.button} 
-                    onPress={() => checkAndRegister()}
+                <TouchableOpacity 
+                    style={{...styles.button, backgroundColor: checkInputData() ? '#15b6f1' : '#cccccc'}} 
+                    onPress={checkInputData() ? StoreRegister : null}
                 >
                     <Text style={styles.buttontext}>가게 등록</Text>
-                </Pressable>
+                </TouchableOpacity>
 
             </SafeAreaView>
         </KeyboardAvoidingView>
@@ -285,7 +254,7 @@ const styles = StyleSheet.create({
     },
     formBox: {
         paddingHorizontal: 24,
-        marginBottom: 25
+        marginTop: 24
     },
     formBoxTitle: {
         fontSize: 16,
@@ -318,12 +287,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#CCCCCC'
     },
-    textinput: {
+    textInput: {
         fontSize: 14,
-        paddingVertical: 10,
-        color: '#666',
-        borderBottomColor: '#dddddd',
+        height: 36,
+        borderBottomColor: "#dddddd",
         borderBottomWidth: 1,
+        color: '#666666'
     },
     imageview: {
         width: 66,
@@ -375,7 +344,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         height: 60,
-        backgroundColor: '#15b6f1',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -383,6 +351,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         color: '#ffffff'
+    },
+    storeInfoBox: {
+        paddingVertical: 5
+    },
+    storeInfoText: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#666666'
+    },
+    errorMessage: {
+        fontSize: 12,
+        fontWeight: "500",
+        color: "#f44",
     },
 })
 

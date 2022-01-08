@@ -1,7 +1,9 @@
 import 'react-native-gesture-handler';
 import React from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, Dimensions } from "react-native";
 import AppHeader from 'utils/Header';
+
+const windowHeight = Dimensions.get('window').height;
 
 const SignUpStoreFinishScreen = ({ navigation, route }) => {
 
@@ -14,16 +16,17 @@ const SignUpStoreFinishScreen = ({ navigation, route }) => {
         title={"가게 등록 완료"}
       />
 
-      <Text style={styles.text}>
-        가게 등록을
-      </Text>
-
-      <Text style={styles.text}>
-        완료하였습니다.
-      </Text>
+      <View style={{ marginTop: windowHeight * 0.25 }}>
+        <Text style={styles.text}>가게 등록을</Text>
+        <Text style={styles.text}>완료하였습니다.</Text>
+      </View>
+      
 
       <View style={styles.bottom}>
-        <TouchableOpacity onPress={() => navigation.reset({ routes: [{ name: 'MainNavi' }] })} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => navigation.reset({ routes: [{ name: 'MainNavi' }] })}
+          style={styles.button}
+        >
           <Text style={styles.buttontext}>홈으로 가기</Text>
         </TouchableOpacity>
       </View>
@@ -35,25 +38,21 @@ const SignUpStoreFinishScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF'
   },
   text: {
     fontSize: 30,
     alignSelf: 'center',
-    marginTop: 60,
   },
   bottom: {
     flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   button: {   
-    width: '50%',
     height: 60,
-    backgroundColor: '#15b6f1',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#15b6f1'
   },
   buttontext: {
     fontSize: 16,

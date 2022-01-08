@@ -84,8 +84,6 @@ const SignUpStoreCheckScreen = ({ navigation, route }) => {
                     />
                 </View>
 
-                <Text style={{margin: 20}}>{type}</Text>
-
                 <Pressable 
                     style={styles.button} 
                     onPress={() => checkStore()}
