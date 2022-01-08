@@ -9,7 +9,11 @@ import LoginScreen from 'screens/Auth/Login/LoginScreen';
 
 import SignUpStartScreen from 'screens/Auth/SignUp/SignUpStartScreen';
 import SignUpFinishScreen from 'screens/Auth/SignUp/SignUpFinishScreen';
-import SignUpStoreAddScreen from 'screens/Auth/SignUp/SignUpStoreAddScreen';
+
+import SignUpStoreSearchScreen from 'screens/Auth/SignUp/Store/SignUpStoreSearchScreen';
+import SignUpStoreCheckScreen from 'screens/Auth/SignUp/Store/SignUpStoreCheckScreen';
+import SignUpStoreAddScreen from 'screens/Auth/SignUp/Store/SignUpStoreAddScreen';
+import SignUpStoreFinishScreen from 'screens/Auth/SignUp/Store/SignUpStoreFinishScreen';
 
 const Stack = createStackNavigator();
 
@@ -50,8 +54,32 @@ const AuthNavi = () => {
             />
 
             <Stack.Screen
+                name="SignUpStoreSearchScreen"
+                component={SignUpStoreSearchScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="SignUpStoreCheckScreen"
+                component={SignUpStoreCheckScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
                 name="SignUpStoreAddScreen"
                 component={SignUpStoreAddScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="SignUpStoreFinishScreen"
+                component={SignUpStoreFinishScreen}
                 options={{
                     headerShown: false
                 }}

@@ -21,6 +21,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
     const password = route.params.password
 
     const ref_nickname = useRef()
+    const ref_profile = useRef()
     const ref_phoneNumber = useRef()
     const ref_authNumber = useRef()
 
@@ -30,6 +31,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
     const [file, setFile] = useState('');
     const [interest, setInterest] = useState('')
     const [region, setRegion] = useState('')
+    const [profile, setProfile] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [authNumber, setAuthNumber] = useState('')
 
@@ -143,7 +145,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                     id: userKey.attributes.sub,
                     email: email,
                     nickname: nickname,
-                    profile: '',
+                    profile: profile,
                     interest: interest,
                     region: region,
                     image: result.key,
@@ -155,9 +157,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
             
             setVisible(true)
 
-            navigation.reset({routes: [{name: 'SignUpStoreAddScreen'}]});
-
-
+            navigation.reset({routes: [{name: 'SignUpStoreSearchScreen'}]})
 
         } catch(error) {
             console.log('error confirming sign up', error);
@@ -180,7 +180,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
     }
 
     const checkInput = () => {
-        if(nickname != '' && file != '' && interest != '' && region != '') {
+        if(nickname != '' && file != '' && interest != '' && region != '' && profile != '') {
             return true;
         } else {
             return false;
@@ -278,7 +278,7 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                                 { label: '법률', value: '법률' },
                                 { label: '회계', value: '회계' },
                             ]}
-                            style={{ inputAndroid: { color: 'black' } }}
+                            style={{ inputAndroid: { color: '#666666' }, inputIOS: { color: '#666666' } }}
                         />
                     </View>
                 </View>
@@ -309,9 +309,22 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                                 { label: '부산 동구', value: '부산 동구' },
                                 { label: '부산 중구', value: '부산 중구' },
                             ]}
-                            style={{ inputAndroid: { color: 'black' } }}
+                            style={{ inputAndroid: { color: '#666666' }, inputIOS: { color: '#666666' } }}
                         />
                     </View>
+                </View>
+
+                <View style={styles.formBox}>
+                    <Text style={styles.bigText}>자기소개</Text>
+                    <TextInput
+                        ref={ref_profile}
+                        style={styles.textInput}
+                        placeholder="자기소개를 적어주세요."
+                        placeholderTextColor="#dddddd"
+                        onChangeText={(text) => setProfile(text)}
+                        returnKeyType='done'
+                        onSubmitEditing={() => Keyboard.dismiss()}
+                    />
                 </View>
                 {
                     checkInput() ?
@@ -416,6 +429,7 @@ const styles = StyleSheet.create({
         height: 36,
         borderBottomColor: "#dddddd",
         borderBottomWidth: 1,
+        color: '#666666'
     },
     image: {
         height: 66,

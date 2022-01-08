@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomColor: '#dddddd',
     borderBottomWidth: 1,
+    color: '#666666'
   },
   loginBtn: {
     borderRadius: 3,
