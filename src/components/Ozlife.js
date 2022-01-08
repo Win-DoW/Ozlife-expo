@@ -5,7 +5,7 @@ import { screen } from 'utils/Styles';
 
 import dayjs from "dayjs";
 
-const Ozlife = ({ ozlife, userID, userReviews }) => {
+const Ozlife = ({ ozlife, userID, userReviews, state = false }) => {
 
     const navigation = useNavigation();
 
@@ -13,6 +13,18 @@ const Ozlife = ({ ozlife, userID, userReviews }) => {
     const current_date = dayjs().format();
     const status = (visit_date.slice(0, 10) === current_date.slice(0, 10));
     const status_review = (userReviews.find(item => item.ozlifeID === ozlife.id));
+
+    const toDay = {
+        0 : '월',
+        1 : '화',
+        2 : '화',
+        3 : '수',
+        4 : '목',
+        5 : '금',
+        6 : '토',
+    };
+    const D_day = dayjs(visit_date).diff(dayjs(current_date), "day");
+    const D_date = visit_date.slice(5,10).replace('-', '/') + "(" + toDay[dayjs(visit_date).day()]  + ")";
 
     const goToOzlifeProfile = () => {
         navigation.navigate("OzlifeProfileScreen", {
@@ -44,11 +56,25 @@ const Ozlife = ({ ozlife, userID, userReviews }) => {
 
     return (
         <TouchableOpacity style={styles.container} onPress={goToOzlifeProfile}>
+
             <Image
                 resizeMode="contain"
                 source={{uri: ozlife.image}}
                 style={styles.image}
             />
+
+            { state &&
+            <View style={styles.coverImage}>
+                { D_day >= 0 ?
+                <Text style={styles.coverText}>D-{D_day}</Text>
+                :
+                <Text style={styles.coverText}>D+{D_day*(-1)}</Text>
+                }
+                <Text style={styles.coverDate}>{D_date}</Text>
+            </View>
+            }
+
+
             <View style={styles.textbox}>
                 <View style={{flexDirection: 'row', alignItems: 'center',}}>
                     <Text style={{fontSize: 12, fontWeight: '300', color: '#aaaaaa', marginRight: 3}}>{ozlife.tag}</Text>
@@ -107,6 +133,30 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 0.5,
         borderColor: '#ccc'
+    },
+    coverImage: {
+        width: screen.width*0.3,
+        aspectRatio: 1,        
+        marginRight: 16,
+        borderRadius: 16,
+        borderWidth: 0.5,
+        borderColor: '#ccc',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(17, 17, 17, 0.4)',
+        zIndex: 1,
+        position: 'absolute',
+    },
+    coverText: { 
+        fontSize: 24,
+        fontWeight: '900',
+        color: '#ffffff',
+    },
+    coverDate: { 
+        fontSize: 14,
+        fontWeight: '900',
+        color: '#ffffff',
+        marginTop: 8,
     },
     textbox: {
         height: screen.width*0.3,
