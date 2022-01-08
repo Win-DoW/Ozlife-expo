@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, Switch, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, SafeAreaView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Header from 'utils/Header';

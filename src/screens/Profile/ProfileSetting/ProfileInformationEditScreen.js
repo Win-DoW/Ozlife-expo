@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, SafeAreaView, StyleSheet, ScrollView, TextInput, ImageBackground, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -9,7 +9,7 @@ import { updateUser } from 'graphql/mutations'
 import Header from 'utils/Header';
 
 import RNPickerSelect from 'react-native-picker-select';
-import Spinner from 'react-native-loading-spinner-overlay';
+import AnimatedLoader from 'react-native-animated-loader';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -24,18 +24,19 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
     }, [navigation]);
     
     const [userData, setUserData] = useState({})
-    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [inputs, setInputs] = useState({        
         nickname: '',
         image: '',
         interest: '',
+        region: '',
         profile: '',
     });
     const [file, setFile] = useState(undefined);
 
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setVisible(true);
         const userKey = await Auth.currentAuthenticatedUser({
           bypassCache: false,
         });
@@ -51,11 +52,12 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
             nickname: user.data.getUser.nickname,
             image: user.data.getUser.image,
             interest: user.data.getUser.interest,
+            region: user.data.getUser.region,
             profile: user.data.getUser.profile,
         })
-        setLoading(false);
+        setVisible(false);
       } catch (e) {
-        setLoading(false);
+        setVisible(false);
         console.log(e);
       }
     };
@@ -100,6 +102,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                     nickname: inputs.nickname,
                     image: storeImage,
                     interest: inputs.interest,
+                    region: inputs.region,
                     profile: inputs.profile
                 }
             }))
@@ -124,13 +127,12 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
         >
             <SafeAreaView style={styles.container}>
 
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
+                <AnimatedLoader
+                    visible={visible}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("utils/Loader.json")}
+                    animationStyle={{ width: 300, height: 300 }}
+                    speed={1}
                 />
 
                 <Header
@@ -142,9 +144,9 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
 
                 <ScrollView style={styles.scrollContainer} overScrollMode='always'>
                     <View style={styles.formBox}>
-                        <Text style={styles.formMainText}>닉네임</Text>
+                        <Text style={styles.bigText}>닉네임</Text>
                         <TextInput
-                            style={styles.textinput}
+                            style={styles.textInput}
                             placeholder={userData.nickname}
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setInputs({...inputs, 'nickname': value})}
@@ -152,20 +154,21 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.formBox}>
-                        <Text style={styles.formMainText}>프로필 이미지</Text>
+                        <Text style={styles.bigText}>프로필 이미지</Text>
                         <ImageBackground style={styles.image} imageStyle={{ borderRadius: 100}} source={{ uri: checkFile() ? file : userData.get_image }}>
                             <Pressable onPress={imagePicker}>
-                                <Image style={{height: 24, width: 24}} source={require('../../../assets/images/icon-plus.png')}/>
+                                <Image style={{height: 24, width: 24}} source={require('assets/images/icon-plus.png')}/>
                             </Pressable>
                         </ImageBackground>
                     </View>
 
                     <View style={styles.formBox}>
-                        <Text style={styles.formMainText}>관심 영역 선택</Text>
-                        <View style={styles.interestPicker}>
+                        <Text style={styles.bigText}>관심 영역 선택</Text>
+                        <View style={styles.pickerContainer}>
                             <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
                                 value={ inputs.interest }
-                                placeholder={{ label: '영역을 선택해주세요.' }}
+                                placeholder={{ label: '영역을 선택해주세요.', value: '' }}
                                 name="interest"
                                 onValueChange={(value) => setInputs({...inputs, 'interest': value})}
                                 items={[
@@ -178,17 +181,47 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                                     { label: '법률', value: '법률' },
                                     { label: '회계', value: '회계' },
                                 ]}
-                                style={{
-                                    placeholder: inputs.interest === '' ? {color: '#ddd', fontSize: 14} : styles.interestPlaceholder,
-                                }}
+                                style={{ inputAndroid: { color: '#666666' }, inputIOS: { color: '#666666' } }}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.formBox}>
+                        <Text style={styles.bigText}>거주 지역</Text>
+                        <View style={styles.pickerContainer}>
+                            <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
+                                value={ inputs.region }
+                                placeholder={{ label: "지역을 선택해주세요.", value: '' }}
+                                name = "region"
+                                onValueChange={(value) => setInputs({...inputs, 'region': value})}
+                                items={[
+                                    { label: '부산 부산진구', value: '부산 부산진구' },
+                                    { label: '부산 해운대구', value: '부산 해운대구' },
+                                    { label: '부산 사하구', value: '부산 사하구' },
+                                    { label: '부산 북구', value: '부산 북구' },
+                                    { label: '부산 남구', value: '부산 남구' },
+                                    { label: '부산 동래구', value: '부산 동래구' },
+                                    { label: '부산 금정구', value: '부산 금정구' },
+                                    { label: '부산 사상구', value: '부산 사상구' },
+                                    { label: '부산 연제구', value: '부산 연제구' },
+                                    { label: '부산 수영구', value: '부산 수영구' },
+                                    { label: '부산 기장군', value: '부산 기장군' },
+                                    { label: '부산 강서구', value: '부산 강서구' },
+                                    { label: '부산 영도구', value: '부산 영도구' },
+                                    { label: '부산 서구', value: '부산 서구' },
+                                    { label: '부산 동구', value: '부산 동구' },
+                                    { label: '부산 중구', value: '부산 중구' },
+                                ]}
+                                style={{ inputAndroid: { color: '#666666' }, inputIOS: { color: '#666666' } }}
                             />
                         </View>
                     </View>
 
                     <View style={[styles.formBox, {marginBottom: 100}]}>
-                        <Text style={styles.formMainText}>자기소개</Text>
+                        <Text style={styles.bigText}>자기소개</Text>
                         <TextInput
-                            style={styles.textinput}
+                            style={styles.textInput}
                             placeholder={userData.profile}
                             placeholderTextColor="#ddd"
                             onChangeText={(value) => setInputs({...inputs, 'profile': value})}
@@ -215,16 +248,12 @@ const styles = StyleSheet.create({
     formBox: {
         marginTop: 25
     },
-    formMainText:{
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    textinput: {
+    textInput: {
         fontSize: 14,
         height: 36,
-        color: '#666',
-        borderBottomColor: '#dddddd',
+        borderBottomColor: "#dddddd",
         borderBottomWidth: 1,
+        color: '#666666'
     },
     image: {
         height: 66,
@@ -234,18 +263,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'flex-end'
     },
-    spinnerTextStyle: {
-        color: '#FFF',
-    },
-    interestPicker: {
+    pickerContainer: {
         borderBottomColor: '#ddd',
         borderBottomWidth: 1,
         height: 36,
         justifyContent: 'center'
-    },
-    interestPlaceholder: {
-        color: '#666',
-        fontSize: 14
     },
     bottomBtn: {
         width: '100%',
@@ -259,6 +281,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         color: '#FFFFFF'
+    },
+    bigText: {
+        fontSize: 16,
+        lineHeight: 24,
+        fontWeight: '500',
+        color: '#000000'
     }
 })
 

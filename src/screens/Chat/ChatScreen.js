@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import {  Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity, LogBox } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import {  View, Text, SafeAreaView, StyleSheet, FlatList, LogBox, Dimensions } from 'react-native';
+import AnimatedLoader from 'react-native-animated-loader';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import { getUserOnChatScreen } from 'graphql/custom'
 
-import { ReturnChatRoomID, ToDo } from 'utils/Chat';
-
 import Header from 'utils/Header';
 import ChatRoomListItem from 'components/ChatComponents/ChatRoomListItem';
+
+const windowHeight = Dimensions.get('window').height;
 
 LogBox.ignoreLogs(['Setting a timer']);
 
 const ChatScreen = ({ navigation, route }) => {
 
-  // 채팅방 생성을 위한 변수들
-  // const userId = '3ee2134d-e833-4361-86c0-663ccaba21ef'
-  // const ownerId = '6ed09320-0fe2-46c6-b54d-05a92a9308b3'
-  //
-
   const [chatRooms, setChatRooms] = useState([])
-  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -33,40 +29,42 @@ const ChatScreen = ({ navigation, route }) => {
 
   const fetchData = async() => {
     try {
-      setLoading(true)
+      setVisible(true)
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
       const user = await API.graphql(graphqlOperation(getUserOnChatScreen, {
         id: userKey.attributes.sub
       }))
 
       setChatRooms(user.data.getUser.chatRoomUser.items)
-      setLoading(false)
+      setVisible(false)
     } catch(e) {
-      setLoading(false)
+      setVisible(false)
       console.log(e)
     }
   }
 
-  // 채팅방 이동
-  const goToChatRoom = () => {
-    const result = ReturnChatRoomID(userId, ownerId).then(response => {
-      navigation.navigate('ChatRoomScreen', {
-        chatRoomId: response
-      })
-    })
+  const EmptyChatRoom = () => {
+    return (
+      <View>
+        <View style={styles.emptyBox}>
+          <MaterialCommunityIcons name="chat-remove-outline" size={40} color="#dddddd" />
+        </View>
+        <View style={{marginTop: 25}}>
+          <Text style={styles.emptyText}>채팅방이 존재하지 않습니다</Text>
+        </View>
+      </View>
+    )
   }
-  // 채팅방 이동
 
   return (
     <SafeAreaView style={styles.container}>
 
-      <Spinner
-        //visibility of Overlay Loading Spinner
-        visible={loading}
-        //Text with the Spinner
-        textContent={"Loading..."}
-        //Text style of the Spinner Text
-        textStyle={styles.spinnerTextStyle}
+      <AnimatedLoader
+        visible={visible}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("utils/Loader.json")}
+        animationStyle={{ width: 300, height: 300 }}
+        speed={1}
       />
 
       <Header
@@ -74,14 +72,11 @@ const ChatScreen = ({ navigation, route }) => {
           noIcon={true}
       />
 
-      {/* <TouchableOpacity style={{height: 56, backgroundColor: 'yellow'}} onPress={goToChatRoom}>
-        <Text style={styles.topBarText}>채팅방 생성</Text>
-      </TouchableOpacity> */}
-
       <FlatList
         data={chatRooms}
         renderItem={({item}) => <ChatRoomListItem chatRoom={item.chatRoom} />}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={EmptyChatRoom}
       />
     </SafeAreaView>
   )
@@ -92,8 +87,22 @@ const styles = StyleSheet.create({
     flex: 1,    
     backgroundColor: '#ffffff',
   },
-  spinnerTextStyle: {
-    color: '#FFF',
+  emptyBox: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderColor: '#dddddd',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: windowHeight * 0.15
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#666666',
+    alignSelf: 'center'
   }
 })
 

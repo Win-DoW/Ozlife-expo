@@ -47,19 +47,20 @@ const styles = StyleSheet.create({
         padding: 16,
         borderColor: "#dddddd",
         borderBottomWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     titleContainer: {
         justifyContent: 'center',
     },
     leftIcon: {
         position: 'absolute',
-        top: 10,
         left: 10,
         justifyContent: 'center'
     },
     rightIcon: {
         position: 'absolute',
-        top: 10,
         right: 10,
         justifyContent: 'center'
     },
