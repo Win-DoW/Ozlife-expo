@@ -9,6 +9,7 @@ import LoginScreen from 'screens/Auth/Login/LoginScreen';
 
 import SignUpStartScreen from 'screens/Auth/SignUp/SignUpStartScreen';
 import SignUpFinishScreen from 'screens/Auth/SignUp/SignUpFinishScreen';
+import SignUpStoreAddScreen from 'screens/Auth/SignUp/SignUpStoreAddScreen';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,14 @@ const AuthNavi = () => {
             <Stack.Screen
                 name="SignUpFinishScreen"
                 component={SignUpFinishScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="SignUpStoreAddScreen"
+                component={SignUpStoreAddScreen}
                 options={{
                     headerShown: false
                 }}
