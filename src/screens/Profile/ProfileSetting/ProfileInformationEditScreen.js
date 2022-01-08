@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, SafeAreaView, StyleSheet, ScrollView, TextInput, ImageBackground, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -9,7 +9,7 @@ import { updateUser } from 'graphql/mutations'
 import Header from 'utils/Header';
 
 import RNPickerSelect from 'react-native-picker-select';
-import Spinner from 'react-native-loading-spinner-overlay';
+import AnimatedLoader from 'react-native-animated-loader';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -24,7 +24,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
     }, [navigation]);
     
     const [userData, setUserData] = useState({})
-    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [inputs, setInputs] = useState({        
         nickname: '',
         image: '',
@@ -35,7 +35,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
 
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setVisible(true);
         const userKey = await Auth.currentAuthenticatedUser({
           bypassCache: false,
         });
@@ -53,9 +53,9 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
             interest: user.data.getUser.interest,
             profile: user.data.getUser.profile,
         })
-        setLoading(false);
+        setVisible(false);
       } catch (e) {
-        setLoading(false);
+        setVisible(false);
         console.log(e);
       }
     };
@@ -124,13 +124,12 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
         >
             <SafeAreaView style={styles.container}>
 
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={loading}
-                    //Text with the Spinner
-                    textContent={'Loading...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
+                <AnimatedLoader
+                    visible={visible}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("utils/Loader.json")}
+                    animationStyle={{ width: 300, height: 300 }}
+                    speed={1}
                 />
 
                 <Header
@@ -161,11 +160,12 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.formBox}>
-                        <Text style={styles.formMainText}>관심 영역 선택</Text>
-                        <View style={styles.interestPicker}>
+                        <Text style={styles.bigText}>관심 영역 선택</Text>
+                        <View style={styles.pickerContainer}>
                             <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
                                 value={ inputs.interest }
-                                placeholder={{ label: '영역을 선택해주세요.' }}
+                                placeholder={{ label: '영역을 선택해주세요.', value: '' }}
                                 name="interest"
                                 onValueChange={(value) => setInputs({...inputs, 'interest': value})}
                                 items={[
@@ -178,9 +178,7 @@ const ProfileInformationEditScreen = ({ navigation, route }) => {
                                     { label: '법률', value: '법률' },
                                     { label: '회계', value: '회계' },
                                 ]}
-                                style={{
-                                    placeholder: inputs.interest === '' ? {color: '#ddd', fontSize: 14} : styles.interestPlaceholder,
-                                }}
+                                style={{ inputAndroid: { color: 'black' } }}
                             />
                         </View>
                     </View>
@@ -218,6 +216,7 @@ const styles = StyleSheet.create({
     formMainText:{
         fontSize: 16,
         fontWeight: '500',
+        color: '#000000'
     },
     textinput: {
         fontSize: 14,
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
     spinnerTextStyle: {
         color: '#FFF',
     },
-    interestPicker: {
+    pickerContainer: {
         borderBottomColor: '#ddd',
         borderBottomWidth: 1,
         height: 36,
@@ -259,6 +258,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         color: '#FFFFFF'
+    },
+    bigText: {
+        fontSize: 16,
+        lineHeight: 24,
+        fontWeight: '500',
+        color: '#000000'
     }
 })
 

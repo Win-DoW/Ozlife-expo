@@ -1,63 +1,59 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
-import MainNavi from './MainNavi';
+import MainNavi from 'navigation/MainNavi';
 
-import LoginScreen from '../screens/Auth/LoginScreen';
-import SignUpScreen from '../screens/Auth/SignUpScreen';
-import ConfirmScreen from '../screens/Auth/ConfirmScreen';
-import NewProfileScreen from '../screens/Auth/NewProfileScreen';
-import FinishScreen from '../screens/Auth/FinishScreen';
+import AppStartScreen from 'screens/Auth/AppStartScreen';
+
+import LoginScreen from 'screens/Auth/Login/LoginScreen';
+
+import SignUpStartScreen from 'screens/Auth/SignUp/SignUpStartScreen';
+import SignUpFinishScreen from 'screens/Auth/SignUp/SignUpFinishScreen';
+import SignUpStoreAddScreen from 'screens/Auth/SignUp/SignUpStoreAddScreen';
 
 const Stack = createStackNavigator();
 
 const AuthNavi = () => {
     return (
-        <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Navigator initialRouteName="AppStartScreen">
+
+            <Stack.Screen
+                name="AppStartScreen"
+                component={AppStartScreen}
+                options={{
+                    headerShown: false
+                }}
+            />
 
             <Stack.Screen
                 name="LoginScreen"
                 component={LoginScreen}
                 options={{
-                    title: "로그인",
+                    headerShown: false
                 }}
             />
 
             <Stack.Screen
-                name="SignUpScreen"
-                component={SignUpScreen}
+                name="SignUpStartScreen"
+                component={SignUpStartScreen}
                 options={{
-                    title: "회원가입",
+                    headerShown: false
                 }}
             />
 
             <Stack.Screen
-                name="ConfirmScreen"
-                component={ConfirmScreen}
+                name="SignUpFinishScreen"
+                component={SignUpFinishScreen}
                 options={{
-                    title: "인증번호 확인",
-                    headerLeft: null,
-                    gestureEnabled: false,
+                    headerShown: false
                 }}
             />
 
             <Stack.Screen
-                name="NewProfileScreen"
-                component={NewProfileScreen}
+                name="SignUpStoreAddScreen"
+                component={SignUpStoreAddScreen}
                 options={{
-                    title: "정보 입력",
-                    headerLeft: null,
-                    gestureEnabled: false,
-                }}
-            />
-
-            <Stack.Screen
-                name="FinishScreen"
-                component={FinishScreen}
-                options={{
-                    title: "가입 완료",
-                    headerLeft: null,
-                    gestureEnabled: false,
+                    headerShown: false
                 }}
             />
 
