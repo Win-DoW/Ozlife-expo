@@ -155,7 +155,7 @@ const First = ({ navigation, route }) => {
                   <FlatList
                     data={words}
                     renderItem={({item}) => <WordItem word={item} />}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item, id) => id}
                   />
                 </View>
 

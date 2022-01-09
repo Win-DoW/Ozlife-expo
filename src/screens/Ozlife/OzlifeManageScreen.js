@@ -120,11 +120,11 @@ const OzlifeManageScreen = ({ route, navigation }) => {
             <ScrollView style={{flex: 1}}>
                 
                 <View style={styles.textBox}>
-                    <Text style={styles.countText}>{reviews.length}개</Text>
+                    <Text style={styles.countText}>{ozlifers.length}개</Text>
                     <Text style={styles.explainText}>의 따뜻한 오지랖이 도착했어요!</Text>
                 </View>
 
-                { reviews.length === 0 ?
+                { ozlifers.length === 0 ?
                 null
                 :
                 <>
@@ -145,11 +145,6 @@ const OzlifeManageScreen = ({ route, navigation }) => {
                             )
                         })}
                     </View>
-
-                    <Pressable style={styles.button} onPress={goToChatRoom}>
-                        <Text style={styles.buttonFirstText}>채팅으로 추가 질문하기</Text>
-                        <Text style={styles.buttonSecondText}>답변이 필수가 아닙니다.</Text>
-                    </Pressable>
                 </>
                 }
 
@@ -185,6 +180,13 @@ const OzlifeManageScreen = ({ route, navigation }) => {
                 <Applicants/>
                 :
                 <Reviews/>
+            }
+
+            { ozlifers.length !== 0 && tabState === 1 &&
+            <Pressable style={styles.button} onPress={() => goToChatRoom()}>
+                <Text style={styles.buttonFirstText}>채팅으로 추가 질문하기</Text>
+                <Text style={styles.buttonSecondText}>답변이 필수가 아닙니다.</Text>
+            </Pressable>
             }
             
         </SafeAreaView>

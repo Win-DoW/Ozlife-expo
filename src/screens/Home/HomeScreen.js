@@ -158,13 +158,13 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       
-      <AnimatedLoader
+      {/* <AnimatedLoader
         visible={visible}
         overlayColor="rgba(255,255,255,0.75)"
         source={require("../../utils/Loader.json")}
         animationStyle={{ width: 300, height: 300 }}
         speed={1}
-      />
+      /> */}
 
       <FlatList
         ListHeaderComponent={Main}

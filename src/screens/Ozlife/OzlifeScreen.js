@@ -6,6 +6,7 @@ import { getUserOnOzlifeScreen } from 'graphql/custom';
 
 import Ozlife from 'components/Ozlife';
 import AnimatedLoader from 'react-native-animated-loader';
+import dayjs from "dayjs";
 
 const OzlifeScreen = ({ navigation, route }) => {
 
@@ -35,7 +36,17 @@ const OzlifeScreen = ({ navigation, route }) => {
 
             const user = userData.data.getUser;
             const ozlifes = user.ozlifeItem.items;
-            const reviews = user.reviewItem.items;
+
+            const reviews = user.reviewItem.items.sort((a, b) => {
+                const firstDate = new Date(a.ozlife.visit_date)
+                const secondDate = new Date(b.ozlife.visit_date)
+
+                if (firstDate <= secondDate) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
 
             setUser(user);
             setUserReviews(reviews);
@@ -108,7 +119,7 @@ const OzlifeScreen = ({ navigation, route }) => {
 
             <FlatList
                 data={tabState === 0 ? answers : questions}
-                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} />}
+                renderItem={({item}) => <Ozlife ozlife={item} userID={user.id} userReviews={userReviews} state={true} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={NoData}
                 contentContainerStyle={{marginTop: 20}}
