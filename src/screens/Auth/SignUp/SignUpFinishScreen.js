@@ -149,7 +149,9 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                     interest: interest,
                     region: region,
                     image: result.key,
-                    noti_token: ''
+                    noti_token: '',
+                    chat_noti_state: 1,
+                    ozlife_noti_state: 1
                 }
             }))
 

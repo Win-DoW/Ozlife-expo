@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Auth } from 'aws-amplify';
+import { getUser } from 'graphql/queries'
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import ProfileSettingList from 'components/ProfileComponents/ProfileSettingList';
 import Header from 'utils/Header';
 
 const ProfileSettingScreen = ({ navigation, route }) => {
 
-    const userName = route.params.name;
+    const [user, setUser] = useState(route.params.user)
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            fetchData();
+        })
+
+        return unsubscribe
+    }, [navigation])
+
+    const fetchData = async() => {
+        try {
+            const userKey = await Auth.currentAuthenticatedUser({bypassCache: false})
+            const userData = await API.graphql(graphqlOperation(getUser, {
+                id: userKey.attributes.sub
+            }))
+            setUser(userData.data.getUser)
+        } catch(e) {
+            console.log(e)
+        }
+    }
 
     const signOut = async() => {
         try {
@@ -29,7 +50,9 @@ const ProfileSettingScreen = ({ navigation, route }) => {
     }
 
     const goToNotiManage = () => {
-        navigation.navigate('NotiManageScreen')
+        navigation.navigate('NotiManageScreen', {
+            user: user
+        })
     }
 
     const goToBack = () => {
@@ -46,7 +69,7 @@ const ProfileSettingScreen = ({ navigation, route }) => {
                 leftIconPress={goToBack}
             />
 
-            <ProfileSettingList text={userName + '님 정보 수정'} press={goToProfileEdit} style={{ marginTop: 16 }}/>
+            <ProfileSettingList text={user.nickname + '님 정보 수정'} press={goToProfileEdit} style={{ marginTop: 16 }}/>
 
             <ProfileSettingList text={'가게 추가'} press={goToStoreAdd} style={{ marginTop: 17 }}/>
 
