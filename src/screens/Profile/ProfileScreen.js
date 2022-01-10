@@ -54,6 +54,8 @@ const ProfileScreen = ({ navigation, route }) => {
       user: user
     });
   }
+  
+  console.log(user)
 
   const ProfileContent = () => {
     return (

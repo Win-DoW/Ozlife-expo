@@ -269,6 +269,18 @@ export const listChatRoomUsersSearchOnChatScreen = /* GraphQL */ `
     }
   }
 `;
+
+export const getUserOnChatNotification = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      noti_token
+      chat_noti_state
+      createdAt
+      updatedAt
+    }
+  }
+`;
 // Chat queries
 
 
