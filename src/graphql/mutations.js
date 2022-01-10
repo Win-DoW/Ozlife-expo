@@ -15,6 +15,8 @@ export const createUser = /* GraphQL */ `
       region
       image
       noti_token
+      chat_noti_state
+      ozlife_noti_state
       chatRoomUser {
         items {
           id
@@ -75,6 +77,18 @@ export const createUser = /* GraphQL */ `
           createdAt
           storeID
           userID
+          updatedAt
+        }
+        nextToken
+      }
+      notiItem {
+        items {
+          id
+          userID
+          title
+          content
+          image
+          createdAt
           updatedAt
         }
         nextToken
@@ -98,6 +112,8 @@ export const updateUser = /* GraphQL */ `
       region
       image
       noti_token
+      chat_noti_state
+      ozlife_noti_state
       chatRoomUser {
         items {
           id
@@ -158,6 +174,18 @@ export const updateUser = /* GraphQL */ `
           createdAt
           storeID
           userID
+          updatedAt
+        }
+        nextToken
+      }
+      notiItem {
+        items {
+          id
+          userID
+          title
+          content
+          image
+          createdAt
           updatedAt
         }
         nextToken
@@ -181,6 +209,8 @@ export const deleteUser = /* GraphQL */ `
       region
       image
       noti_token
+      chat_noti_state
+      ozlife_noti_state
       chatRoomUser {
         items {
           id
@@ -241,6 +271,18 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           storeID
           userID
+          updatedAt
+        }
+        nextToken
+      }
+      notiItem {
+        items {
+          id
+          userID
+          title
+          content
+          image
+          createdAt
           updatedAt
         }
         nextToken
@@ -277,6 +319,8 @@ export const createStore = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -287,6 +331,9 @@ export const createStore = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -346,6 +393,8 @@ export const updateStore = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -356,6 +405,9 @@ export const updateStore = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -415,6 +467,8 @@ export const deleteStore = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -425,6 +479,9 @@ export const deleteStore = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -501,6 +558,8 @@ export const createOzlife = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -519,6 +578,8 @@ export const createOzlife = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -529,6 +590,9 @@ export const createOzlife = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -594,6 +658,8 @@ export const updateOzlife = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -612,6 +678,8 @@ export const updateOzlife = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -622,6 +690,9 @@ export const updateOzlife = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -687,6 +758,8 @@ export const deleteOzlife = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -705,6 +778,8 @@ export const deleteOzlife = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -715,6 +790,9 @@ export const deleteOzlife = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -789,6 +867,8 @@ export const createReview = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -807,6 +887,8 @@ export const createReview = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -817,6 +899,9 @@ export const createReview = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -879,6 +964,8 @@ export const updateReview = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -897,6 +984,8 @@ export const updateReview = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -907,6 +996,9 @@ export const updateReview = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -969,6 +1061,8 @@ export const deleteReview = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -987,6 +1081,8 @@ export const deleteReview = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -997,6 +1093,9 @@ export const deleteReview = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1025,6 +1124,8 @@ export const createChatRoomUser = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1035,6 +1136,9 @@ export const createChatRoomUser = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1085,6 +1189,8 @@ export const updateChatRoomUser = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1095,6 +1201,9 @@ export const updateChatRoomUser = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1145,6 +1254,8 @@ export const deleteChatRoomUser = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1155,6 +1266,9 @@ export const deleteChatRoomUser = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1231,6 +1345,8 @@ export const createChatRoom = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -1294,6 +1410,8 @@ export const updateChatRoom = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -1357,6 +1475,8 @@ export const deleteChatRoom = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -1395,6 +1515,8 @@ export const createMessage = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1405,6 +1527,9 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1455,6 +1580,8 @@ export const updateMessage = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1465,6 +1592,9 @@ export const updateMessage = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1515,6 +1645,8 @@ export const deleteMessage = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -1525,6 +1657,9 @@ export const deleteMessage = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -1551,6 +1686,54 @@ export const deleteMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const createNotification = /* GraphQL */ `
+  mutation CreateNotification(
+    $input: CreateNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    createNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      content
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateNotification = /* GraphQL */ `
+  mutation UpdateNotification(
+    $input: UpdateNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    updateNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      content
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteNotification = /* GraphQL */ `
+  mutation DeleteNotification(
+    $input: DeleteNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    deleteNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      content
+      image
+      createdAt
       updatedAt
     }
   }

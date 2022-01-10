@@ -9,11 +9,14 @@ type User
   region: String
   image: String
   noti_token: String
+  chat_noti_state: Int
+  ozlife_noti_state: Int
 
   chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
   reviewItem: [Review] @connection(keyName: "reviewByUser", fields: ["id"])
   storeItem: [Store] @connection(keyName: "storeByUser", fields: ["id"])
   ozlifeItem: [Ozlife] @connection(keyName: "ozlifeByUser", fields: ["id"])
+  notiItem: [Notification] @connection(keyName: "notiByUser", fields: ["id"])
 }
 
 type Store
@@ -125,4 +128,16 @@ type Message
   chatRoomID: ID!
   user: User @connection(fields: ["userID"])
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+}
+
+type Notification
+  @model
+  @key(name: "notiByUser", fields: ["userID", "createdAt"], queryField: "notificationByUser")
+{
+  id: ID!
+  userID: ID!
+  title: String
+  content: String
+  image: String
+  createdAt: String!
 }

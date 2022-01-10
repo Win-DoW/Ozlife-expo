@@ -12,6 +12,8 @@ export const getUser = /* GraphQL */ `
       region
       image
       noti_token
+      chat_noti_state
+      ozlife_noti_state
       chatRoomUser {
         items {
           id
@@ -76,6 +78,18 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      notiItem {
+        items {
+          id
+          userID
+          title
+          content
+          image
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -97,6 +111,8 @@ export const listUsers = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -107,6 +123,9 @@ export const listUsers = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -140,6 +159,8 @@ export const getStore = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -150,6 +171,9 @@ export const getStore = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -211,6 +235,8 @@ export const listStores = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -264,6 +290,8 @@ export const getOzlife = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -282,6 +310,8 @@ export const getOzlife = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -292,6 +322,9 @@ export const getOzlife = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -362,6 +395,8 @@ export const listOzlives = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -424,6 +459,8 @@ export const getReview = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -442,6 +479,8 @@ export const getReview = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -452,6 +491,9 @@ export const getReview = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -504,6 +546,8 @@ export const listReviews = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -529,6 +573,8 @@ export const getChatRoomUser = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -539,6 +585,9 @@ export const getChatRoomUser = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -591,6 +640,8 @@ export const listChatRoomUsers = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -650,6 +701,8 @@ export const getChatRoom = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -717,6 +770,8 @@ export const getMessage = /* GraphQL */ `
         region
         image
         noti_token
+        chat_noti_state
+        ozlife_noti_state
         chatRoomUser {
           nextToken
         }
@@ -727,6 +782,9 @@ export const getMessage = /* GraphQL */ `
           nextToken
         }
         ozlifeItem {
+          nextToken
+        }
+        notiItem {
           nextToken
         }
         createdAt
@@ -779,6 +837,8 @@ export const listMessages = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -789,6 +849,39 @@ export const listMessages = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getNotification = /* GraphQL */ `
+  query GetNotification($id: ID!) {
+    getNotification(id: $id) {
+      id
+      userID
+      title
+      content
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listNotifications = /* GraphQL */ `
+  query ListNotifications(
+    $filter: ModelNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNotifications(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        title
+        content
+        image
+        createdAt
         updatedAt
       }
       nextToken
@@ -827,6 +920,8 @@ export const messagesByChatRoom = /* GraphQL */ `
           region
           image
           noti_token
+          chat_noti_state
+          ozlife_noti_state
           createdAt
           updatedAt
         }
@@ -837,6 +932,36 @@ export const messagesByChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const notificationByUser = /* GraphQL */ `
+  query NotificationByUser(
+    $userID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notificationByUser(
+      userID: $userID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        title
+        content
+        image
+        createdAt
         updatedAt
       }
       nextToken
