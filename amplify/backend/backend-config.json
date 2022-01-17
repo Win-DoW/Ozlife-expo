@@ -1,12 +1,30 @@
 {
+  "api": {
+    "ozlifeexpo": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authozlifeexpo7362a1207362a120"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  },
   "auth": {
-    "ozlifeexpo59bb2ebd59bb2ebd": {
+    "ozlifeexpo7362a1207362a120": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
-        "loginMechanisms": [],
+        "socialProviders": [],
+        "usernameAttributes": [],
         "signupAttributes": [
           "EMAIL"
         ],
@@ -22,29 +40,6 @@
           "EMAIL"
         ]
       }
-    }
-  },
-  "api": {
-    "ozlifeexpo": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authozlifeexpo59bb2ebd59bb2ebd"
-            }
-          },
-          "additionalAuthenticationProviders": []
-        }
-      }
-    }
-  },
-  "storage": {
-    "s3c1496aa5": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
     }
   }
 }

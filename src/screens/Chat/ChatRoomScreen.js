@@ -18,7 +18,9 @@ import {
   getUserOnProfileInformationEditScreen,
   getChatRoomCountOnChatRoomScreen,
   getChatRoomLastOnChatRoomScreen,
-  updateChatRoomCountOnChatRoomScreen } from 'graphql/custom'
+  updateChatRoomCountOnChatRoomScreen,
+  getUserOnChatNotification
+} from 'graphql/custom'
 
 import Header from "utils/Header";
 import ChatMessage from "components/ChatComponents/ChatMessage";
@@ -181,7 +183,12 @@ const ChatRoomScreen = ({ navigation, route }) => {
         }))
   
         await updateChatRoomLastMessage(newMessageData.data.createMessage.id);
-        SendNotification(otherUser.noti_token, user.nickname, inputMessage);
+        const otherUserData = await API.graphql(graphqlOperation(getUserOnChatNotification, {
+          id: otherUser.id
+        }))
+        if(otherUserData.data.getUser.chat_noti_state == 1) {
+          SendNotification(otherUser.noti_token, user.nickname, inputMessage);
+        }
       }
     } catch(e) {
       console.log(e)

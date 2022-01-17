@@ -51,9 +51,11 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const goToSetting = () => {
     navigation.navigate('ProfileSettingScreen', {
-      name: user.nickname
+      user: user
     });
   }
+  
+  console.log(user)
 
   const ProfileContent = () => {
     return (
@@ -77,11 +79,6 @@ const ProfileScreen = ({ navigation, route }) => {
               <Text style={{ fontSize: 12, fontWeight: "500", color: "#ff4444", marginLeft: 4 }}>
                 1231
               </Text>
-              <TouchableOpacity style={{ paddingHorizontal: 6, paddingVertical: 6 }}>
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#aaaaaa" }}>
-                  찜목록
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

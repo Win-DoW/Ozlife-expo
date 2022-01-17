@@ -269,6 +269,18 @@ export const listChatRoomUsersSearchOnChatScreen = /* GraphQL */ `
     }
   }
 `;
+
+export const getUserOnChatNotification = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      noti_token
+      chat_noti_state
+      createdAt
+      updatedAt
+    }
+  }
+`;
 // Chat queries
 
 
@@ -296,6 +308,9 @@ export const getUserOnProfileScreen = /* GraphQL */ `
       interest
       region
       image
+      noti_token
+      chat_noti_state
+      ozlife_noti_state
       reviewItem {
         items {
           id
