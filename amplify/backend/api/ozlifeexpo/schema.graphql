@@ -12,16 +12,15 @@ type User
   chat_noti_state: Int
   ozlife_noti_state: Int
 
-  chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
-  reviewItem: [Review] @connection(keyName: "reviewByUser", fields: ["id"])
-  storeItem: [Store] @connection(keyName: "storeByUser", fields: ["id"])
-  ozlifeItem: [Ozlife] @connection(keyName: "ozlifeByUser", fields: ["id"])
-  notiItem: [Notification] @connection(keyName: "notiByUser", fields: ["id"])
+  chatRoomUser: [ChatRoomUser] @hasMany(indexName: "byUser", fields: ["id"])
+  reviewItem: [Review] @hasMany(indexName: "reviewByUser", fields: ["id"])
+  storeItem: [Store] @hasMany(indexName: "storeByUser", fields: ["id"])
+  ozlifeItem: [Ozlife] @hasMany(indexName: "ozlifeByUser", fields: ["id"])
+  notiItem: [Notification] @hasMany(indexName: "notiByUser", fields: ["id"])
 }
 
 type Store
   @model
-  @key(name: "storeByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
   name: String!
@@ -35,16 +34,13 @@ type Store
   latitude: Float
   createdAt: String
 
-  userID: ID!
-  user: User @connection(fields: ["userID"])
-  ozlifeItem: [Ozlife] @connection(keyName: "byStore", fields: ["id"])
+  userID: ID! @index(name: "storeByUser", sortKeyFields: ["createdAt"])
+  user: User @hasOne(fields: ["userID"])
+  ozlifeItem: [Ozlife] @hasMany(indexName: "byStore", fields: ["id"])
 }
 
 type Ozlife
   @model
-  @key(name: "byStore", fields: ["storeID"])
-  @key(name: "storeByUser", fields: ["userID", "createdAt"])
-  @key(name: "ozlifeByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
   title: String
@@ -62,43 +58,39 @@ type Ozlife
   address: String
   createdAt: String
 
-  storeID: ID!
-  store: Store @connection(fields: ["storeID"])
+  storeID: ID! @index(name: "byStore")
+  store: Store @hasOne(fields: ["storeID"])
 
-  userID: ID!
-  user: User @connection(fields: ["userID"])
+  userID: ID! @index(name: "storeByUser", sortKeyFields: ["createdAt"]) @index(name: "ozlifeByUser", sortKeyFields: ["createdAt"])
+  user: User @hasOne(fields: ["userID"])
 
-  reviewItem: [Review] @connection(keyName: "byOzlife", fields: ["id"])
+  reviewItem: [Review] @hasMany(indexName: "byOzlife", fields: ["id"])
 }
 
 type Review
   @model
-  @key(name: "byOzlife", fields: ["ozlifeID"])
-  @key(name: "reviewByUser", fields: ["userID", "createdAt"])
 {
   id: ID!
   reviews: [String]
   status: Int
   createdAt: String
 
-  ozlifeID: ID!
-  ozlife: Ozlife @connection(fields: ["ozlifeID"])
+  ozlifeID: ID! @index(name: "byOzlife")
+  ozlife: Ozlife @hasOne(fields: ["ozlifeID"])
 
-  userID: ID!
-  user: User @connection(fields: ["userID"])
+  userID: ID! @index(name: "reviewByUser", sortKeyFields: ["createdAt"])
+  user: User @hasOne(fields: ["userID"])
 }
 
 type ChatRoomUser
   @model
-  @key(name: "byUser", fields: ["userID", "chatRoomID"])
-  @key(name: "byChatRoom", fields: ["chatRoomID", "userID"])
 {
   id: ID!
-  userID: ID!
+  userID: ID! @index(name: "byUser", sortKeyFields: ["chatRoomID"])
   otherUserID: ID!
-  chatRoomID: ID!
-  user: User @connection(fields: ["userID"])
-  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+  chatRoomID: ID! @index(name: "byChatRoom", sortKeyFields: ["userID"])
+  user: User @hasOne(fields: ["userID"])
+  chatRoom: ChatRoom @hasOne(fields: ["chatRoomID"])
 }
 
 type ChatRoom
@@ -106,38 +98,34 @@ type ChatRoom
 {
   id: ID!
   chatRoomUsers: [ChatRoomUser]
-    @connection(keyName: "byChatRoom", fields: ["id"])
-  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"])
+    @hasMany(indexName: "byChatRoom", fields: ["id"])
+  messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
   lastMessageID: ID!
-  lastMessage: Message @connection(fields: ["lastMessageID"])
+  lastMessage: Message @hasOne(fields: ["lastMessageID"])
   messagesCount: Int!
 }
 
 type Message
   @model
-  @key(
-    name: "byChatRoom"
-    fields: ["chatRoomID", "createdAt"]
-    queryField: "messagesByChatRoom"
-  )
+  
 {
   id: ID!
   createdAt: String!
   content: String!
   userID: ID!
-  chatRoomID: ID!
-  user: User @connection(fields: ["userID"])
-  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+  chatRoomID: ID! @index(name: "byChatRoom", sortKeyFields: ["createdAt"], queryField: "messagesByChatRoom")
+  user: User @hasOne(fields: ["userID"])
+  chatRoom: ChatRoom @hasOne(fields: ["chatRoomID"])
 }
 
 type Notification
   @model
-  @key(name: "notiByUser", fields: ["userID", "createdAt"], queryField: "notificationByUser")
 {
   id: ID!
-  userID: ID!
+  userID: ID! @index(name: "notiByUser", sortKeyFields: ["createdAt"], queryField: "notificationByUser")
   title: String
   content: String
   image: String
   createdAt: String!
 }
+
