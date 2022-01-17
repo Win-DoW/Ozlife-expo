@@ -647,3 +647,88 @@ export const listOzlivesOnSearchScreen = /* GraphQL */ `
     }
   }
 `;
+
+export const listOzlivesOnHomeScreen = /* GraphQL */ `
+  query ListOzlives(
+    $filter: ModelOzlifeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOzlives(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        profile
+        images
+        section
+        tag
+        question
+        member
+        visit_date
+        name
+        original_price
+        discount_price
+        promotion
+        address
+        createdAt
+        storeID
+        store {
+          id
+          name
+          profile
+          images
+          tel
+          address
+          license
+          url
+          longitude
+          latitude
+          createdAt
+          userID
+          updatedAt
+        }
+        userID
+        user {
+          id
+          email
+          nickname
+          profile
+          interest
+          region
+          image
+          noti_token
+          chat_noti_state
+          ozlife_noti_state
+          createdAt
+          updatedAt
+        }
+        reviewItem {
+          items {
+            id
+            reviews
+            status
+            createdAt
+            ozlifeID
+            userID
+            user {
+              id
+              email
+              nickname
+              profile
+              interest
+              region
+              image
+              noti_token
+              createdAt
+              updatedAt
+            }
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

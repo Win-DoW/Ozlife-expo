@@ -4,8 +4,7 @@ import Ozlife from 'components/Ozlife'
 import dayjs from "dayjs";
 
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
-import { getUserOnHomeScreen } from 'graphql/custom';
-import { listOzlives } from 'graphql/queries';
+import { getUserOnHomeScreen, listOzlivesOnHomeScreen } from 'graphql/custom';
 import { updateUser } from 'graphql/mutations'
 
 import * as Notifications from 'expo-notifications'
@@ -94,7 +93,7 @@ const HomeScreen = ({ navigation, route }) => {
 
       const userKey = await Auth.currentAuthenticatedUser({bypassCache: false});
       const userData = await API.graphql(graphqlOperation(getUserOnHomeScreen, { id: userKey.attributes.sub }));
-      const ozlifes = await API.graphql(graphqlOperation(listOzlives, { filter: { address: { contains: userData.data.getUser.region }}}));
+      const ozlifes = await API.graphql(graphqlOperation(listOzlivesOnHomeScreen, { filter: { address: { contains: userData.data.getUser.region }}}));
       const user = userData.data.getUser;
 
       setUser(user);
