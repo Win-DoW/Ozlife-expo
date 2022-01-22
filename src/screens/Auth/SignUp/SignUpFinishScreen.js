@@ -140,6 +140,8 @@ const SignUpFinishScreen = ({ navigation, route }) => {
                 contentType: 'image/jpeg',
             });
 
+            console.log('dd')
+
             await API.graphql(graphqlOperation(createUser, {
                 input: {
                     id: userKey.attributes.sub,

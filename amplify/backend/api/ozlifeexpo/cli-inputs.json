@@ -5,10 +5,8 @@
     "serviceName": "AppSync",
     "gqlSchemaPath": "/Users/coby/Documents/Git/App/Ozlife-expo/amplify/backend/api/ozlifeexpo/schema.graphql",
     "defaultAuthType": {
-      "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authozlifeexpo7362a1207362a120"
-    },
-    "conflictResolution": {},
-    "additionalAuthTypes": []
+      "mode": "API_KEY",
+      "expirationTime": 7
+    }
   }
 }

@@ -517,9 +517,13 @@
             "name" : "chatRoomID",
             "description" : null,
             "type" : {
-              "kind" : "SCALAR",
-              "name" : "ID",
-              "ofType" : null
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "ID",
+                "ofType" : null
+              }
             },
             "defaultValue" : null
           }, {
@@ -582,9 +586,13 @@
             "name" : "userID",
             "description" : null,
             "type" : {
-              "kind" : "SCALAR",
-              "name" : "ID",
-              "ofType" : null
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "ID",
+                "ofType" : null
+              }
             },
             "defaultValue" : null
           }, {
@@ -1124,13 +1132,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "ChatRoomUser",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "ChatRoomUser",
+                "ofType" : null
               }
             }
           },
@@ -1944,13 +1948,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "Message",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "Message",
+                "ofType" : null
               }
             }
           },
@@ -2412,13 +2412,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "Review",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "Review",
+                "ofType" : null
               }
             }
           },
@@ -3126,13 +3122,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "Ozlife",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "Ozlife",
+                "ofType" : null
               }
             }
           },
@@ -3558,13 +3550,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "Store",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "Store",
+                "ofType" : null
               }
             }
           },
@@ -3847,13 +3835,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "Notification",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "Notification",
+                "ofType" : null
               }
             }
           },
@@ -4090,13 +4074,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "User",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "User",
+                "ofType" : null
               }
             }
           },
@@ -4267,13 +4247,9 @@
               "kind" : "LIST",
               "name" : null,
               "ofType" : {
-                "kind" : "NON_NULL",
-                "name" : null,
-                "ofType" : {
-                  "kind" : "OBJECT",
-                  "name" : "ChatRoom",
-                  "ofType" : null
-                }
+                "kind" : "OBJECT",
+                "name" : "ChatRoom",
+                "ofType" : null
               }
             }
           },
@@ -8735,23 +8711,6 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
         "name" : "aws_subscribe",
         "description" : "Tells the service which mutation triggers this subscription.",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -8793,6 +8752,23 @@
         "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
+        } ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false

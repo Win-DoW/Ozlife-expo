@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3407b7883",
+  "policyUUID": "407b7883",
+  "bucketName": "ozlifeexpo135d96e34b4f4ae4a112a65c019091c0",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

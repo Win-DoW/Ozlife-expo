@@ -890,7 +890,7 @@ export const listNotifications = /* GraphQL */ `
 `;
 export const messagesByChatRoom = /* GraphQL */ `
   query MessagesByChatRoom(
-    $chatRoomID: ID
+    $chatRoomID: ID!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
@@ -940,7 +940,7 @@ export const messagesByChatRoom = /* GraphQL */ `
 `;
 export const notificationByUser = /* GraphQL */ `
   query NotificationByUser(
-    $userID: ID
+    $userID: ID!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelNotificationFilterInput

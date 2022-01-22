@@ -1,12 +1,5 @@
 {
   "AppSyncApiName": "ozlifeexpo",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false,
-  "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": [
-      "authozlifeexpo7362a1207362a120",
-      "Outputs.UserPoolId"
-    ]
-  },
-  "AuthModeLastUpdated": "2022-01-17T06:49:05.855Z"
+  "DynamoDBEnableServerSideEncryption": false
 }

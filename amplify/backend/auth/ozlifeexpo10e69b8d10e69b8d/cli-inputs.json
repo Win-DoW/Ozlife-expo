@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "ozlifeexpo7362a120_identitypool_7362a120",
+    "identityPoolName": "ozlifeexpo10e69b8d_identitypool_10e69b8d",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "ozlife7362a120",
-    "userPoolName": "ozlifeexpo7362a120_userpool_7362a120",
+    "resourceNameTruncated": "ozlife10e69b8d",
+    "userPoolName": "ozlifeexpo10e69b8d_userpool_10e69b8d",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "ozlife7362a120_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "ozlife10e69b8d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "7362a120",
-    "resourceName": "ozlifeexpo7362a1207362a120",
+    "sharedId": "10e69b8d",
+    "resourceName": "ozlifeexpo10e69b8d10e69b8d",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "thirdPartyAuth": false,
@@ -42,13 +42,32 @@
     "adminQueries": false,
     "triggers": {},
     "hostedUI": true,
-    "hostedUIDomainName": "ozlifeexpo7362a120-7362a120",
+    "hostedUIDomainName": "ozlifeexpo10e69b8d-10e69b8d",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"expo://callback/\"],\"LogoutURLs\":[\"expo://signout/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"ozlife://callback/\"],\"LogoutURLs\":[\"ozlife://signout/\"]}",
+    "authProviders": [],
+    "parentStack": {
+      "Ref": "AWS::StackId"
+    },
+    "permissions": []
   }
 }
