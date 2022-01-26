@@ -1,6 +1,23 @@
 {
+  "api": {
+    "ozlifeexpo": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  },
   "auth": {
-    "ozlifeexpo10e69b8d10e69b8d": {
+    "ozlifeexpo20d5206220d52062": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -25,25 +42,8 @@
       }
     }
   },
-  "api": {
-    "ozlifeexpo": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
-            }
-          },
-          "additionalAuthenticationProviders": []
-        }
-      }
-    }
-  },
   "storage": {
-    "s3407b7883": {
+    "s3b0835f3b": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

@@ -1,19 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-ozlifeexpo-dev-152956-authRole",
-      "UnauthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-152956-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-152956-authRole",
+      "AuthRoleName": "amplify-ozlifeexpo-dev-230603-authRole",
+      "UnauthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-230603-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::477404879761:role/amplify-ozlifeexpo-dev-230603-authRole",
       "Region": "ap-northeast-2",
-      "DeploymentBucketName": "amplify-ozlifeexpo-dev-152956-deployment",
-      "UnauthRoleName": "amplify-ozlifeexpo-dev-152956-unauthRole",
-      "StackName": "amplify-ozlifeexpo-dev-152956",
-      "StackId": "arn:aws:cloudformation:ap-northeast-2:477404879761:stack/amplify-ozlifeexpo-dev-152956/b95bb9d0-7b4c-11ec-8d8c-06201903311a",
-      "AmplifyAppId": "d1xrpc4l2hu49v"
+      "DeploymentBucketName": "amplify-ozlifeexpo-dev-230603-deployment",
+      "UnauthRoleName": "amplify-ozlifeexpo-dev-230603-unauthRole",
+      "StackName": "amplify-ozlifeexpo-dev-230603",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:477404879761:stack/amplify-ozlifeexpo-dev-230603/1b371a70-7eb1-11ec-a6de-025faca17cde",
+      "AmplifyAppId": "d2428mu8bhc3w6"
     },
     "categories": {
       "auth": {
-        "ozlifeexpo10e69b8d10e69b8d": {}
+        "ozlifeexpo20d5206220d52062": {}
       }
     }
   }

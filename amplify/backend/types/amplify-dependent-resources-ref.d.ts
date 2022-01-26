@@ -1,6 +1,13 @@
 export type AmplifyDependentResourcesAttributes = {
+    "api": {
+        "ozlifeexpo": {
+            "GraphQLAPIKeyOutput": "string",
+            "GraphQLAPIIdOutput": "string",
+            "GraphQLAPIEndpointOutput": "string"
+        }
+    },
     "auth": {
-        "ozlifeexpo10e69b8d10e69b8d": {
+        "ozlifeexpo20d5206220d52062": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -13,15 +20,8 @@ export type AmplifyDependentResourcesAttributes = {
             "CreatedSNSRole": "string"
         }
     },
-    "api": {
-        "ozlifeexpo": {
-            "GraphQLAPIKeyOutput": "string",
-            "GraphQLAPIIdOutput": "string",
-            "GraphQLAPIEndpointOutput": "string"
-        }
-    },
     "storage": {
-        "s3407b7883": {
+        "s3b0835f3b": {
             "BucketName": "string",
             "Region": "string"
         }
