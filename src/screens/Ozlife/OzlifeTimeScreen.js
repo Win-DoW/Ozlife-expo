@@ -143,9 +143,6 @@ const styles = StyleSheet.create({
       lineHeight: 30,
     },
     button: {
-      marginTop: 16,
-      width: '100%',
-      height: 60,
       backgroundColor: '#15b6f1',
       alignItems: 'center',
       justifyContent: 'center',

@@ -24,7 +24,7 @@ const StoreAddScreen = ({ navigation, route }) => {
     const [tel, setTel] = useState(store.tel)
     const [address, setAddress] = useState(store.address)
     const [url, setUrl] = useState(store.url)
-    const [license, setLicense] = useState(store.license)
+    const [license, setLicense] = useState('123')
 
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
@@ -371,9 +371,6 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     button: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
         height: 60,
         backgroundColor: '#15b6f1',
         alignItems: 'center',

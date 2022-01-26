@@ -56,7 +56,7 @@ const StoreSearchScreen = ({ navigation, route }) => {
     const PlaceInfo = ({info}) => {
 
         const selectPlace = (info) => {
-            navigation.navigate('StoreCheckScreen', {
+            navigation.navigate('StoreAddScreen', {
                 store : {
                     name: info.place_name,
                     tel: info.phone,
