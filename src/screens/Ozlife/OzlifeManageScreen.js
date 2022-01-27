@@ -32,10 +32,6 @@ const OzlifeManageScreen = ({ route, navigation }) => {
         return unsubscribe;
     }, [navigation]);
 
-    useEffect(() => {
-        setOzlifer(ozlifers[index])
-    }, [index]);
-
     const fetchData = async () => {
         try {
             setUsers([]);
@@ -87,16 +83,26 @@ const OzlifeManageScreen = ({ route, navigation }) => {
         );
     }
 
+    const prev = () => {
+        setOzlifer(ozlifers[index-1])
+        setIndex(index-1)
+    }
+
+    const next = () => {
+        setOzlifer(ozlifers[index+1])
+        setIndex(index+1)
+    }
+
     const OzliferHeader = () => {
         return (
             <View style={styles.ozliferHeader}>
-                <Pressable onPress={() => index === 0 ? null : setIndex(index-1)}>
-                    <Ionicons name="chevron-back" size={24} color="black" />
+                <Pressable onPress={() => index === 0 ? null : prev()}>
+                    <Ionicons name="chevron-back" size={24} color={index === 0 ? "gray":"black" } />
                 </Pressable>
                 <View style={styles.ozliferContainer}>
                     <Image style={styles.image} source={{ uri: ozlifer.image }} />
                     <View style={{ height: screen.width * 0.25, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 12, color: '#aaaaaa', marginTop: 8 }}>전문 오지라퍼</Text>
+                        <Text style={{ fontSize: 12, color: '#aaaaaa', marginTop: 8 }}>전문 오지라퍼</Text> 
                         <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 8 }}>{ozlifer.nickname}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                             <Image
@@ -108,8 +114,8 @@ const OzlifeManageScreen = ({ route, navigation }) => {
                         </View>
                     </View>
                 </View>
-                <Pressable onPress={() => index === reviews.length-1 ? null : setIndex(index+1)}>
-                    <Ionicons name="chevron-forward" size={24} color="black" />
+                <Pressable onPress={() => index === ozlifers.length-1 ? null : next()}>
+                    <Ionicons name="chevron-forward" size={24} color={index === ozlifers.length-1 ? "gray":"black" } />
                 </Pressable>
             </View>
         )
