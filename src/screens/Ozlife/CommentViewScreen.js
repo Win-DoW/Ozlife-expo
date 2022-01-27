@@ -5,6 +5,8 @@ import { updateReview } from 'graphql/mutations';
 import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import AppHeader from 'utils/Header';
 
+import { createAlarm } from 'utils/Alarm';
+
 const CommentViewScreen = ({ navigation, route }) => {
 
     const ozlife = route.params.ozlife;
@@ -24,6 +26,8 @@ const CommentViewScreen = ({ navigation, route }) => {
                 userID,
                 ozlifeID: ozlife.id
             }}));
+
+            await createAlarm(ozlife.userID, '오지랖 후기', `${ozlife.name} 오지랖 후기가 들어왔습니다.`, ozlife.images[0]);
         
             navigation.navigate('MainTab', { screen: 'OzlifeScreen' });
         

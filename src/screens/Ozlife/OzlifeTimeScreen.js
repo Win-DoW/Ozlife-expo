@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import AppHeader from 'utils/Header';
 import AnimatedLoader from 'react-native-animated-loader';
 
+import { createAlarm } from 'utils/Alarm';
+
 const OzlifeTimeScreen = ({ navigation, route }) => {
 
     const [visible, setVisible] = useState(false);
@@ -47,6 +49,9 @@ const OzlifeTimeScreen = ({ navigation, route }) => {
                     status: 0,
                 }
             }));
+
+            await createAlarm(ozlife.userID, '오지랖 신청', `${ozlife.name} 오지랖 신청이 들어왔습니다.`, ozlife.images[0]);
+
             setVisible(false);
 
             navigation.reset({ routes: [{ name: 'MainNavi' }] })
