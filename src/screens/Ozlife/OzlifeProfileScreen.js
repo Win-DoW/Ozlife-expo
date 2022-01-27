@@ -28,6 +28,7 @@ const OzlifeProfileScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            console.log(store)
             fetchData();
         });
 

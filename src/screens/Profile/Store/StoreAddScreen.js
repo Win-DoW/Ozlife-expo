@@ -25,6 +25,8 @@ const StoreAddScreen = ({ navigation, route }) => {
     const [address, setAddress] = useState(store.address)
     const [url, setUrl] = useState(store.url)
     const [license, setLicense] = useState('123')
+    const [longitude, setLongitude] = useState(store.longitude)
+    const [latitude, setLatitude] = useState(store.latitude)
 
     const [images, setImages] = useState([]);
     const [imageIdx, setImageIdx] = useState(0);
@@ -89,8 +91,11 @@ const StoreAddScreen = ({ navigation, route }) => {
                         profile,
                         tel,
                         address,
+                        url,
                         license,
                         images: keys,
+                        longitude,
+                        latitude
                     }
                 }))
 
